@@ -1,8 +1,8 @@
 import 'package:armoyu_services/armoyu_services.dart';
-import 'package:armoyu_services/widgets/sources/elevatedbutton.dart';
-import 'package:armoyu_services/widgets/sources/mention.dart';
-import 'package:armoyu_services/widgets/sources/searchbar/searchbar.dart';
-import 'package:armoyu_services/widgets/sources/textfield.dart';
+import 'package:armoyu_widgets/sources/elevatedbutton.dart';
+import 'package:armoyu_widgets/sources/mention.dart';
+import 'package:armoyu_widgets/sources/searchbar/searchbar.dart';
+import 'package:armoyu_widgets/sources/textfield.dart';
 
 class ARMOYUWidget {
   final ARMOYUServices service;

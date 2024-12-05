@@ -1,7 +1,7 @@
 name: armoyu_widgets
 description: "ARMOYU Widget kütüphanesidir"
 repository: https://github.com/aramizdakioyuncu/armoyu_widgets
-version: 1.0.0+2
+version: 1.0.0+3
 
 environment:
   sdk: '>=3.4.4 <4.0.0'
@@ -24,7 +24,7 @@ dependencies:
   get: ^4.6.6
   url_launcher: ^6.3.1
 
-  armoyu_services: ^1.0.0+19
+  armoyu_services: ^1.0.0+23
 
 dev_dependencies:
   flutter_test:
