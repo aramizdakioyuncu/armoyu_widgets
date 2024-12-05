@@ -40,7 +40,7 @@ class ARMOYUSearchBar {
     required RxList<User> allItems,
     required RxList<User> filteredItems,
     required SearchController searchController,
-    required Function(int id, String val)? itemSelected,
+    required Function(int id, String val, String username)? itemSelected,
     bool autofocus = false,
   }) {
     return SearchAnchor(
@@ -78,6 +78,7 @@ class ARMOYUSearchBar {
                   userID: element.id,
                   displayname: element.value,
                   avatar: element.avatar,
+                  username: element.username,
                 ),
               );
             }
@@ -124,6 +125,7 @@ class ARMOYUSearchBar {
                           itemSelected(
                             filteredItems[index].userID!,
                             filteredItems[index].displayname!,
+                            filteredItems[index].username!,
                           );
                         }
                         searchController.text =
