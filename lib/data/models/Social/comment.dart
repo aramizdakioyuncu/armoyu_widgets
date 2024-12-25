@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
 import 'package:armoyu_widgets/core/api.dart';
-import 'package:armoyu_widgets/core/widgets.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/functions/page_functions.dart';
 import 'package:armoyu_widgets/widgets/post_comments/post_comments_controller.dart';
@@ -175,7 +174,7 @@ class Comment {
     final controller = Get.put(PostCommentsController(comment: this),
         tag: commentID.toString());
 
-    final findCurrentAccountController = Get.find<AccountUserController>();
+    // final findCurrentAccountController = Get.find<AccountUserController>();
 
     return Obx(
       () => ListTile(
@@ -232,25 +231,25 @@ class Comment {
                 ),
               ),
             ),
-            Obx(
-              () => Visibility(
-                visible: findCurrentAccountController
-                        .currentUserAccounts.value.user.value.userID ==
-                    controller.xcomment!.value!.user.userID,
-                child: IconButton(
-                  onPressed: () async => ARMOYUWidget.showConfirmationDialog(
-                    context,
-                    accept: () {
-                      controller.removeComment(deleteFunction);
-                    },
-                  ),
-                  icon: const Icon(
-                    Icons.delete,
-                    color: Colors.grey,
-                  ),
-                ),
-              ),
-            ),
+            // Obx(
+            //   () => Visibility(
+            //     visible: findCurrentAccountController
+            //             .currentUserAccounts.value.user.value.userID ==
+            //         controller.xcomment!.value!.user.userID,
+            //     child: IconButton(
+            //       onPressed: () async => ARMOYUWidget.showConfirmationDialog(
+            //         context,
+            //         accept: () {
+            //           controller.removeComment(deleteFunction);
+            //         },
+            //       ),
+            //       icon: const Icon(
+            //         Icons.delete,
+            //         color: Colors.grey,
+            //       ),
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),

@@ -1,7 +1,7 @@
 import 'dart:developer';
 
-import 'package:ARMOYU/app/core/api.dart';
 import 'package:armoyu_services/core/models/ARMOYU/_response/service_result.dart';
+import 'package:armoyu_widgets/core/api.dart';
 import 'package:get/get.dart';
 
 class UserlistController extends GetxController {

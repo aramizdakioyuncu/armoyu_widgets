@@ -1,7 +1,6 @@
 import 'package:armoyu_widgets/functions/page_functions.dart';
 import 'package:armoyu_widgets/data/models/Social/post.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
-import 'package:armoyu_widgets/services/accountuser_services.dart';
 import 'package:armoyu_widgets/translations/app_translation.dart';
 import 'package:armoyu_widgets/widgets/posts/controllers/post_controller.dart';
 import 'package:armoyu_widgets/widgets/utility.dart';
@@ -19,12 +18,12 @@ class TwitterPostWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final findCurrentAccountController = Get.find<AccountUserController>();
-    String uniqueTag = DateTime.now().millisecondsSinceEpoch.toString();
+    // final findCurrentAccountController = Get.find<AccountUserController>();
+    // String uniqueTag = DateTime.now().millisecondsSinceEpoch.toString();
     final controller = Get.put(
       PostController(post: post),
-      tag:
-          "${findCurrentAccountController.currentUserAccounts.value.user.value.userID}postUniq${post.postID}-$uniqueTag",
+      // tag:
+      //     "${findCurrentAccountController.currentUserAccounts.value.user.value.userID}postUniq${post.postID}-$uniqueTag",
     );
 
     return Obx(
