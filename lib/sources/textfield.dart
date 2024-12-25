@@ -38,13 +38,6 @@ class ARMOYUTextfields {
       key: key,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Visibility(
-          visible: title != null,
-          child: Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: Text(title.toString()),
-          ),
-        ),
         TextField(
           onTap: () {
             if (onTap == null) {
@@ -74,6 +67,7 @@ class ARMOYUTextfields {
           textInputAction: TextInputAction.next,
           autofillHints: const [AutofillHints.username],
           decoration: InputDecoration(
+            labelText: title,
             contentPadding: const EdgeInsets.all(16.0),
             suffixIcon: suffixiconbutton,
             counter: minLength != null || maxLength != null
