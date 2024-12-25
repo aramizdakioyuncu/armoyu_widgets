@@ -1,3 +1,4 @@
+import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_widgets/functions/page_functions.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/widgets/Skeletons/cards_skeleton.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class CustomCards extends StatelessWidget {
+  final ARMOYUServices service;
   final String title;
   final List<Map<String, String>> content;
   final Icon icon;
@@ -21,18 +23,19 @@ class CustomCards extends StatelessWidget {
     required this.icon,
     required this.effectcolor,
     required this.firstFetch,
+    required this.service,
   });
 
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(
       CardsController(
-        content: content,
-        effectcolor: effectcolor,
-        firstFetch: firstFetch,
-        icon: icon,
-        title: title,
-      ),
+          content: content,
+          effectcolor: effectcolor,
+          firstFetch: firstFetch,
+          icon: icon,
+          title: title,
+          service: service),
       tag: DateTime.now().microsecondsSinceEpoch.toString() + title,
     );
 

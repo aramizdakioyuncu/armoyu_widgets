@@ -1,7 +1,5 @@
-import 'dart:developer';
-
+import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
-import 'package:armoyu_widgets/core/api.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/functions/page_functions.dart';
 import 'package:armoyu_widgets/widgets/post_comments/post_comments_controller.dart';
@@ -60,15 +58,14 @@ class Comment {
   final GlobalKey<LikeButtonState> _likeButtonKey =
       GlobalKey<LikeButtonState>();
   Future<void> likefunction(
-    Function setstatefunction,
-  ) async {
+      Function setstatefunction, ARMOYUServices service) async {
     if (likeunlikeProcces) {
       return;
     }
     likeunlikeProcces = true;
 
     PostCommentLikeResponse response =
-        await API.service.postsServices.commentlike(commentID: commentID);
+        await service.postsServices.commentlike(commentID: commentID);
     if (!response.result.status) {
       log(response.result.description);
       likeunlikeProcces = false;
@@ -82,15 +79,14 @@ class Comment {
   }
 
   Future<void> dislikefunction(
-    Function setstatefunction,
-  ) async {
+      Function setstatefunction, ARMOYUServices service) async {
     if (likeunlikeProcces) {
       return;
     }
     likeunlikeProcces = true;
 
     PostCommentUnLikeResponse response =
-        await API.service.postsServices.commentunlike(commentID: commentID);
+        await service.postsServices.commentunlike(commentID: commentID);
     if (!response.result.status) {
       log(response.result.description);
       likeunlikeProcces = false;
@@ -105,25 +101,21 @@ class Comment {
   }
 
   Future<bool> postLike(
-    bool isLiked,
-    setstatefunction,
-  ) async {
+      bool isLiked, setstatefunction, ARMOYUServices service) async {
     if (likeunlikeProcces) {
       return isLiked;
     }
 
     if (isLiked) {
-      dislikefunction(setstatefunction);
+      dislikefunction(setstatefunction, service);
     } else {
-      likefunction(setstatefunction);
+      likefunction(setstatefunction, service);
     }
     return !isLiked;
   }
 
   Widget commentlist(
-    BuildContext context,
-    Function setstatefunction,
-  ) {
+      BuildContext context, Function setstatefunction, ARMOYUServices service) {
     return GestureDetector(
       onDoubleTap: () {
         _likeButtonKey.currentState?.onTap();
@@ -150,10 +142,8 @@ class Comment {
                 key: _likeButtonKey,
                 isLiked: didIlike,
                 likeCount: likeCount,
-                onTap: (isLiked) async => await postLike(
-                  isLiked,
-                  setstatefunction,
-                ),
+                onTap: (isLiked) async =>
+                    await postLike(isLiked, setstatefunction, service),
                 likeBuilder: (bool isLiked) {
                   return Icon(
                     isLiked ? Icons.favorite : Icons.favorite_outline,
@@ -169,9 +159,10 @@ class Comment {
     );
   }
 
-  Widget postCommentsWidget(BuildContext context,
+  Widget postCommentsWidget(BuildContext context, ARMOYUServices service,
       {required Function deleteFunction}) {
-    final controller = Get.put(PostCommentsController(comment: this),
+    final controller = Get.put(
+        PostCommentsController(comment: this, service: service),
         tag: commentID.toString());
 
     // final findCurrentAccountController = Get.find<AccountUserController>();

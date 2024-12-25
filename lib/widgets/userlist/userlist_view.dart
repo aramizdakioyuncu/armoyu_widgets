@@ -1,3 +1,4 @@
+import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/data/models/useraccounts.dart';
 import 'package:armoyu_widgets/functions/page_functions.dart';
@@ -10,6 +11,8 @@ import 'package:get/get.dart';
 
 // ignore: must_be_immutable
 class UserListWidget extends StatelessWidget {
+  final ARMOYUServices service;
+
   final UserAccounts currentUserAccounts;
   final int userID;
   final String profileImageUrl;
@@ -25,11 +28,12 @@ class UserListWidget extends StatelessWidget {
     required this.username,
     required this.displayname,
     required this.isFriend,
+    required this.service,
   });
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(UserlistController());
+    final controller = Get.put(UserlistController(service));
     return Row(
       children: [
         Padding(

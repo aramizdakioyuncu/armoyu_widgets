@@ -1,7 +1,6 @@
 import 'dart:async';
-import 'dart:developer';
 
-import 'package:armoyu_widgets/core/api.dart';
+import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_widgets/core/armoyu.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/translations/app_translation.dart';
@@ -16,7 +15,10 @@ import 'package:flutter_multi_formatter/formatters/masked_input_formatter.dart';
 import 'package:get/get.dart';
 
 class CustomTextfields {
-  static Widget costum3({
+  final ARMOYUServices service;
+  CustomTextfields(this.service);
+
+  Widget costum3({
     String? title,
     required Rx<TextEditingController> controller,
     bool isPassword = false,
@@ -118,7 +120,7 @@ class CustomTextfields {
     );
   }
 
-  static FlutterMentions mentionTextFiled({
+  FlutterMentions mentionTextFiled({
     required Rx<GlobalKey<FlutterMentionsState>> key,
     int? minLines = 1,
     required User currentUser,
@@ -144,8 +146,8 @@ class CustomTextfields {
         //Oyuncu listesi bomboşsa
         if (WidgetMention.peopleList.isEmpty) {
           searchTimer = Timer(const Duration(milliseconds: 500), () async {
-            SearchListResponse response = await API.service.searchServices
-                .onlyusers(searchword: "", page: 1);
+            SearchListResponse response =
+                await service.searchServices.onlyusers(searchword: "", page: 1);
             if (!response.result.status) {
               log(response.result.description);
               return;
@@ -166,7 +168,7 @@ class CustomTextfields {
         if (WidgetMention.hashtagList.isEmpty) {
           searchTimer = Timer(const Duration(milliseconds: 500), () async {
             SearchHashtagListResponse response =
-                await API.service.searchServices.hashtag(hashtag: "", page: 1);
+                await service.searchServices.hashtag(hashtag: "", page: 1);
             if (!response.result.status) {
               log(response.result.description);
               return;
@@ -197,7 +199,7 @@ class CustomTextfields {
         searchTimer?.cancel();
         searchTimer = Timer(const Duration(milliseconds: 500), () async {
           if (lastWord[0] == "@") {
-            SearchListResponse response = await API.service.searchServices
+            SearchListResponse response = await service.searchServices
                 .onlyusers(searchword: lastWord.substring(1), page: 1);
 
             if (!response.result.status) {
@@ -216,8 +218,7 @@ class CustomTextfields {
               }
             }
           } else if (lastWord[0] == "#") {
-            SearchHashtagListResponse response = await API
-                .service.searchServices
+            SearchHashtagListResponse response = await service.searchServices
                 .hashtag(hashtag: lastWord.substring(1), page: 1);
 
             if (!response.result.status) {
@@ -248,7 +249,7 @@ class CustomTextfields {
     );
   }
 
-  static TextField number({
+  TextField number({
     String? placeholder,
     required TextEditingController controller,
     required int length,

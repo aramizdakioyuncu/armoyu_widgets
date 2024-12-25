@@ -1,6 +1,4 @@
-import 'dart:developer';
-
-import 'package:armoyu_widgets/core/api.dart';
+import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_widgets/core/widgets.dart';
 import 'package:armoyu_widgets/data/models/Social/comment.dart';
 import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
@@ -8,8 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class PostCommentsController extends GetxController {
+  final ARMOYUServices service;
+
   final Comment comment;
-  PostCommentsController({required this.comment});
+  PostCommentsController({required this.comment, required this.service});
 
   Rxn<Comment>? xcomment;
   @override
@@ -37,7 +37,7 @@ class PostCommentsController extends GetxController {
       const Icon(Icons.favorite_outline_rounded, color: Colors.grey, size: 20);
 
   Future<void> removeComment(Function deleteFunction) async {
-    PostRemoveCommentResponse response = await API.service.postsServices
+    PostRemoveCommentResponse response = await service.postsServices
         .removecomment(commentID: xcomment!.value!.commentID);
     ARMOYUWidget.toastNotification(response.result.description.toString());
 
@@ -59,7 +59,7 @@ class PostCommentsController extends GetxController {
     }
 
     if (!xcomment!.value!.didIlike) {
-      PostCommentUnLikeResponse response = await API.service.postsServices
+      PostCommentUnLikeResponse response = await service.postsServices
           .commentunlike(commentID: xcomment!.value!.commentID);
 
       if (!response.result.status) {
@@ -73,7 +73,7 @@ class PostCommentsController extends GetxController {
         return;
       }
     } else {
-      PostCommentLikeResponse response = await API.service.postsServices
+      PostCommentLikeResponse response = await service.postsServices
           .commentlike(commentID: xcomment!.value!.commentID);
 
       if (!response.result.status) {

@@ -1,5 +1,4 @@
-import 'dart:developer';
-
+import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_services/core/models/ARMOYU/API/utils/player_pop_list.dart';
 import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
 import 'package:armoyu_widgets/functions/functions_service.dart';
@@ -7,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class CardsController extends GetxController {
+  final ARMOYUServices service;
   final String title;
   final List<Map<String, String>> content;
   final Icon icon;
@@ -19,6 +19,7 @@ class CardsController extends GetxController {
     required this.icon,
     required this.effectcolor,
     required this.firstFetch,
+    required this.service,
   });
 
   var morefetchProcces = false.obs;
@@ -60,7 +61,7 @@ class CardsController extends GetxController {
     }
     morefetchProcces.value = true;
 
-    FunctionService f = FunctionService();
+    FunctionService f = FunctionService(service);
     log("${xtitle.value}  ${xtitle.value}  ");
 
     PlayerPopResponse response;

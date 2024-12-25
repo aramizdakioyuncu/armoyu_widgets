@@ -1,7 +1,6 @@
 import 'dart:async';
-import 'dart:developer';
 
-import 'package:armoyu_widgets/core/api.dart';
+import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_widgets/core/armoyu.dart';
 import 'package:armoyu_widgets/core/widgets.dart';
 
@@ -35,7 +34,8 @@ import 'package:url_launcher/url_launcher.dart';
 class ARMOYUFunctions {
   final UserAccounts currentUserAccounts;
 
-  ARMOYUFunctions({required this.currentUserAccounts});
+  final ARMOYUServices service;
+  ARMOYUFunctions({required this.currentUserAccounts, required this.service});
 
   static User userfetch(APILogin response) {
     return User(
@@ -274,7 +274,7 @@ class ARMOYUFunctions {
 
   Future<void> favteamselect(Team? team) async {
     ServiceResult response =
-        await API.service.profileServices.selectfavteam(teamID: team?.teamID);
+        await service.profileServices.selectfavteam(teamID: team?.teamID);
     log(response.toString());
     if (!response.status) {
       log(response.description);
@@ -290,7 +290,7 @@ class ARMOYUFunctions {
 
   Future<void> favteamfetch() async {
     if (currentUserAccounts.favoriteteams == null) {
-      TeamListResponse response = await API.service.teamsServices.fetch();
+      TeamListResponse response = await service.teamsServices.fetch();
       if (!response.result.status) {
         log(response.result.description);
         favteamfetch();
@@ -329,7 +329,7 @@ class ARMOYUFunctions {
   }
 
   Future<void> fetchCountry() async {
-    CountryResponse response = await API.service.countryServices.countryfetch();
+    CountryResponse response = await service.countryServices.countryfetch();
     if (!response.result.status) {
       log(response.result.description);
       return;
@@ -369,7 +369,7 @@ class ARMOYUFunctions {
     }
 
     ProvinceResponse response =
-        await API.service.countryServices.fetchprovince(countryID: countryID);
+        await service.countryServices.fetchprovince(countryID: countryID);
     if (!response.result.status) {
       log(response.result.description);
       return;
@@ -480,7 +480,7 @@ class ARMOYUFunctions {
                                 ),
                               ),
                               Expanded(
-                                child: CustomTextfields.costum3(
+                                child: CustomTextfields(service).costum3(
                                   placeholder: currentUserAccounts
                                       .user.value.displayName!.value,
                                   controller: firstName,
@@ -502,7 +502,7 @@ class ARMOYUFunctions {
                                 ),
                               ),
                               Expanded(
-                                child: CustomTextfields.costum3(
+                                child: CustomTextfields(service).costum3(
                                   placeholder: currentUserAccounts
                                       .user.value.displayName!.value,
                                   controller: lastName,
@@ -524,7 +524,7 @@ class ARMOYUFunctions {
                                 ),
                               ),
                               Expanded(
-                                child: CustomTextfields.costum3(
+                                child: CustomTextfields(service).costum3(
                                   placeholder: currentUserAccounts
                                       .user.value.aboutme!.value,
                                   controller: aboutme,
@@ -550,7 +550,7 @@ class ARMOYUFunctions {
                                 ),
                               ),
                               Expanded(
-                                child: CustomTextfields.costum3(
+                                child: CustomTextfields(service).costum3(
                                   placeholder: currentUserAccounts
                                       .user.value.userMail!.value,
                                   controller: email,
@@ -723,7 +723,7 @@ class ARMOYUFunctions {
                                 ),
                               ),
                               Expanded(
-                                child: CustomTextfields.number(
+                                child: CustomTextfields(service).number(
                                   placeholder: "(XXX) XXX XX XX",
                                   controller: phoneNumber.value,
                                   icon: const Icon(Icons.phone),
@@ -747,7 +747,7 @@ class ARMOYUFunctions {
                                 ),
                               ),
                               Expanded(
-                                child: CustomTextfields.costum3(
+                                child: CustomTextfields(service).costum3(
                                     controller: passwordControl,
                                     isPassword: true,
                                     focusNode: myFocusPassword),
@@ -813,8 +813,8 @@ class ARMOYUFunctions {
                                 profileeditProcess.value = true;
                                 // setstatefunction();
 
-                                ServiceResult response = await API
-                                    .service.profileServices
+                                ServiceResult response = await service
+                                    .profileServices
                                     .saveprofiledetails(
                                   firstname: firstName.value.text,
                                   lastname: lastName.value.text,

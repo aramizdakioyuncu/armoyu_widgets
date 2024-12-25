@@ -1,9 +1,8 @@
-import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
-import 'package:armoyu_widgets/core/api.dart';
 import 'package:armoyu_widgets/core/appcore.dart';
 import 'package:armoyu_widgets/core/armoyu.dart';
 import 'package:armoyu_widgets/core/widgets.dart';
@@ -81,6 +80,7 @@ class Media {
     required List<Media> medialist,
     bool storyShare = false,
     required Function setstatefunction,
+    required ARMOYUServices service,
   }) {
     return GestureDetector(
       onTap: () {
@@ -144,8 +144,8 @@ class Media {
                             medialist.removeAt(index);
                             setstatefunction();
 
-                            MediaDeleteResponse response = await API
-                                .service.mediaServices
+                            MediaDeleteResponse response = await service
+                                .mediaServices
                                 .delete(mediaID: mediaID);
 
                             if (!response.result.status) {

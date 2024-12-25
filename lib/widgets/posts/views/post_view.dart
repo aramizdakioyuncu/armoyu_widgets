@@ -1,3 +1,4 @@
+import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_widgets/functions/page_functions.dart';
 import 'package:armoyu_widgets/data/models/Social/post.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
@@ -11,17 +12,20 @@ import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
 
 class TwitterPostWidget extends StatelessWidget {
+  final ARMOYUServices service;
+
   final Post post;
   final bool? isPostdetail = false;
 
-  const TwitterPostWidget({super.key, required this.post});
+  const TwitterPostWidget(
+      {super.key, required this.post, required this.service});
 
   @override
   Widget build(BuildContext context) {
     // final findCurrentAccountController = Get.find<AccountUserController>();
     // String uniqueTag = DateTime.now().millisecondsSinceEpoch.toString();
     final controller = Get.put(
-      PostController(post: post),
+      PostController(post: post, service: service),
       // tag:
       //     "${findCurrentAccountController.currentUserAccounts.value.user.value.userID}postUniq${post.postID}-$uniqueTag",
     );
@@ -306,10 +310,7 @@ class TwitterPostWidget extends StatelessWidget {
                             (index) {
                           return controller
                               .postInfo.value.firstthreecomment![index]
-                              .commentlist(
-                            context,
-                            () {},
-                          );
+                              .commentlist(context, () {}, service);
                         }),
                       ),
                     ),

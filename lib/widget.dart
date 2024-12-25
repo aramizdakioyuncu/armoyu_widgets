@@ -6,9 +6,10 @@ import 'package:armoyu_widgets/sources/textfield.dart';
 
 class ARMOYUWidget {
   final ARMOYUServices service;
+  ARMOYUWidget({required this.service});
+
   late final ARMOYUElevatedButton elevatedButton = ARMOYUElevatedButton();
   late final ARMOYUTextfields textField = ARMOYUTextfields(service);
   late final ARMOYUMention mention = ARMOYUMention(service);
   late final ARMOYUSearchBar searchBar = ARMOYUSearchBar(service);
-  ARMOYUWidget({required this.service});
 }

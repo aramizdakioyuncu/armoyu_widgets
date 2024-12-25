@@ -1,6 +1,4 @@
-import 'dart:developer';
-
-import 'package:armoyu_widgets/core/api.dart';
+import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_widgets/core/widgets.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/group.dart';
 import 'package:armoyu_widgets/functions/page_functions.dart';
@@ -20,6 +18,7 @@ import '../detectabletext.dart';
 
 // ignore: must_be_immutable
 class CustomMenusNotificationbars {
+  final ARMOYUServices service;
   final UserAccounts currentUserAccounts;
   final User user;
   final String text;
@@ -38,6 +37,7 @@ class CustomMenusNotificationbars {
     required this.categorydetail,
     required this.categorydetailID,
     required this.enableButtons,
+    required this.service,
   });
 
   Widget notificationWidget(BuildContext context,
@@ -133,8 +133,8 @@ class CustomMenusNotificationbars {
                                           1;
 
                                   if (categorydetail == "istek") {
-                                    ServiceResult response = await API
-                                        .service.profileServices
+                                    ServiceResult response = await service
+                                        .profileServices
                                         .friendrequestanswer(
                                       userID: user.userID!,
                                       answer: 1,
@@ -169,7 +169,7 @@ class CustomMenusNotificationbars {
                                     deleteFunction();
 
                                     GroupRequestAnswerResponse response =
-                                        await API.service.groupServices
+                                        await service.groupServices
                                             .grouprequestanswer(
                                       groupID: categorydetailID,
                                       answer: "1",
@@ -209,8 +209,8 @@ class CustomMenusNotificationbars {
                                     // natificationisVisible = false;
                                     deleteFunction();
 
-                                    ServiceResult response = await API
-                                        .service.profileServices
+                                    ServiceResult response = await service
+                                        .profileServices
                                         .friendrequestanswer(
                                       userID: user.userID!,
                                       answer: 0,
@@ -245,7 +245,7 @@ class CustomMenusNotificationbars {
                                     deleteFunction();
 
                                     GroupRequestAnswerResponse response =
-                                        await API.service.groupServices
+                                        await service.groupServices
                                             .grouprequestanswer(
                                       groupID: categorydetailID,
                                       answer: "0",

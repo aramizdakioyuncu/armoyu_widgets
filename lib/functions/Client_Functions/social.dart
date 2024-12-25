@@ -1,13 +1,15 @@
-import 'dart:developer';
-
+import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_services/core/models/ARMOYU/API/utils/player_pop_list.dart';
 import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
 import 'package:armoyu_widgets/functions/functions_service.dart';
 
 class ClientFunctionsSocail {
+  final ARMOYUServices service;
+  ClientFunctionsSocail(this.service);
+
   Future<List<Map<String, String>>> loadXPCards(
       int page, List<Map<String, String>> list) async {
-    FunctionService f = FunctionService();
+    FunctionService f = FunctionService(service);
     PlayerPopResponse response = await f.getplayerxp(1);
     if (!response.result.status) {
       log(response.result.description);
@@ -33,7 +35,7 @@ class ClientFunctionsSocail {
 
   Future<List<Map<String, String>>> loadpopCards(
       int page, List<Map<String, String>> list) async {
-    FunctionService f = FunctionService();
+    FunctionService f = FunctionService(service);
     PlayerPopResponse response = await f.getplayerpop(1);
     if (!response.result.status) {
       log(response.result.description);

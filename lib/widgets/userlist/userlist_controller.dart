@@ -1,16 +1,17 @@
-import 'dart:developer';
-
+import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_services/core/models/ARMOYU/_response/service_result.dart';
-import 'package:armoyu_widgets/core/api.dart';
+
 import 'package:get/get.dart';
 
 class UserlistController extends GetxController {
+  final ARMOYUServices service;
+  UserlistController(this.service);
   var buttonbefriend = "Arkadaş Ol".obs;
   var buttonremovefriend = "Çıkar".obs;
 
   Future<void> friendrequest(int userID) async {
     ServiceResult response =
-        await API.service.profileServices.friendrequest(userID: userID);
+        await service.profileServices.friendrequest(userID: userID);
 
     if (!response.status) {
       log(response.description);
@@ -22,7 +23,7 @@ class UserlistController extends GetxController {
 
   Future<void> removefriend(int userID, bool isFriend) async {
     ServiceResult response =
-        await API.service.profileServices.friendremove(userID: userID);
+        await service.profileServices.friendremove(userID: userID);
     if (!response.status) {
       log(response.description);
       return;

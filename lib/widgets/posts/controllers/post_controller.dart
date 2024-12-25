@@ -1,6 +1,4 @@
-import 'dart:developer';
-
-import 'package:armoyu_widgets/core/api.dart';
+import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_widgets/core/armoyu.dart';
 import 'package:armoyu_widgets/core/widgets.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
@@ -24,9 +22,10 @@ import 'package:pinch_zoom/pinch_zoom.dart';
 import 'package:video_player/video_player.dart';
 
 class PostController extends GetxController {
+  final ARMOYUServices service;
   final Post post;
 
-  PostController({required this.post});
+  PostController({required this.post, required this.service});
 
   var likeButtonKey = GlobalKey<LikeButtonState>().obs;
 
@@ -105,7 +104,7 @@ class PostController extends GetxController {
       comments.value = null;
     }
     PostCommentsFetchResponse response =
-        await API.service.postsServices.commentsfetch(postID: postID);
+        await service.postsServices.commentsfetch(postID: postID);
     if (!response.result.status) {
       log(response.result.description);
       fetchCommentStatus.value = false;
@@ -171,7 +170,7 @@ class PostController extends GetxController {
       likers.value = null;
     }
     PostLikesListResponse response =
-        await API.service.postsServices.postlikeslist(postID: postID);
+        await service.postsServices.postlikeslist(postID: postID);
     if (!response.result.status) {
       log(response.result.description.toString());
       fetchlikersStatus.value = false;
@@ -215,7 +214,7 @@ class PostController extends GetxController {
     postVisible.value = false;
 
     PostRemoveResponse response =
-        await API.service.postsServices.remove(postID: postInfo.value.postID);
+        await service.postsServices.remove(postID: postInfo.value.postID);
 
     ARMOYUWidget.toastNotification(response.result.description.toString());
 
@@ -294,7 +293,8 @@ class PostController extends GetxController {
                                       itemCount: comments.value!.length,
                                       itemBuilder: (context, index) {
                                         return comments.value![index]
-                                            .postCommentsWidget(context,
+                                            .postCommentsWidget(
+                                                context, service,
                                                 deleteFunction: () {
                                           comments.value!.removeAt(index);
 
@@ -352,7 +352,7 @@ class PostController extends GetxController {
                           child: ElevatedButton(
                             onPressed: () async {
                               PostCreateCommentResponse response =
-                                  await API.service.postsServices.createcomment(
+                                  await service.postsServices.createcomment(
                                 postID: postInfo.value.postID,
                                 text: controllerMessage.value.text,
                               );
@@ -395,7 +395,7 @@ class PostController extends GetxController {
     likeunlikeProcces.value = true;
 
     PostLikeResponse response =
-        await API.service.postsServices.like(postID: postID);
+        await service.postsServices.like(postID: postID);
     if (!response.result.status) {
       log(response.result.description.toString());
       widgetlike = widgetlike;
@@ -415,7 +415,7 @@ class PostController extends GetxController {
     likeunlikeProcces.value = true;
 
     PostUnLikeResponse response =
-        await API.service.postsServices.unlike(postID: postID);
+        await service.postsServices.unlike(postID: postID);
     if (!response.result.status) {
       log(response.result.description.toString());
       widgetlike = widgetlike;
@@ -548,8 +548,8 @@ class PostController extends GetxController {
                   Visibility(
                     child: InkWell(
                       onTap: () async {
-                        PostRemoveResponse response = await API
-                            .service.postsServices
+                        PostRemoveResponse response = await service
+                            .postsServices
                             .remove(postID: postInfo.value.postID);
                         if (!response.result.status) {
                           log(response.result.description);
@@ -601,8 +601,8 @@ class PostController extends GetxController {
                       onTap: () async {
                         Get.back();
 
-                        BlockingAddResponse response = await API
-                            .service.blockingServices
+                        BlockingAddResponse response = await service
+                            .blockingServices
                             .add(userID: postInfo.value.owner.userID!);
 
                         ARMOYUWidget.toastNotification(

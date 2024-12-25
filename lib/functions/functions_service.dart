@@ -1,10 +1,8 @@
-import 'dart:convert';
-import 'dart:developer';
-
+import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_services/core/models/ARMOYU/API/login&register&password/login.dart';
 import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
 import 'package:armoyu_services/core/models/ARMOYU/_response/service_result.dart';
-import 'package:armoyu_widgets/core/api.dart';
+
 import 'package:armoyu_widgets/core/armoyu.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/data/models/useraccounts.dart';
@@ -13,12 +11,14 @@ import 'package:crypto/crypto.dart';
 import 'package:get/get.dart';
 
 class FunctionService {
+  final ARMOYUServices service;
+  FunctionService(this.service);
   String generateMd5(String input) {
     return md5.convert(utf8.encode(input)).toString();
   }
 
   Future<ServiceResult> getappdetail() async {
-    ServiceResult jsonData = await API.service.utilsServices.getappdetail();
+    ServiceResult jsonData = await service.utilsServices.getappdetail();
     return jsonData;
   }
 
@@ -30,7 +30,7 @@ class FunctionService {
   ) async {
     // password = generateMd5(password);
 
-    LoginResponse response = await API.service.authServices
+    LoginResponse response = await service.authServices
         .login(username: username, password: userpass);
 
     if (!response.result.status ||
@@ -66,8 +66,7 @@ class FunctionService {
   }
 
   Future<User?> fetchUserInfo({required int userID}) async {
-    FunctionService f = FunctionService();
-    LookProfileResponse response = await f.lookProfile(userID);
+    LookProfileResponse response = await lookProfile(userID);
 
     if (!response.result.status ||
         response.result.description == "Oyuncu bilgileri yanlış!") {
@@ -80,7 +79,7 @@ class FunctionService {
   }
 
   Future<LoginResponse> login(String username, String password) async {
-    LoginResponse response = await API.service.authServices
+    LoginResponse response = await service.authServices
         .login(username: username, password: password);
 
     if (!response.result.status ||
@@ -115,7 +114,7 @@ class FunctionService {
 
     if (ARMOYU.deviceModel != "Bilinmeyen") {
       log("Onesignal işlemleri!");
-      // OneSignalApi.setupOneSignal(currentUserAccounts: userdetail);
+      // OneSignalsetupOneSignal(currentUserAccounts: userdetail);
     }
 
     //Socket Güncelle
@@ -144,7 +143,7 @@ class FunctionService {
     String rpassword,
     String inviteCode,
   ) async {
-    RegisterResponse jsonData = await API.service.authServices.register(
+    RegisterResponse jsonData = await service.authServices.register(
       username: username,
       firstname: name,
       lastname: lastname,
@@ -179,7 +178,7 @@ class FunctionService {
 
   Future<ServiceResult> forgotpassword(
       String username, String useremail, String userresettype) async {
-    ServiceResult jsonData = await API.service.utilsServices.forgotpassword(
+    ServiceResult jsonData = await service.utilsServices.forgotpassword(
       username: username,
       useremail: useremail,
       userresettype: userresettype,
@@ -189,7 +188,7 @@ class FunctionService {
 
   Future<ServiceResult> forgotpassworddone(String username, String useremail,
       String securitycode, String password, String repassword) async {
-    ServiceResult jsonData = await API.service.utilsServices.forgotpassworddone(
+    ServiceResult jsonData = await service.utilsServices.forgotpassworddone(
       username: username,
       useremail: useremail,
       securitycode: securitycode,
@@ -201,38 +200,36 @@ class FunctionService {
 
   Future<LookProfileResponse> lookProfile(int userID) async {
     LookProfileResponse jsonData =
-        await API.service.utilsServices.lookProfile(userID: userID);
+        await service.utilsServices.lookProfile(userID: userID);
     return jsonData;
   }
 
   Future<LookProfilewithUsernameResponse> lookProfilewithusername(
       String username) async {
-    LookProfilewithUsernameResponse jsonData = await API.service.utilsServices
+    LookProfilewithUsernameResponse jsonData = await service.utilsServices
         .lookProfilewithusername(userusername: username);
     return jsonData;
   }
 
   Future<APIMyGroupListResponse> myGroups() async {
-    APIMyGroupListResponse jsonData =
-        await API.service.utilsServices.myGroups();
+    APIMyGroupListResponse jsonData = await service.utilsServices.myGroups();
     return jsonData;
   }
 
   Future<APIMySchoolListResponse> mySchools() async {
-    APIMySchoolListResponse jsonData =
-        await API.service.utilsServices.mySchools();
+    APIMySchoolListResponse jsonData = await service.utilsServices.mySchools();
     return jsonData;
   }
 
   Future<ServiceResult> myStations() async {
-    ServiceResult jsonData = await API.service.utilsServices.myStations();
+    ServiceResult jsonData = await service.utilsServices.myStations();
     return jsonData;
   }
 
   Future<PostFetchListResponse> getprofilePosts(
       int page, int userID, String category) async {
     PostFetchListResponse jsonData =
-        await API.service.postsServices.getprofilePosts(
+        await service.postsServices.getprofilePosts(
       userID: userID.toString(),
       page: page,
       category: category,
@@ -242,20 +239,20 @@ class FunctionService {
 
   Future<PlayerPopResponse> getplayerxp(int page) async {
     PlayerPopResponse jsonData =
-        await API.service.utilsServices.getplayerxp(page: page);
+        await service.utilsServices.getplayerxp(page: page);
     return jsonData;
   }
 
   Future<PlayerPopResponse> getplayerpop(int page) async {
     PlayerPopResponse jsonData =
-        await API.service.utilsServices.getplayerpop(page: page);
+        await service.utilsServices.getplayerpop(page: page);
     return jsonData;
   }
 
   Future<NotificationListResponse> getnotifications(
       String kategori, String kategoridetay, int page) async {
     NotificationListResponse jsonData =
-        await API.service.notificationServices.getnotifications(
+        await service.notificationServices.getnotifications(
       kategori: kategori,
       kategoridetay: kategoridetay,
       page: page,
@@ -265,25 +262,25 @@ class FunctionService {
 
   Future<ChatListResponse> getchats(int page) async {
     ChatListResponse jsonData =
-        await API.service.utilsServices.getchats(page: page);
+        await service.utilsServices.getchats(page: page);
     return jsonData;
   }
 
   Future<ServiceResult> getnewchatfriendlist(int page) async {
     ServiceResult jsonData =
-        await API.service.utilsServices.getnewchatfriendlist(page: page);
+        await service.utilsServices.getnewchatfriendlist(page: page);
     return jsonData;
   }
 
   Future<ChatFetchDetailResponse> getdeailchats(int chatID) async {
     ChatFetchDetailResponse jsonData =
-        await API.service.utilsServices.getdetailchats(chatID: chatID);
+        await service.utilsServices.getdetailchats(chatID: chatID);
     return jsonData;
   }
 
   Future<ServiceResult> sendchatmessage(
       int userID, String message, String type) async {
-    ServiceResult jsonData = await API.service.utilsServices.sendchatmessage(
+    ServiceResult jsonData = await service.utilsServices.sendchatmessage(
       userID: userID,
       message: message,
       type: type,
