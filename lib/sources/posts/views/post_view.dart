@@ -1,9 +1,10 @@
 import 'package:armoyu_services/armoyu_services.dart';
+import 'package:armoyu_widgets/data/services/accountuser_services.dart';
 import 'package:armoyu_widgets/functions/page_functions.dart';
 import 'package:armoyu_widgets/data/models/Social/post.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/translations/app_translation.dart';
-import 'package:armoyu_widgets/widgets/posts/controllers/post_controller.dart';
+import 'package:armoyu_widgets/sources/posts/controllers/post_controller.dart';
 import 'package:armoyu_widgets/widgets/utility.dart';
 import 'package:armoyu_widgets/widgets/text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -11,23 +12,19 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
 
-class TwitterPostWidget extends StatelessWidget {
+class TwitterPostWidget {
   final ARMOYUServices service;
 
-  final Post post;
-  final bool? isPostdetail = false;
+  const TwitterPostWidget(this.service);
 
-  const TwitterPostWidget(
-      {super.key, required this.post, required this.service});
-
-  @override
-  Widget build(BuildContext context) {
-    // final findCurrentAccountController = Get.find<AccountUserController>();
-    // String uniqueTag = DateTime.now().millisecondsSinceEpoch.toString();
+  Widget postWidget(BuildContext context,
+      {required Post post, bool? isPostdetail = false}) {
+    final findCurrentAccountController = Get.find<AccountUserController>();
+    String uniqueTag = DateTime.now().millisecondsSinceEpoch.toString();
     final controller = Get.put(
       PostController(post: post, service: service),
-      // tag:
-      //     "${findCurrentAccountController.currentUserAccounts.value.user.value.userID}postUniq${post.postID}-$uniqueTag",
+      tag:
+          "${findCurrentAccountController.currentUserAccounts.value.user.value.userID}postUniq${post.postID}-$uniqueTag",
     );
 
     return Obx(

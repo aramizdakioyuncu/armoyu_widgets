@@ -6,6 +6,8 @@ import 'package:armoyu_widgets/data/models/Social/comment.dart';
 import 'package:armoyu_widgets/data/models/Social/like.dart';
 import 'package:armoyu_widgets/data/models/Social/post.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
+import 'package:armoyu_widgets/data/services/accountuser_services.dart';
+import 'package:armoyu_widgets/sources/photoviewer/views/photoviewer_view.dart';
 import 'package:armoyu_widgets/translations/app_translation.dart';
 import 'package:armoyu_widgets/widgets/post_likers/post_likers_view.dart';
 import 'package:armoyu_widgets/widgets/shimmer/placeholder.dart';
@@ -37,10 +39,9 @@ class PostController extends GetxController {
   void onInit() {
     super.onInit();
 
-    // final findCurrentAccountController = Get.find<AccountUserController>();
-    // currentUser =
-    //     findCurrentAccountController.currentUserAccounts.value.user.value;
-    // postInfo.value = post;
+    final findCurrentAccountController = Get.find<AccountUserController>();
+    currentUser =
+        findCurrentAccountController.currentUserAccounts.value.user.value;
     postInfo = Rx<Post>(post);
     likebutton = LikeButton(
       key: likeButtonKey.value,
@@ -778,15 +779,16 @@ class PostController extends GetxController {
 
         GestureDetector aa = GestureDetector(
           onTap: () {
-            // Navigator.of(context).push(
-            //   MaterialPageRoute(
-            //     builder: (context) => MediaViewer(
-            //       currentUserID: currentUser!.userID!,
-            //       media: postInfo.value.media,
-            //       initialIndex: i,
-            //     ),
-            //   ),
-            // );
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => PhotoviewerView(
+                  service: service,
+                  currentUserID: currentUser!.userID!,
+                  media: postInfo.value.media,
+                  initialIndex: i,
+                ),
+              ),
+            );
           },
           child: mediaSablon(
             indexlength: postInfo.value.media.length,
