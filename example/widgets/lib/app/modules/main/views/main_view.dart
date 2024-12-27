@@ -72,6 +72,10 @@ class MainView extends StatelessWidget {
                           );
                           AppService.widgets =
                               ARMOYUWidget(service: AppService.service);
+                          AppService.service.authServices.setbarriertoken(
+                            barriertoken:
+                                "5221d07eb0049191ed17b3d1ea773941aa3ab1960c9696c64de2281766d13df2",
+                          );
 
                           bool status = await AppService.service.setup();
                           controller.statusController.value = status;
@@ -85,12 +89,29 @@ class MainView extends StatelessWidget {
                 ),
               ],
             ),
-            AppService.widgets.elevatedButton.costum1(
-              text: "Posts",
-              onPressed: () {
-                Get.toNamed("/posts");
-              },
-              loadingStatus: false,
+            Wrap(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: AppService.widgets.elevatedButton.costum1(
+                    text: "Posts",
+                    onPressed: () {
+                      Get.toNamed("/posts");
+                    },
+                    loadingStatus: false,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: AppService.widgets.elevatedButton.costum1(
+                    text: "Story",
+                    onPressed: () {
+                      Get.toNamed("/story");
+                    },
+                    loadingStatus: false,
+                  ),
+                ),
+              ],
             ),
           ],
         ),

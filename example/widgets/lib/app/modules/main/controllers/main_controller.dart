@@ -26,15 +26,16 @@ class MainController extends GetxController {
             mediaID: 0,
             mediaURL: MediaURL(
               bigURL: Rx(
-                  "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"),
+                  "https://aramizdakioyuncu.com/galeri/profilresimleri/1profilresimufaklik1734874339.jpg"),
               normalURL: Rx(
-                  "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"),
+                  "https://aramizdakioyuncu.com/galeri/profilresimleri/1profilresimufaklik1734874339.jpg"),
               minURL: Rx(
-                  "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"),
+                  "https://aramizdakioyuncu.com/galeri/profilresimleri/1profilresimufaklik1734874339.jpg"),
             ),
           ),
         ).obs,
-        sessionTOKEN: Rx(""),
+        sessionTOKEN: Rx(
+            "5221d07eb0049191ed17b3d1ea773941aa3ab1960c9696c64de2281766d13df2"),
         language: Rx(""),
       ),
     );

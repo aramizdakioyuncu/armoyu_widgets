@@ -2,7 +2,7 @@ import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_widgets/data/services/accountuser_services.dart';
 import 'package:armoyu_widgets/sources/elevatedbutton.dart';
 import 'package:armoyu_widgets/sources/mention.dart';
-import 'package:armoyu_widgets/sources/posts/views/post_view.dart';
+import 'package:armoyu_widgets/sources/social/views/social_view.dart';
 import 'package:armoyu_widgets/sources/searchbar/searchbar.dart';
 import 'package:armoyu_widgets/sources/textfield.dart';
 import 'package:get/get.dart';

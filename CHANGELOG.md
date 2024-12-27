@@ -1,3 +1,3 @@
-## [1.0.0+3]
+## [1.0.0+5]
 
-- Çalışır hale getirildi.
+- Story Wİdget eklendi.

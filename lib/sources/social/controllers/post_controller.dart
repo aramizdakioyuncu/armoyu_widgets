@@ -8,6 +8,7 @@ import 'package:armoyu_widgets/data/models/Social/post.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/data/services/accountuser_services.dart';
 import 'package:armoyu_widgets/sources/photoviewer/views/photoviewer_view.dart';
+import 'package:armoyu_widgets/sources/postscomment/views/postcomment_view.dart';
 import 'package:armoyu_widgets/translations/app_translation.dart';
 import 'package:armoyu_widgets/widgets/post_likers/post_likers_view.dart';
 import 'package:armoyu_widgets/widgets/shimmer/placeholder.dart';
@@ -293,9 +294,9 @@ class PostController extends GetxController {
                                   : ListView.builder(
                                       itemCount: comments.value!.length,
                                       itemBuilder: (context, index) {
-                                        return comments.value![index]
-                                            .postCommentsWidget(
-                                                context, service,
+                                        return PostcommentView
+                                            .postCommentsWidget(context,
+                                                service, comments.value![index],
                                                 deleteFunction: () {
                                           comments.value!.removeAt(index);
 
@@ -714,7 +715,7 @@ class PostController extends GetxController {
           child: CachedNetworkImage(
             imageUrl: mediaUrl,
             fit: fit,
-            width: width,
+            // width: width, Genişlik Kafayı yediği için yorum satırına aldık
             height: height,
             placeholder: (context, url) => const CupertinoActivityIndicator(),
             errorWidget: (context, url, error) => const Icon(Icons.error),

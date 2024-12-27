@@ -30,6 +30,7 @@ class PhotoviewerView extends StatelessWidget {
     required this.currentUserID,
   });
 
+  @override
   Widget build(BuildContext context) {
     final controller = Get.put(PhotoviewerController());
     return Scaffold(
