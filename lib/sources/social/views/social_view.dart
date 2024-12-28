@@ -391,20 +391,26 @@ class TwitterPostWidget {
                   onTap: () {
                     if (cardData.owner.userID == currentUser.value.userID) {
                       if (ishasstory) {
-                        Get.to(StoryScreenView(service: service), arguments: {
-                          "storyList": rxContent,
-                          "storyIndex": index,
-                        });
+                        Get.to(
+                          StoryScreenView(service: service),
+                          arguments: {
+                            "storyList": rxContent,
+                            "storyIndex": index,
+                          },
+                        );
 
                         return;
                       }
 
                       Get.toNamed("/gallery");
                     } else {
-                      Get.to(StoryScreenView(service: service), arguments: {
-                        "storyList": rxContent,
-                        "storyIndex": index,
-                      });
+                      Get.to(
+                        StoryScreenView(service: service),
+                        arguments: {
+                          "storyList": rxContent,
+                          "storyIndex": index,
+                        },
+                      );
 
                       //Basılınca görüntülendi efekti ver
                       content[index].isView = true;

@@ -7,6 +7,8 @@ import 'package:armoyu_widgets/core/appcore.dart';
 import 'package:armoyu_widgets/core/armoyu.dart';
 import 'package:armoyu_widgets/core/widgets.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
+import 'package:armoyu_widgets/sources/Story/publish_story_page/views/storypublish_view.dart';
+import 'package:armoyu_widgets/sources/photoviewer/views/photoviewer_view.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
@@ -79,34 +81,35 @@ class Media {
     required User currentUser,
     required List<Media> medialist,
     bool storyShare = false,
-    required Function setstatefunction,
     required ARMOYUServices service,
   }) {
     return GestureDetector(
       onTap: () {
         if (storyShare) {
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => StorypublishView(
-          //       currentUser: currentUser,
-          //       imageID: 1,
-          //       imageURL: medialist[index].mediaURL.bigURL.value,
-          //     ),
-          //   ),
-          // );
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => StorypublishView(
+                service: service,
+                currentUser: currentUser,
+                imageID: 1,
+                imageURL: medialist[index].mediaURL.bigURL.value,
+              ),
+            ),
+          );
           return;
         }
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => MediaViewer(
-        //       currentUserID: currentUser.userID!,
-        //       media: medialist,
-        //       initialIndex: index,
-        //     ),
-        //   ),
-        // );
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PhotoviewerView(
+              service: service,
+              currentUserID: currentUser.userID!,
+              media: medialist,
+              initialIndex: index,
+            ),
+          ),
+        );
       },
       onLongPress: () {
         if (ownerID != currentUser.userID) {
@@ -142,7 +145,6 @@ class Media {
                           onTap: () async {
                             Navigator.pop(context);
                             medialist.removeAt(index);
-                            setstatefunction();
 
                             MediaDeleteResponse response = await service
                                 .mediaServices

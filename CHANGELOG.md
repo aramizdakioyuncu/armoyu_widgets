@@ -1,3 +1,3 @@
-## [1.0.0+5]
+## [1.0.0+7]
 
-- Story Wİdget eklendi.
+- Optimizeler.

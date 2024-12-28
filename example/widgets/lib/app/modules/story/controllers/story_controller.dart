@@ -73,7 +73,7 @@ class StoryController extends GetxController {
                 (e) => Story(
                   storyID: e.hikayeId,
                   ownerID: e.hikayeSahip,
-                  ownerusername: element.oyuncuAdSoyad,
+                  ownerusername: element.oyuncuKadi,
                   owneravatar: element.oyuncuAvatar.minURL,
                   time: e.hikayeZaman,
                   media: e.hikayeMedya,

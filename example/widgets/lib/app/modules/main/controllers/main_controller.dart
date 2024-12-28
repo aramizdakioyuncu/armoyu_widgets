@@ -19,18 +19,18 @@ class MainController extends GetxController {
     AppService.widgets.accountController.changeUser(
       UserAccounts(
         user: User(
-          userID: 1,
-          displayName: Rx("User Display Name"),
-          userName: Rx("User Display Name"),
+          userID: 11107,
+          displayName: Rx("Test Kullanıcısı"),
+          userName: Rx("deneme"),
           avatar: Media(
             mediaID: 0,
             mediaURL: MediaURL(
-              bigURL: Rx(
-                  "https://aramizdakioyuncu.com/galeri/profilresimleri/1profilresimufaklik1734874339.jpg"),
-              normalURL: Rx(
-                  "https://aramizdakioyuncu.com/galeri/profilresimleri/1profilresimufaklik1734874339.jpg"),
-              minURL: Rx(
-                  "https://aramizdakioyuncu.com/galeri/profilresimleri/1profilresimufaklik1734874339.jpg"),
+              bigURL:
+                  Rx("https://aramizdakioyuncu.com/galeri/ana-yapi/armoyu.png"),
+              normalURL:
+                  Rx("https://aramizdakioyuncu.com/galeri/ana-yapi/armoyu.png"),
+              minURL:
+                  Rx("https://aramizdakioyuncu.com/galeri/ana-yapi/armoyu.png"),
             ),
           ),
         ).obs,

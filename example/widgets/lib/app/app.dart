@@ -1,3 +1,4 @@
+import 'package:armoyu_widgets/translations/app_translation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:widgets/app/routes/app_route.dart';
@@ -14,6 +15,9 @@ class MyApp extends StatelessWidget {
       theme: appLightThemeData,
       darkTheme: appDarkThemeData,
       themeMode: ThemeMode.dark,
+      translationsKeys: AppTranslation.translationKeys,
+      locale: Get.deviceLocale,
+      fallbackLocale: const Locale('en', 'US'),
       initialRoute: AppRoute.initial,
       getPages: AppRoute.routes,
     );
