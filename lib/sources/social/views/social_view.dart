@@ -1,5 +1,6 @@
 import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_widgets/data/models/Story/storylist.dart';
+import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/data/services/accountuser_services.dart';
 import 'package:armoyu_widgets/data/models/Social/post.dart';
 import 'package:armoyu_widgets/sources/Story/story_screen_page/views/story_screen_view.dart';
@@ -342,14 +343,9 @@ class TwitterPostWidget {
     );
   }
 
-  Widget widgetStorycircle({required List<StoryList> content}) {
-    //****//
-    final findCurrentAccountController = Get.find<AccountUserController>();
-    log("Current AccountUser :: ${findCurrentAccountController.currentUserAccounts.value.user.value.displayName}");
-    //****//
-
-    var currentUser =
-        findCurrentAccountController.currentUserAccounts.value.user;
+  Widget widgetStorycircle(
+      {required User user, required List<StoryList> content}) {
+    var currentUser = user.obs;
 
     final RxList<StoryList> rxContent = RxList<StoryList>(content);
     return Column(
