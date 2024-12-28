@@ -228,7 +228,8 @@ class PostController extends GetxController {
     Get.back();
   }
 
-  Future<void> postcomments(int postID) async {
+  Future<void> postcomments(int postID,
+      {required Function profileFunction}) async {
     Rxn<List<Comment>> comments = Rxn<List<Comment>>();
 
     //Yorumları Çekmeye başla
@@ -297,6 +298,8 @@ class PostController extends GetxController {
                                         return PostcommentView
                                             .postCommentsWidget(context,
                                                 service, comments.value![index],
+                                                profileFunction:
+                                                    profileFunction,
                                                 deleteFunction: () {
                                           comments.value!.removeAt(index);
 
@@ -502,7 +505,11 @@ class PostController extends GetxController {
                                           date: likerList.value![index].date,
                                           islike: 1,
                                           user: likerList.value![index].user,
-                                        );
+                                        ).build(context, profileFunction: () {
+                                          log(likerList
+                                              .value![index].user.userID
+                                              .toString());
+                                        });
                                       },
                                     ),
                         ),

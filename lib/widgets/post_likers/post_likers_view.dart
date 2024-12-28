@@ -1,4 +1,3 @@
-import 'package:armoyu_widgets/functions/page_functions.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/widgets/post_likers/post_likers_controller.dart';
 
@@ -7,20 +6,18 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 // ignore: must_be_immutable
-class WidgetPostLikersView extends StatelessWidget {
+class WidgetPostLikersView {
   final User user;
   final String date;
   int islike;
 
   WidgetPostLikersView({
-    super.key,
     required this.user,
     required this.date,
     required this.islike,
   });
 
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, {required Function profileFunction}) {
     String uniqueTag = DateTime.now().millisecondsSinceEpoch.toString();
 
     Get.put(
@@ -34,11 +31,7 @@ class WidgetPostLikersView extends StatelessWidget {
       contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
       leading: InkWell(
         onTap: () {
-          PageFunctions functions = PageFunctions();
-          functions.pushProfilePage(
-            context,
-            User(userID: user.userID),
-          );
+          profileFunction();
         },
         child: CircleAvatar(
           backgroundColor: Colors.transparent,

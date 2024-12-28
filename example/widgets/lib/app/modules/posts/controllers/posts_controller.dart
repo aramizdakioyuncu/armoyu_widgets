@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:armoyu_services/core/models/ARMOYU/API/post/post_detail.dart';
 import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
@@ -39,6 +41,9 @@ class PostsController extends GetxController {
       postsList.value!.add(
         AppService.widgets.social.postWidget(
           Get.context!,
+          profileFunction: () {
+            log(element.postID.toString());
+          },
           post: Post(
             postID: element.postID,
             content: element.content,

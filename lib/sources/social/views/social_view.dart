@@ -1,9 +1,7 @@
 import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_widgets/data/models/Story/storylist.dart';
 import 'package:armoyu_widgets/data/services/accountuser_services.dart';
-import 'package:armoyu_widgets/functions/page_functions.dart';
 import 'package:armoyu_widgets/data/models/Social/post.dart';
-import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/sources/Story/story_screen_page/views/story_screen_view.dart';
 import 'package:armoyu_widgets/sources/postscomment/views/postcomment_view.dart';
 import 'package:armoyu_widgets/translations/app_translation.dart';
@@ -21,7 +19,9 @@ class TwitterPostWidget {
   const TwitterPostWidget(this.service);
 
   Widget postWidget(BuildContext context,
-      {required Post post, bool? isPostdetail = false}) {
+      {required Post post,
+      required Function profileFunction,
+      bool? isPostdetail = false}) {
     final findCurrentAccountController = Get.find<AccountUserController>();
     String uniqueTag = DateTime.now().millisecondsSinceEpoch.toString();
     final controller = Get.put(
@@ -46,12 +46,7 @@ class TwitterPostWidget {
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 child: InkWell(
                   onTap: () {
-                    PageFunctions functions = PageFunctions();
-
-                    functions.pushProfilePage(
-                      context,
-                      User(userID: post.owner.userID),
-                    );
+                    profileFunction();
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -167,6 +162,7 @@ class TwitterPostWidget {
                           child: WidgetUtility.specialText(
                             context,
                             controller.postInfo.value.content,
+                            profileFunction: profileFunction,
                           ),
                         ),
                       ),
@@ -208,8 +204,9 @@ class TwitterPostWidget {
                         iconSize: 25,
                         icon: controller.postcommentIcon.value,
                         color: controller.postcommentColor.value,
-                        onPressed: () => controller
-                            .postcomments(controller.postInfo.value.postID),
+                        onPressed: () => controller.postcomments(
+                            controller.postInfo.value.postID,
+                            profileFunction: profileFunction),
                       ),
                     ),
                     const SizedBox(width: 5),
@@ -293,6 +290,7 @@ class TwitterPostWidget {
                                         () => WidgetUtility.specialText(
                                           context,
                                           "@${controller.postInfo.value.firstthreelike![0].user.userName.toString()}  ${(controller.postInfo.value.likesCount - 1) <= 0 ? SocialKeys.socialLiked.tr : SocialKeys.socialandnumberpersonLiked.tr.replaceAll('#NUMBER#', "${controller.postInfo.value.likesCount - 1}")}",
+                                          profileFunction: profileFunction,
                                         ),
                                       ),
                                     )
@@ -309,11 +307,11 @@ class TwitterPostWidget {
                             controller.postInfo.value.firstthreecomment!.length,
                             (index) {
                           return PostcommentView.commentlist(
-                              context,
-                              controller
-                                  .postInfo.value.firstthreecomment![index],
-                              () {},
-                              service);
+                            context,
+                            controller.postInfo.value.firstthreecomment![index],
+                            service,
+                            profileFunction: profileFunction,
+                          );
                         }),
                       ),
                     ),
@@ -323,8 +321,9 @@ class TwitterPostWidget {
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: GestureDetector(
-                            onTap: () => controller
-                                .postcomments(controller.postInfo.value.postID),
+                            onTap: () => controller.postcomments(
+                                controller.postInfo.value.postID,
+                                profileFunction: profileFunction),
                             child: CustomText.costum1(
                               "${controller.postInfo.value.commentsCount} ${SocialKeys.socialViewAllComments.tr}",
                               color: Get.theme.primaryColor.withOpacity(0.8),
@@ -351,6 +350,8 @@ class TwitterPostWidget {
 
     var currentUser =
         findCurrentAccountController.currentUserAccounts.value.user;
+
+    final RxList<StoryList> rxContent = RxList<StoryList>(content);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -391,7 +392,7 @@ class TwitterPostWidget {
                     if (cardData.owner.userID == currentUser.value.userID) {
                       if (ishasstory) {
                         Get.to(StoryScreenView(service: service), arguments: {
-                          "storyList": content,
+                          "storyList": rxContent,
                           "storyIndex": index,
                         });
 
@@ -401,7 +402,7 @@ class TwitterPostWidget {
                       Get.toNamed("/gallery");
                     } else {
                       Get.to(StoryScreenView(service: service), arguments: {
-                        "storyList": content,
+                        "storyList": rxContent,
                         "storyIndex": index,
                       });
 

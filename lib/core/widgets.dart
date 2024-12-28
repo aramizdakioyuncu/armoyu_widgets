@@ -30,7 +30,7 @@ class ARMOYUWidget {
         size: 15,
         color: Colors.white,
       ),
-    );
+    ).build(Get.context!, profileFunction: () {});
   }
 
   Widget widgetPOPlist() {
@@ -45,7 +45,7 @@ class ARMOYUWidget {
         size: 15,
         color: Colors.white,
       ),
-    );
+    ).build(Get.context!, profileFunction: () {});
   }
 
   static void stackbarNotification(BuildContext context, String text) {

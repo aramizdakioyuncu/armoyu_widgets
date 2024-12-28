@@ -1,7 +1,6 @@
 import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_widgets/core/widgets.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/group.dart';
-import 'package:armoyu_widgets/functions/page_functions.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/data/models/useraccounts.dart';
 import 'package:armoyu_widgets/translations/app_translation.dart';
@@ -41,7 +40,7 @@ class CustomMenusNotificationbars {
   });
 
   Widget notificationWidget(BuildContext context,
-      {required Function deleteFunction}) {
+      {required Function deleteFunction, required Function profileFunction}) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       child: Column(
@@ -78,11 +77,7 @@ class CustomMenusNotificationbars {
               children: [
                 InkWell(
                   onTap: () {
-                    PageFunctions functions = PageFunctions();
-                    functions.pushProfilePage(
-                      context,
-                      User(userID: user.userID),
-                    );
+                    profileFunction();
                   },
                   child: CircleAvatar(
                     backgroundColor: Colors.transparent,

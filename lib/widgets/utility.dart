@@ -3,8 +3,6 @@ import 'dart:developer';
 import 'package:armoyu_widgets/core/armoyu.dart';
 import 'package:armoyu_widgets/core/widgets.dart';
 import 'package:armoyu_widgets/data/models/select.dart';
-import 'package:armoyu_widgets/functions/page_functions.dart';
-import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +16,7 @@ class WidgetUtility {
     TextAlign textAlign = TextAlign.start,
     FontWeight fontWeight = FontWeight.normal,
     Color? color,
+    required Function profileFunction,
   }) {
     final lines = text.split('\n');
     final textSpans = <TextSpan>[];
@@ -60,12 +59,7 @@ class WidgetUtility {
                 ..onTap = () {
                   // Burada @ işaretine tıklandığında yapılacak işlemi ekleyin
                   log('Tapped on username: $username');
-                  PageFunctions functions = PageFunctions();
-
-                  functions.pushProfilePage(
-                    context,
-                    User(userName: username.substring(1).obs),
-                  );
+                  profileFunction();
                 },
             ));
           } else if (urlRegex.hasMatch(word)) {

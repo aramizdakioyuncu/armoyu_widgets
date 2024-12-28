@@ -92,8 +92,7 @@ class PostscommentController extends GetxController {
     }
   }
 
-  Future<void> likefunction(
-      Function setstatefunction, ARMOYUServices service) async {
+  Future<void> likefunction(ARMOYUServices service) async {
     if (likeunlikeProcces.value) {
       return;
     }
@@ -104,17 +103,15 @@ class PostscommentController extends GetxController {
     if (!response.result.status) {
       log(response.result.description);
       likeunlikeProcces.value = false;
-      setstatefunction();
+
       return;
     }
     comment.likeCount++;
     comment.didIlike = true;
     likeunlikeProcces.value = false;
-    setstatefunction();
   }
 
-  Future<void> dislikefunction(
-      Function setstatefunction, ARMOYUServices service) async {
+  Future<void> dislikefunction(ARMOYUServices service) async {
     if (likeunlikeProcces.value) {
       return;
     }
@@ -125,26 +122,23 @@ class PostscommentController extends GetxController {
     if (!response.result.status) {
       log(response.result.description);
       likeunlikeProcces.value = false;
-      setstatefunction();
 
       return;
     }
     comment.likeCount--;
     comment.didIlike = false;
     likeunlikeProcces.value = false;
-    setstatefunction();
   }
 
-  Future<bool> postLike(
-      bool isLiked, setstatefunction, ARMOYUServices service) async {
+  Future<bool> postLike(bool isLiked, ARMOYUServices service) async {
     if (likeunlikeProcces.value) {
       return isLiked;
     }
 
     if (isLiked) {
-      dislikefunction(setstatefunction, service);
+      dislikefunction(service);
     } else {
-      likefunction(setstatefunction, service);
+      likefunction(service);
     }
     return !isLiked;
   }

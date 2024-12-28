@@ -1,9 +1,7 @@
 import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_widgets/core/widgets.dart';
 import 'package:armoyu_widgets/data/models/Social/comment.dart';
-import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/data/services/accountuser_services.dart';
-import 'package:armoyu_widgets/functions/page_functions.dart';
 import 'package:armoyu_widgets/sources/postscomment/controllers/postscomment_controller.dart';
 import 'package:armoyu_widgets/widgets/post_comments/post_comments_controller.dart';
 import 'package:armoyu_widgets/widgets/text.dart';
@@ -13,8 +11,9 @@ import 'package:get/get.dart';
 import 'package:like_button/like_button.dart';
 
 class PostcommentView {
-  static Widget commentlist(BuildContext context, Comment comment,
-      Function setstatefunction, ARMOYUServices service) {
+  static Widget commentlist(
+      BuildContext context, Comment comment, ARMOYUServices service,
+      {required Function profileFunction}) {
     final controller = Get.put(
         PostscommentController(comment: comment, service: service),
         tag: comment.commentID.toString());
@@ -34,6 +33,7 @@ class PostcommentView {
                     context,
                     text: controller.comment.content,
                     user: controller.comment.user,
+                    profileFunction: profileFunction,
                   ),
                 ],
               ),
@@ -45,8 +45,8 @@ class PostcommentView {
                   key: controller.likeButtonKey.value,
                   isLiked: controller.comment.didIlike,
                   likeCount: controller.comment.likeCount,
-                  onTap: (isLiked) async => await controller.postLike(
-                      isLiked, setstatefunction, service),
+                  onTap: (isLiked) async =>
+                      await controller.postLike(isLiked, service),
                   likeBuilder: (bool isLiked) {
                     return Icon(
                       isLiked ? Icons.favorite : Icons.favorite_outline,
@@ -65,7 +65,7 @@ class PostcommentView {
 
   static Widget postCommentsWidget(
       BuildContext context, ARMOYUServices service, Comment comment,
-      {required Function deleteFunction}) {
+      {required Function deleteFunction, required Function profileFunction}) {
     final controller = Get.put(
         PostCommentsController(comment: comment, service: service),
         tag: comment.commentID.toString());
@@ -85,11 +85,7 @@ class PostcommentView {
             children: [
               InkWell(
                 onTap: () {
-                  PageFunctions functions = PageFunctions();
-                  functions.pushProfilePage(
-                    context,
-                    User(userID: controller.xcomment!.value!.user.userID),
-                  );
+                  profileFunction();
                 },
                 child: CircleAvatar(
                   backgroundColor: Colors.transparent,

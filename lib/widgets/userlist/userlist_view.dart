@@ -1,7 +1,5 @@
 import 'package:armoyu_services/armoyu_services.dart';
-import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/data/models/useraccounts.dart';
-import 'package:armoyu_widgets/functions/page_functions.dart';
 import 'package:armoyu_widgets/widgets/buttons.dart';
 import 'package:armoyu_widgets/widgets/text.dart';
 import 'package:armoyu_widgets/widgets/userlist/userlist_controller.dart';
@@ -9,8 +7,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-// ignore: must_be_immutable
-class UserListWidget extends StatelessWidget {
+class UserListWidget {
   final ARMOYUServices service;
 
   final UserAccounts currentUserAccounts;
@@ -21,7 +18,6 @@ class UserListWidget extends StatelessWidget {
   bool isFriend;
 
   UserListWidget({
-    super.key,
     required this.currentUserAccounts,
     required this.userID,
     required this.profileImageUrl,
@@ -31,8 +27,7 @@ class UserListWidget extends StatelessWidget {
     required this.service,
   });
 
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, {required Function profileFunction}) {
     final controller = Get.put(UserlistController(service));
     return Row(
       children: [
@@ -40,12 +35,7 @@ class UserListWidget extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
           child: GestureDetector(
             onTap: () {
-              PageFunctions functions = PageFunctions();
-
-              functions.pushProfilePage(
-                context,
-                User(userID: userID),
-              );
+              profileFunction();
             },
             child: CircleAvatar(
               backgroundColor: Colors.transparent,

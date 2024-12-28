@@ -1,6 +1,4 @@
 import 'package:armoyu_services/armoyu_services.dart';
-import 'package:armoyu_widgets/functions/page_functions.dart';
-import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/widgets/Skeletons/cards_skeleton.dart';
 import 'package:armoyu_widgets/widgets/cards/cards_controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -8,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class CustomCards extends StatelessWidget {
+class CustomCards {
   final ARMOYUServices service;
   final String title;
   final List<Map<String, String>> content;
@@ -17,7 +15,6 @@ class CustomCards extends StatelessWidget {
   final bool firstFetch;
 
   const CustomCards({
-    super.key,
     required this.title,
     required this.content,
     required this.icon,
@@ -26,8 +23,7 @@ class CustomCards extends StatelessWidget {
     required this.service,
   });
 
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, {required Function profileFunction}) {
     final controller = Get.put(
       CardsController(
           content: content,
@@ -66,13 +62,7 @@ class CustomCards extends StatelessWidget {
                   return InkWell(
                     borderRadius: BorderRadius.circular(15),
                     onTap: () {
-                      PageFunctions functions = PageFunctions();
-                      functions.pushProfilePage(
-                        context,
-                        User(
-                          userID: int.parse(cardData["userID"].toString()),
-                        ),
-                      );
+                      profileFunction();
                     },
                     child: Container(
                       width: 150,

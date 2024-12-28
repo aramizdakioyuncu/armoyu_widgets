@@ -1,4 +1,3 @@
-import 'package:armoyu_widgets/functions/page_functions.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
@@ -28,6 +27,7 @@ class CustomText {
     BuildContext context, {
     required String text,
     required User user,
+    required Function profileFunction,
   }) {
     final textSpans = <InlineSpan>[];
     textSpans.add(
@@ -41,13 +41,7 @@ class CustomText {
             ),
             recognizer: TapGestureRecognizer()
               ..onTap = () {
-                PageFunctions functions = PageFunctions();
-                functions.pushProfilePage(
-                  context,
-                  User(
-                    userName: user.userName,
-                  ),
-                );
+                profileFunction();
               },
           )
         ],
@@ -69,12 +63,7 @@ class CustomText {
       WidgetSpan(
         child: InkWell(
           onTap: () {
-            PageFunctions functions = PageFunctions();
-
-            functions.pushProfilePage(
-              context,
-              User(userName: user.userName),
-            );
+            profileFunction();
           },
           child: CircleAvatar(
             backgroundColor: Colors.transparent,
