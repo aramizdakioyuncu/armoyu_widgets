@@ -16,7 +16,7 @@ class WidgetUtility {
     TextAlign textAlign = TextAlign.start,
     FontWeight fontWeight = FontWeight.normal,
     Color? color,
-    required Function profileFunction,
+    required Function(int userID, String username) profileFunction,
   }) {
     final lines = text.split('\n');
     final textSpans = <TextSpan>[];
@@ -59,7 +59,7 @@ class WidgetUtility {
                 ..onTap = () {
                   // Burada @ işaretine tıklandığında yapılacak işlemi ekleyin
                   log('Tapped on username: $username');
-                  profileFunction();
+                  profileFunction(0, username);
                 },
             ));
           } else if (urlRegex.hasMatch(word)) {

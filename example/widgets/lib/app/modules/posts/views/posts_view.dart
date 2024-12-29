@@ -1,35 +1,32 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:widgets/app/modules/posts/controllers/posts_controller.dart';
+import 'package:widgets/app/services/app_service.dart';
 
 class PostsView extends StatelessWidget {
   const PostsView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(PostsController());
+    var scrollController = ScrollController();
+
     return Scaffold(
       appBar: AppBar(
+        forceMaterialTransparency: true,
         title: const Text('Posts'),
       ),
-      body: Center(
-        child: Obx(
-          () => controller.postsList.value == null
-              ? const Center(
-                  child: CupertinoActivityIndicator(),
-                )
-              : SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(
-                      controller.postsList.value!.length,
-                      (index) {
-                        return controller.postsList.value![index];
-                      },
-                    ),
-                  ),
-                ),
+      body: SingleChildScrollView(
+        controller: scrollController,
+        child: Column(
+          children: [
+            AppService.widgets.social.posts(
+              context: context,
+              scrollController: scrollController,
+              profileFunction: (userID, username) {
+                log('$userID $username');
+              },
+            ),
+          ],
         ),
       ),
     );

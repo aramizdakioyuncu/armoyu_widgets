@@ -1,3 +1,3 @@
-## [1.0.0+8]
+## [1.0.0+10]
 
-- Stroydeki hata düzeltildi.
+- Optimize Kodlar.

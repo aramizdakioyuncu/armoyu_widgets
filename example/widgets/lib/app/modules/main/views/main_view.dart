@@ -111,6 +111,16 @@ class MainView extends StatelessWidget {
                     loadingStatus: false,
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: AppService.widgets.elevatedButton.costum1(
+                    text: "Social",
+                    onPressed: () {
+                      Get.toNamed("/social");
+                    },
+                    loadingStatus: false,
+                  ),
+                ),
               ],
             ),
           ],

@@ -48,7 +48,7 @@ class StoryScreenController extends GetxController {
     Map<String, dynamic> arguments = Get.arguments;
 
     storyIndex.value = arguments['storyIndex'];
-    storyList.value = arguments['storyList'];
+    storyList.value = RxList<StoryList>(arguments['storyList']);
     pageControllerStory.value = PageController(initialPage: storyIndex.value!);
     pageController.value = PageController(
       initialPage: initialStoryIndex.value,

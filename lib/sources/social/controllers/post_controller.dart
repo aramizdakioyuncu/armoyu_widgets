@@ -1,10 +1,10 @@
 import 'package:armoyu_services/armoyu_services.dart';
+import 'package:armoyu_services/core/models/ARMOYU/API/post/post_detail.dart';
+import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
 import 'package:armoyu_widgets/core/armoyu.dart';
 import 'package:armoyu_widgets/core/widgets.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
-import 'package:armoyu_widgets/data/models/Social/comment.dart';
 import 'package:armoyu_widgets/data/models/Social/like.dart';
-import 'package:armoyu_widgets/data/models/Social/post.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/data/services/accountuser_services.dart';
 import 'package:armoyu_widgets/sources/photoviewer/views/photoviewer_view.dart';
@@ -13,85 +13,255 @@ import 'package:armoyu_widgets/translations/app_translation.dart';
 import 'package:armoyu_widgets/widgets/post_likers/post_likers_view.dart';
 import 'package:armoyu_widgets/widgets/shimmer/placeholder.dart';
 import 'package:armoyu_widgets/widgets/text.dart';
-import 'package:armoyu_services/core/models/ARMOYU/API/post/post_detail.dart';
-import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:like_button/like_button.dart';
 import 'package:pinch_zoom/pinch_zoom.dart';
 import 'package:video_player/video_player.dart';
 
 class PostController extends GetxController {
   final ARMOYUServices service;
-  final Post post;
+  PostController(this.service);
 
-  PostController({required this.post, required this.service});
-
-  var likeButtonKey = GlobalKey<LikeButtonState>().obs;
-
-  late var likebutton = Rx<LikeButton?>(null);
-
-  late Rx<Post> postInfo;
-  User? currentUser;
-  @override
-  void onInit() {
-    super.onInit();
-
-    final findCurrentAccountController = Get.find<AccountUserController>();
-    currentUser =
-        findCurrentAccountController.currentUserAccounts.value.user.value;
-    postInfo = Rx<Post>(post);
-    likebutton = LikeButton(
-      key: likeButtonKey.value,
-      isLiked: postInfo.value.isLikeme,
-      likeCount: postInfo.value.likesCount,
-      onTap: (isLiked) async => await postLike(isLiked),
-      likeBuilder: (bool isLiked) {
-        return Icon(
-          isLiked ? Icons.favorite : Icons.favorite_outline,
-          color: isLiked ? Colors.red : Colors.grey,
-          size: 25,
-        );
-      },
-    ).obs;
-
-    if (postInfo.value.iscommentMe == true) {
-      postcommentIcon.value = const Icon(Icons.comment);
-      postcommentColor.value = Colors.blue;
-    }
-
-    if (postInfo.value.iscommentMe == true) {
-      postrepostIcon.value = const Icon(Icons.cyclone);
-      postrepostColor.value = Colors.green;
-    }
-  }
-
-  @override
-  // ignore: unnecessary_overrides
-  void onClose() {
-    super.onClose();
-  }
-
-  var controllerMessage = TextEditingController().obs;
-
+  final Rxn<List<APIPostList>> postsList = Rxn<List<APIPostList>>(null);
+  var postscount = 1.obs;
+  var postsProccess = false.obs;
   var likeunlikeProcces = false.obs;
-  var postVisible = true.obs;
-
-  //Comment Button
-  var postcommentIcon = const Icon(Icons.comment_outlined).obs;
-  var postcommentColor = Colors.grey.obs;
-
-  //Repost Button
-  var postrepostIcon = const Icon(Icons.cyclone_outlined).obs;
-  var postrepostColor = Colors.grey.obs;
-
   var fetchCommentStatus = false.obs;
   var fetchlikersStatus = false.obs;
 
-  Future<void> getcommentsfetch(Rxn<List<Comment>> comments, int postID,
+  User? currentUser;
+
+  @override
+  void onInit() {
+    super.onInit();
+    log("Post Widget Init");
+    final findCurrentAccountController = Get.find<AccountUserController>();
+    currentUser =
+        findCurrentAccountController.currentUserAccounts.value.user.value;
+    fetchsocailposts();
+  }
+
+  Future<void> fetchsocailposts() async {
+    if (postsProccess.value) {
+      return;
+    }
+    postsProccess.value = true;
+
+    PostFetchListResponse response =
+        await service.postsServices.getPosts(page: postscount.value);
+
+    if (!response.result.status) {
+      postsProccess.value = false;
+      return;
+    }
+
+    postsList.value ??= [];
+    for (APIPostList element in response.response!) {
+      postsList.value!.add(element);
+    }
+    postsList.refresh();
+    postsProccess.value = false;
+  }
+
+  //// This function is used to add new post to the list
+  void likepost(APIPostList post) async {
+    if (likeunlikeProcces.value) {
+      return;
+    }
+
+    likeunlikeProcces.value = true;
+
+    PostLikeResponse response =
+        await service.postsServices.like(postID: post.postID);
+    if (!response.result.status) {
+      log(response.result.description.toString());
+      return;
+    }
+
+    post.didilikeit = 1;
+    post.likeCount++;
+    likeunlikeProcces.value = false;
+  }
+
+  void unlikepost(APIPostList post) async {
+    if (likeunlikeProcces.value) {
+      return;
+    }
+    likeunlikeProcces.value = true;
+
+    PostUnLikeResponse response =
+        await service.postsServices.unlike(postID: post.postID);
+    if (!response.result.status) {
+      log(response.result.description.toString());
+      return;
+    }
+
+    post.didilikeit = 0;
+    post.likeCount--;
+
+    likeunlikeProcces.value = false;
+  }
+
+  Future<bool> postLike(bool isLiked, APIPostList post) async {
+    if (isLiked) {
+      if (likeunlikeProcces.value) {
+        return isLiked;
+      }
+      //Beğenmeme fonksiyonu
+      unlikepost(post);
+    } else {
+      likepost(post);
+    }
+    return !isLiked;
+  }
+
+  Future<void> removepost(APIPostList post) async {
+    PostRemoveResponse response =
+        await service.postsServices.remove(postID: post.postID);
+
+    ARMOYUWidget.toastNotification(response.result.description.toString());
+
+    if (!response.result.status) {
+      return;
+    }
+
+    Get.back();
+  }
+
+  void postfeedback(APIPostList post) {
+    showModalBottomSheet<void>(
+      backgroundColor: Get.theme.cardColor,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(10),
+        ),
+      ),
+      context: Get.context!,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Wrap(
+            children: [
+              Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[900],
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(30),
+                        ),
+                      ),
+                      width: ARMOYU.screenWidth / 4,
+                      height: 5,
+                    ),
+                  ),
+                  Visibility(
+                    child: InkWell(
+                      onTap: () async {
+                        PostRemoveResponse response = await service
+                            .postsServices
+                            .remove(postID: post.postID);
+                        if (!response.result.status) {
+                          log(response.result.description);
+                          return;
+                        }
+                        log(response.result.description);
+                      },
+                      child: ListTile(
+                        leading: const Icon(
+                          Icons.star_rate_sharp,
+                        ),
+                        title: Text(SocialKeys.socialAddFavorite.tr),
+                      ),
+                    ),
+                  ),
+                  Visibility(
+                    visible: post.postOwner.ownerID == currentUser!.userID,
+                    child: InkWell(
+                      onTap: () async {},
+                      child: ListTile(
+                        leading: const Icon(
+                          Icons.edit_note_sharp,
+                        ),
+                        title: Text(SocialKeys.socialedit.tr),
+                      ),
+                    ),
+                  ),
+                  const Visibility(
+                    //Çizgi ekler
+                    child: Divider(),
+                  ),
+                  Visibility(
+                    visible: post.postOwner.ownerID != currentUser!.userID,
+                    child: InkWell(
+                      onTap: () {},
+                      child: ListTile(
+                        textColor: Colors.red,
+                        leading: const Icon(
+                          Icons.flag,
+                          color: Colors.red,
+                        ),
+                        title: Text(SocialKeys.socialReport.tr),
+                      ),
+                    ),
+                  ),
+                  Visibility(
+                    visible: post.postOwner.ownerID != currentUser!.userID,
+                    child: InkWell(
+                      onTap: () async {
+                        Get.back();
+
+                        BlockingAddResponse response =
+                            await service.blockingServices.add(
+                          userID: post.postOwner.ownerID,
+                        );
+
+                        ARMOYUWidget.toastNotification(
+                          response.result.description,
+                        );
+                      },
+                      child: ListTile(
+                        textColor: Colors.red,
+                        leading: const Icon(
+                          Icons.person_off_outlined,
+                          color: Colors.red,
+                        ),
+                        title: Text(SocialKeys.socialBlock.tr),
+                      ),
+                    ),
+                  ),
+                  Visibility(
+                    visible: post.postOwner.ownerID == currentUser!.userID,
+                    child: InkWell(
+                      onTap: () async => ARMOYUWidget.showConfirmationDialog(
+                        context,
+                        accept: removepost,
+                      ),
+                      child: ListTile(
+                        textColor: Colors.red,
+                        leading: const Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                        ),
+                        title: Text(SocialKeys.socialdelete.tr),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> getcommentsfetch(Rxn<List<APIPostComments>> comments, int postID,
       {bool fetchRestart = false}) async {
     if (!fetchRestart && comments.value != null) {
       return;
@@ -119,121 +289,20 @@ class PostController extends GetxController {
 
     //Veriler çek
     for (APIPostComments element in response.response!) {
-      String displayname = element.postcommenter.displayname.toString();
-      String avatar = element.postcommenter.avatar.minURL.toString();
-      String text = element.commentContent.toString();
-      bool islike = element.isLikedByMe;
-      int yorumID = element.commentID;
-      int userID = element.postcommenter.userID;
-      int postID = element.postID;
-      int commentlikescount = element.likeCount;
-
-      Comment comment = Comment(
-        commentID: yorumID,
-        content: text,
-        didIlike: islike,
-        likeCount: commentlikescount,
-        postID: postID,
-        user: User(
-          userID: userID,
-          displayName: displayname.obs,
-          avatar: Media(
-            mediaID: userID,
-            mediaURL: MediaURL(
-              bigURL: Rx<String>(avatar),
-              normalURL: Rx<String>(avatar),
-              minURL: Rx<String>(avatar),
-            ),
-          ),
-        ),
-        date: "",
-      );
-
       //Post yorumlarına ekler
-      comments.value!.add(comment);
+      comments.value!.add(element);
     }
-    postInfo.value.comments = comments.value;
     comments.refresh();
     fetchCommentStatus.value = false;
   }
 
-  Future<void> postlikesfetch(Rxn<List<Like>> likers, int postID,
-      {bool fetchRestart = false}) async {
-    if (!fetchRestart && likers.value != null) {
-      return;
-    }
-
-    if (fetchlikersStatus.value) {
-      return;
-    }
-    fetchlikersStatus.value = true;
-
-    if (fetchRestart) {
-      likers.value = null;
-    }
-    PostLikesListResponse response =
-        await service.postsServices.postlikeslist(postID: postID);
-    if (!response.result.status) {
-      log(response.result.description.toString());
-      fetchlikersStatus.value = false;
-      return;
-    }
-
-    //Eğer veri null ise nullu boz Yorumları başlatma dizisi eşitle
-    likers.value ??= [];
-
-    for (APIPostLiker element in response.response!) {
-      String displayname = element.likerdisplayname.toString();
-      String avatar = element.likeravatar.minURL.toString();
-      String date = element.likedate.toString();
-      int userID = element.likerID;
-      log(userID.toString());
-      Like like = Like(
-        likeID: 1,
-        user: User(
-          userID: userID,
-          displayName: displayname.obs,
-          avatar: Media(
-            mediaID: userID,
-            mediaURL: MediaURL(
-              bigURL: Rx<String>(avatar),
-              normalURL: Rx<String>(avatar),
-              minURL: Rx<String>(avatar),
-            ),
-          ),
-        ),
-        date: date,
-      );
-
-      likers.value!.add(like);
-    }
-    postInfo.value.likers = likers.value;
-    likers.refresh();
-    fetchlikersStatus.value = false;
-  }
-
-  Future<void> removepost() async {
-    postVisible.value = false;
-
-    PostRemoveResponse response =
-        await service.postsServices.remove(postID: postInfo.value.postID);
-
-    ARMOYUWidget.toastNotification(response.result.description.toString());
-
-    if (!response.result.status) {
-      postVisible.value = true;
-      return;
-    }
-
-    Get.back();
-  }
-
-  Future<void> postcomments(int postID,
+  Future<void> postcomments(
+      APIPostList post, TextEditingController messageController,
       {required Function profileFunction}) async {
-    Rxn<List<Comment>> comments = Rxn<List<Comment>>();
+    Rxn<List<APIPostComments>> comments = Rxn<List<APIPostComments>>();
 
     //Yorumları Çekmeye başla
-    getcommentsfetch(comments, postID);
+    getcommentsfetch(comments, post.postID);
 
     showModalBottomSheet(
       shape: const RoundedRectangleBorder(
@@ -250,7 +319,7 @@ class PostController extends GetxController {
           child: RefreshIndicator(
             onRefresh: () async => await getcommentsfetch(
               comments,
-              postID,
+              post.postID,
               fetchRestart: true,
             ),
             child: SafeArea(
@@ -296,15 +365,17 @@ class PostController extends GetxController {
                                       itemCount: comments.value!.length,
                                       itemBuilder: (context, index) {
                                         return PostcommentView
-                                            .postCommentsWidget(context,
-                                                service, comments.value![index],
-                                                profileFunction:
-                                                    profileFunction,
-                                                deleteFunction: () {
-                                          comments.value!.removeAt(index);
+                                            .postCommentsWidgetV2(
+                                          context,
+                                          service,
+                                          comments.value![index],
+                                          profileFunction: profileFunction,
+                                          deleteFunction: () {
+                                            comments.value!.removeAt(index);
 
-                                          comments.refresh();
-                                        });
+                                            comments.refresh();
+                                          },
+                                        );
                                       },
                                     ),
                         ),
@@ -340,7 +411,7 @@ class PostController extends GetxController {
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
                                 child: TextField(
-                                  controller: controllerMessage.value,
+                                  controller: messageController,
                                   style: const TextStyle(
                                       color: Colors.white, fontSize: 16),
                                   decoration: InputDecoration(
@@ -358,8 +429,8 @@ class PostController extends GetxController {
                             onPressed: () async {
                               PostCreateCommentResponse response =
                                   await service.postsServices.createcomment(
-                                postID: postInfo.value.postID,
-                                text: controllerMessage.value.text,
+                                postID: post.postID,
+                                text: messageController.text,
                               );
                               if (!response.result.status) {
                                 ARMOYUWidget.toastNotification(
@@ -368,10 +439,10 @@ class PostController extends GetxController {
                               }
                               await getcommentsfetch(
                                 comments,
-                                postInfo.value.postID,
+                                post.postID,
                                 fetchRestart: true,
                               );
-                              controllerMessage.value.text = "";
+                              messageController.text = "";
                             },
                             child: const Icon(
                               Icons.send,
@@ -392,65 +463,66 @@ class PostController extends GetxController {
     return;
   }
 
-  void aapostLike(widgetlike, postID) async {
-    if (likeunlikeProcces.value) {
+  Future<void> postlikesfetch(Rxn<List<Like>> likers, APIPostList post,
+      {bool fetchRestart = false}) async {
+    if (!fetchRestart && likers.value != null) {
       return;
     }
 
-    likeunlikeProcces.value = true;
+    if (fetchlikersStatus.value) {
+      return;
+    }
+    fetchlikersStatus.value = true;
 
-    PostLikeResponse response =
-        await service.postsServices.like(postID: postID);
+    if (fetchRestart) {
+      likers.value = null;
+    }
+    PostLikesListResponse response =
+        await service.postsServices.postlikeslist(postID: post.postID);
     if (!response.result.status) {
       log(response.result.description.toString());
-      widgetlike = widgetlike;
-      postInfo.value.likesCount = postInfo.value.likesCount;
+      fetchlikersStatus.value = false;
       return;
     }
 
-    postInfo.value.isLikeme = true;
-    postInfo.value.likesCount++;
-    likeunlikeProcces.value = false;
+    //Eğer veri null ise nullu boz Yorumları başlatma dizisi eşitle
+    likers.value ??= [];
+
+    for (APIPostLiker element in response.response!) {
+      String displayname = element.likerdisplayname.toString();
+      String avatar = element.likeravatar.minURL.toString();
+      String date = element.likedate.toString();
+      int userID = element.likerID;
+      log(userID.toString());
+      Like like = Like(
+        likeID: 1,
+        user: User(
+          userID: userID,
+          displayName: displayname.obs,
+          avatar: Media(
+            mediaID: userID,
+            mediaURL: MediaURL(
+              bigURL: Rx<String>(avatar),
+              normalURL: Rx<String>(avatar),
+              minURL: Rx<String>(avatar),
+            ),
+          ),
+        ),
+        date: date,
+      );
+
+      likers.value!.add(like);
+    }
+    // postInfo.value.likers = likers.value;
+
+    likers.refresh();
+    fetchlikersStatus.value = false;
   }
 
-  void aa2postLike(widgetlike, postID) async {
-    if (likeunlikeProcces.value) {
-      return;
-    }
-    likeunlikeProcces.value = true;
-
-    PostUnLikeResponse response =
-        await service.postsServices.unlike(postID: postID);
-    if (!response.result.status) {
-      log(response.result.description.toString());
-      widgetlike = widgetlike;
-      postInfo.value.likesCount = postInfo.value.likesCount;
-      return;
-    }
-
-    postInfo.value.isLikeme = false;
-    postInfo.value.likesCount--;
-
-    likeunlikeProcces.value = false;
-  }
-
-  Future<bool> postLike(bool isLiked) async {
-    if (isLiked) {
-      if (likeunlikeProcces.value) {
-        return isLiked;
-      }
-      //Beğenmeme fonksiyonu
-      aa2postLike(postInfo.value.isLikeme, postInfo.value.postID);
-    } else {
-      aapostLike(postInfo.value.isLikeme, postInfo.value.postID);
-    }
-    return !isLiked;
-  }
-
-  void showpostlikers() {
+  void showpostlikers(APIPostList post) {
     Rxn<List<Like>> likerList = Rxn<List<Like>>();
 
-    postlikesfetch(likerList, postInfo.value.postID);
+    postlikesfetch(likerList, post);
 
     showModalBottomSheet(
       shape: const RoundedRectangleBorder(
@@ -467,7 +539,7 @@ class PostController extends GetxController {
           child: RefreshIndicator(
             onRefresh: () => postlikesfetch(
               likerList,
-              postInfo.value.postID,
+              post,
               fetchRestart: true,
             ),
             child: SafeArea(
@@ -526,136 +598,7 @@ class PostController extends GetxController {
     return;
   }
 
-  void postfeedback() {
-    showModalBottomSheet<void>(
-      backgroundColor: Get.theme.cardColor,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(10),
-        ),
-      ),
-      context: Get.context!,
-      builder: (BuildContext context) {
-        return SafeArea(
-          child: Wrap(
-            children: [
-              Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[900],
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(30),
-                        ),
-                      ),
-                      width: ARMOYU.screenWidth / 4,
-                      height: 5,
-                    ),
-                  ),
-                  Visibility(
-                    child: InkWell(
-                      onTap: () async {
-                        PostRemoveResponse response = await service
-                            .postsServices
-                            .remove(postID: postInfo.value.postID);
-                        if (!response.result.status) {
-                          log(response.result.description);
-                          return;
-                        }
-                        log(response.result.description);
-                      },
-                      child: ListTile(
-                        leading: const Icon(
-                          Icons.star_rate_sharp,
-                        ),
-                        title: Text(SocialKeys.socialAddFavorite.tr),
-                      ),
-                    ),
-                  ),
-                  Visibility(
-                    visible: postInfo.value.owner.userID == currentUser!.userID,
-                    child: InkWell(
-                      onTap: () async {},
-                      child: ListTile(
-                        leading: const Icon(
-                          Icons.edit_note_sharp,
-                        ),
-                        title: Text(SocialKeys.socialedit.tr),
-                      ),
-                    ),
-                  ),
-                  const Visibility(
-                    //Çizgi ekler
-                    child: Divider(),
-                  ),
-                  Visibility(
-                    visible: postInfo.value.owner.userID != currentUser!.userID,
-                    child: InkWell(
-                      onTap: () {},
-                      child: ListTile(
-                        textColor: Colors.red,
-                        leading: const Icon(
-                          Icons.flag,
-                          color: Colors.red,
-                        ),
-                        title: Text(SocialKeys.socialReport.tr),
-                      ),
-                    ),
-                  ),
-                  Visibility(
-                    visible: postInfo.value.owner.userID != currentUser!.userID,
-                    child: InkWell(
-                      onTap: () async {
-                        Get.back();
-
-                        BlockingAddResponse response = await service
-                            .blockingServices
-                            .add(userID: postInfo.value.owner.userID!);
-
-                        ARMOYUWidget.toastNotification(
-                          response.result.description,
-                        );
-                      },
-                      child: ListTile(
-                        textColor: Colors.red,
-                        leading: const Icon(
-                          Icons.person_off_outlined,
-                          color: Colors.red,
-                        ),
-                        title: Text(SocialKeys.socialBlock.tr),
-                      ),
-                    ),
-                  ),
-                  Visibility(
-                    visible: postInfo.value.owner.userID == currentUser!.userID,
-                    child: InkWell(
-                      onTap: () async => ARMOYUWidget.showConfirmationDialog(
-                        context,
-                        accept: removepost,
-                      ),
-                      child: ListTile(
-                        textColor: Colors.red,
-                        leading: const Icon(
-                          Icons.delete,
-                          color: Colors.red,
-                        ),
-                        title: Text(SocialKeys.socialdelete.tr),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                ],
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Widget buildMediaContent(BuildContext context) {
+  Widget buildMediaContent(BuildContext context, Rx<APIPostList> postInfo) {
     Widget mediaSablon(
       String mediaUrl, {
       required int indexlength,
@@ -733,24 +676,24 @@ class PostController extends GetxController {
 
     Widget mediayerlesim = const Row();
 
-    if (postInfo.value.media.isNotEmpty) {
+    if (postInfo.value.media != null) {
       List<Row> mediaItems = [];
 
       List<Widget> mediarow1 = [];
       List<Widget> mediarow2 = [];
-      for (int i = 0; i < postInfo.value.media.length; i++) {
+      for (int i = 0; i < postInfo.value.media!.length; i++) {
         if (i > 3) {
           continue;
         }
 
-        List media = postInfo.value.media[i].mediaType!.split('/');
+        List media = postInfo.value.media![i].mediaType!.split('/');
 
         if (media[0] == "video") {
           mediarow1.clear();
           mediarow1.add(
             mediaSablon(
-              indexlength: postInfo.value.media.length,
-              postInfo.value.media[i].mediaURL.normalURL.value,
+              indexlength: postInfo.value.media!.length,
+              postInfo.value.media![i].mediaURL.normalURL,
               isvideo: true,
             ),
           );
@@ -758,21 +701,21 @@ class PostController extends GetxController {
         }
 
         BoxFit mediadirection = BoxFit.cover;
-        if (postInfo.value.media[i].mediaDirection.toString() == "yatay" &&
-            postInfo.value.media.length == 1) {
+        if (postInfo.value.media![i].mediaDirection.toString() == "yatay" &&
+            postInfo.value.media!.length == 1) {
           mediadirection = BoxFit.contain;
         }
 
         double mediawidth = ARMOYU.screenWidth;
         double mediaheight = ARMOYU.screenHeight;
-        if (postInfo.value.media.length == 1) {
+        if (postInfo.value.media!.length == 1) {
           mediawidth = mediawidth / 1;
 
           mediaheight = mediaheight / 2;
-        } else if (postInfo.value.media.length == 2) {
+        } else if (postInfo.value.media!.length == 2) {
           mediawidth = mediawidth / 2;
           mediaheight = mediaheight / 4;
-        } else if (postInfo.value.media.length == 3) {
+        } else if (postInfo.value.media!.length == 3) {
           if (i == 0) {
             mediawidth = mediawidth / 1;
             mediaheight = mediaheight / 2.5;
@@ -780,7 +723,7 @@ class PostController extends GetxController {
             mediawidth = mediawidth / 2;
             mediaheight = mediaheight / 4;
           }
-        } else if (postInfo.value.media.length >= 4) {
+        } else if (postInfo.value.media!.length >= 4) {
           mediawidth = mediawidth / 2;
           mediaheight = mediaheight / 4;
         }
@@ -792,15 +735,26 @@ class PostController extends GetxController {
                 builder: (context) => PhotoviewerView(
                   service: service,
                   currentUserID: currentUser!.userID!,
-                  media: postInfo.value.media,
+                  media: postInfo.value.media!
+                      .map(
+                        (e) => Media(
+                          mediaID: e.mediaID,
+                          mediaURL: MediaURL(
+                            bigURL: Rx(e.mediaURL.bigURL),
+                            normalURL: Rx(e.mediaURL.normalURL),
+                            minURL: Rx(e.mediaURL.minURL),
+                          ),
+                        ),
+                      )
+                      .toList(),
                   initialIndex: i,
                 ),
               ),
             );
           },
           child: mediaSablon(
-            indexlength: postInfo.value.media.length,
-            postInfo.value.media[i].mediaURL.normalURL.value,
+            indexlength: postInfo.value.media!.length,
+            postInfo.value.media![i].mediaURL.normalURL,
             width: mediawidth,
             height: mediaheight,
             fit: mediadirection,
@@ -808,13 +762,13 @@ class PostController extends GetxController {
           ),
         );
 
-        if (postInfo.value.media.length == 3) {
+        if (postInfo.value.media!.length == 3) {
           if (i == 0) {
             mediarow1.add(aa);
           } else {
             mediarow2.add(aa);
           }
-        } else if (postInfo.value.media.length >= 4) {
+        } else if (postInfo.value.media!.length >= 4) {
           if (i == 0 || i == 1) {
             mediarow1.add(aa);
           } else {

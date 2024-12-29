@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-class StoryController extends GetxController {
+class SocailController extends GetxController {
   @override
   // ignore: unnecessary_overrides
   void onInit() {
