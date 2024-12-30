@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:armoyu_widgets/core/armoyu.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/data/models/useraccounts.dart';
+import 'package:armoyu_widgets/data/services/socketio.dart';
 import 'package:get/get.dart';
 
 class AccountUserController extends GetxController {
@@ -27,5 +28,8 @@ class AccountUserController extends GetxController {
   // Kullanıcıyı değiştir
   void changeUser(UserAccounts userAccounts) {
     currentUserAccounts.value = userAccounts;
+
+    var socketio = Get.find<SocketioController>();
+    socketio.registerUser(userAccounts.user.value);
   }
 }

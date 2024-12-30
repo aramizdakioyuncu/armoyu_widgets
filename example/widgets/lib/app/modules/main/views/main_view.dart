@@ -4,6 +4,7 @@ import 'package:armoyu_widgets/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:widgets/app/modules/main/controllers/main_controller.dart';
+import 'package:widgets/app/routes/app_route.dart';
 import 'package:widgets/app/services/app_service.dart';
 
 class MainView extends StatelessWidget {
@@ -117,6 +118,16 @@ class MainView extends StatelessWidget {
                     text: "Social",
                     onPressed: () {
                       Get.toNamed("/social");
+                    },
+                    loadingStatus: false,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: AppService.widgets.elevatedButton.costum1(
+                    text: "Chat",
+                    onPressed: () {
+                      Get.toNamed(Routes.CHAT);
                     },
                     loadingStatus: false,
                   ),

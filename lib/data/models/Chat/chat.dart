@@ -2,8 +2,6 @@ import 'package:armoyu_widgets/data/models/Chat/chat_message.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/data/models/useraccounts.dart';
 import 'package:armoyu_widgets/widgets/buttons.dart';
-import 'package:armoyu_widgets/widgets/text.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -52,98 +50,6 @@ class Chat {
               .obs,
       chatType: json['chatType'],
       chatNotification: (json['chatNotification'] as bool).obs,
-    );
-  }
-
-  Widget listtilechat(context, {required VoidCallback onDelete}) {
-    return ListTile(
-      contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 5),
-      leading: CircleAvatar(
-        backgroundColor: Colors.transparent,
-        foregroundImage: CachedNetworkImageProvider(
-          user.avatar!.mediaURL.minURL.value,
-        ),
-        radius: 28,
-      ),
-      tileColor: chatNotification.value ? Colors.red.shade900 : null,
-      title: CustomText.costum1(user.displayName!.value),
-      subtitle: lastmessage == null
-          ? const Text("")
-          : Row(
-              children: [
-                Expanded(
-                  child: RichText(
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    text: TextSpan(
-                      children: [
-                        if (lastmessage!.value.isMe)
-                          const WidgetSpan(
-                            child: Icon(
-                              Icons.done_all,
-                              color: Color.fromRGBO(116, 243, 20, 1),
-                              size: 14,
-                            ),
-                          ),
-                        if (lastmessage!.value.isMe)
-                          const WidgetSpan(
-                            child: SizedBox(width: 5),
-                          ),
-                        TextSpan(
-                          text: lastmessage!.value.messageContext,
-                          style: TextStyle(
-                            color: Get.theme.primaryColor.withOpacity(0.8),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-      trailing: chatType == "ozel"
-          ? const Icon(Icons.person)
-          : const Icon(Icons.people_alt),
-      onTap: () {
-        chatNotification.value = false;
-        Get.toNamed(
-          "/chat/detail",
-          arguments: {"chat": this},
-        );
-      },
-      onLongPress: () {
-        showModalBottomSheet(
-          context: context,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          builder: (context) {
-            return SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ListTile(
-                      leading: const Icon(Icons.delete, color: Colors.red),
-                      title: const Text('Sil'),
-                      onTap: () {
-                        Navigator.pop(context);
-                        onDelete();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Öğe silindi.'),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      },
     );
   }
 

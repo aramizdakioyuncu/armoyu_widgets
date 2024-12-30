@@ -16,10 +16,10 @@ import 'package:get/get.dart';
 import 'package:like_button/like_button.dart';
 import 'package:share_plus/share_plus.dart';
 
-class TwitterPostWidget {
+class SocialWidget {
   final ARMOYUServices service;
 
-  const TwitterPostWidget(this.service);
+  const SocialWidget(this.service);
 
   Widget posts({
     required BuildContext context,
