@@ -154,6 +154,8 @@ class ChatWidget {
     String chatImage =
         "https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg",
     required Function(Chat chat) chatcall,
+    required Function onClose,
+    required Function(int userID, String username) onPressedtoProfile,
   }) {
     final controller = Get.put(SourceChatdetailController(service, chat));
     return Container(
@@ -169,77 +171,93 @@ class ChatWidget {
           AppBar(
             backgroundColor: Colors.black45,
             automaticallyImplyLeading: false,
-            // forceMaterialTransparency: true,
-            title: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CustomText.costum1(
-                  controller.chat.user.displayName!.value,
-                  size: 17,
-                  weight: FontWeight.bold,
-                ),
-                Row(
-                  children: [
-                    controller.chat.user.lastloginv2 == null
-                        ? Shimmer.fromColors(
-                            baseColor: Colors.grey[300]!,
-                            highlightColor: Colors.grey[100]!,
-                            child: Container(width: 20),
-                          )
-                        : Text(
-                            controller.chat.user.lastloginv2 == null
-                                ? ""
-                                : controller.chat.user.lastloginv2
-                                    .toString()
-                                    .toString()
-                                    .replaceAll('Saniye', CommonKeys.second.tr)
-                                    .replaceAll('Dakika', CommonKeys.minute.tr)
-                                    .replaceAll('Saat', CommonKeys.hour.tr)
-                                    .replaceAll('Gün', CommonKeys.day.tr)
-                                    .replaceAll('Ay', CommonKeys.month.tr)
-                                    .replaceAll('Yıl', CommonKeys.year.tr)
-                                    .replaceAll(
-                                        'Çevrimiçi', CommonKeys.online.tr)
-                                    .replaceAll(
-                                        'Çevrimdışı', CommonKeys.offline.tr),
-                            style: TextStyle(
-                              fontSize: 10,
-                              color:
-                                  controller.chat.user.lastloginv2.toString() ==
-                                          "Çevrimiçi"
-                                      ? Colors.green
-                                      : Colors.red,
+            title: Obx(
+              () => controller.xchat.value == null
+                  ? Container()
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CustomText.costum1(
+                          controller.xchat.value!.user.displayName!.value,
+                          size: 17,
+                          weight: FontWeight.bold,
+                        ),
+                        Row(
+                          children: [
+                            controller.xchat.value!.user.lastloginv2 == null
+                                ? Shimmer.fromColors(
+                                    baseColor: Colors.grey[300]!,
+                                    highlightColor: Colors.grey[100]!,
+                                    child: Container(width: 20),
+                                  )
+                                : Text(
+                                    controller.xchat.value!.user.lastloginv2 ==
+                                            null
+                                        ? ""
+                                        : controller
+                                            .xchat.value!.user.lastloginv2
+                                            .toString()
+                                            .toString()
+                                            .replaceAll(
+                                                'Saniye', CommonKeys.second.tr)
+                                            .replaceAll(
+                                                'Dakika', CommonKeys.minute.tr)
+                                            .replaceAll(
+                                                'Saat', CommonKeys.hour.tr)
+                                            .replaceAll(
+                                                'Gün', CommonKeys.day.tr)
+                                            .replaceAll(
+                                                'Ay', CommonKeys.month.tr)
+                                            .replaceAll(
+                                                'Yıl', CommonKeys.year.tr)
+                                            .replaceAll('Çevrimiçi',
+                                                CommonKeys.online.tr)
+                                            .replaceAll('Çevrimdışı',
+                                                CommonKeys.offline.tr),
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      color: controller
+                                                  .xchat.value!.user.lastloginv2
+                                                  .toString() ==
+                                              "Çevrimiçi"
+                                          ? Colors.green
+                                          : Colors.red,
+                                    ),
+                                  ),
+                          ],
+                        ),
+                      ],
+                    ),
+            ),
+            leading: Obx(
+              () => controller.xchat.value == null
+                  ? Container()
+                  : Builder(
+                      builder: (BuildContext context) {
+                        return Container(
+                          padding: const EdgeInsets.all(12.0),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(50.0),
+                            child: GestureDetector(
+                              onTap: () {
+                                onPressedtoProfile(
+                                  controller.xchat.value!.user.userID!,
+                                  controller.xchat.value!.user.userName!.value,
+                                );
+                              },
+                              child: CachedNetworkImage(
+                                imageUrl: controller.xchat.value!.user.avatar!
+                                    .mediaURL.minURL.value,
+                                width: 30,
+                                height: 30,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
-                  ],
-                ),
-              ],
-            ),
-            leading: Builder(
-              builder: (BuildContext context) {
-                return Container(
-                  padding: const EdgeInsets.all(12.0),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(50.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        // functions.pushProfilePage(
-                        //   context,
-                        //   User(userID: controller.chat.value!.user.userID!),
-                        // );
+                        );
                       },
-                      child: CachedNetworkImage(
-                        imageUrl:
-                            controller.chat.user.avatar!.mediaURL.minURL.value,
-                        width: 30,
-                        height: 30,
-                        fit: BoxFit.cover,
-                      ),
                     ),
-                  ),
-                );
-              },
             ),
             actions: <Widget>[
               IconButton(
@@ -257,7 +275,7 @@ class ChatWidget {
               IconButton(
                 icon: const Icon(Icons.close),
                 onPressed: () {
-                  Navigator.pop(context);
+                  onClose();
                 },
               ),
             ],
@@ -387,8 +405,8 @@ class ChatWidget {
             ClipOval(
               child: CachedNetworkImage(
                 imageUrl: chat.user.avatar!.mediaURL.minURL.value,
-                width: 150, // Set the desired width
-                height: 150, // Set the desired height
+                width: 150,
+                height: 150,
                 fit: BoxFit.cover,
               ),
             ),
@@ -574,7 +592,8 @@ class ChatWidget {
                               try {
                                 await controller.player.value.play(
                                   UrlSource(
-                                      'https://cdn.pixabay.com/audio/2024/12/09/audio_5c5be993bd.mp3'),
+                                    'https://cdn.pixabay.com/audio/2024/12/09/audio_5c5be993bd.mp3',
+                                  ),
                                 );
                               } catch (e) {
                                 log(e.toString());

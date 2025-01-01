@@ -62,32 +62,7 @@ class ChatWidgetv2 {
           : const Icon(Icons.people_alt),
       onTap: () {
         chat.chatNotification.value = false;
-        onPressed(chat
-            // Chat(
-            //   user: User(
-            //     userID: chat.user,
-            //     displayName: Rx(chat.adSoyad),
-            //     avatar: Media(
-            //       mediaID: 0,
-            //       mediaURL: MediaURL(
-            //         bigURL: Rx(chat.chatImage.mediaURL.bigURL),
-            //         normalURL: Rx(chat.chatImage.mediaURL.bigURL),
-            //         minURL: Rx(chat.chatImage.mediaURL.bigURL),
-            //       ),
-            //     ),
-            //     lastloginv2: Rx(chat.sonGiris),
-            //   ),
-            //   chatNotification: chat.bildirim == 1 ? true.obs : false.obs,
-            //   lastmessage: Rx(
-            //     ChatMessage(
-            //       messageID: 0,
-            //       messageContext: chat.sonMesaj,
-            //       user: User(),
-            //       isMe: true,
-            //     ),
-            //   ),
-            // ),
-            );
+        onPressed(chat);
       },
       onLongPress: () {
         showModalBottomSheet(

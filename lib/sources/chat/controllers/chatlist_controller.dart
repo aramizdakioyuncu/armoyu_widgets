@@ -78,6 +78,7 @@ class SourceChatlistController extends GetxController {
         Chat(
           user: User(
             userID: element.kullID,
+            userName: Rx(element.kullAdi!),
             displayName: Rx(element.adSoyad),
             avatar: Media(
               mediaID: element.kullID,

@@ -37,8 +37,10 @@ class ChatView extends StatelessWidget {
                         context,
                         onPressed: (chat) {
                           log(chat.chatID.toString());
-                          Get.toNamed(Routes.CHATDETAIL,
-                              arguments: {'chat': chat});
+                          Get.toNamed(
+                            Routes.CHATDETAIL,
+                            arguments: {'chat': chat},
+                          );
                         },
                         scrollController: controller.scrollController.value,
                       ),

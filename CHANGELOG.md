@@ -1,3 +1,3 @@
-## [1.0.0+11]
+## [1.0.0+12]
 
-- Chat Widget getirildi.
+- Chat deki bug düzeltmesi.
