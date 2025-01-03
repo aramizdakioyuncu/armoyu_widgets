@@ -26,43 +26,50 @@ class ChatWidget {
     final controller = Get.put(SourceChatfriendnoteController(service));
 
     return Obx(
-      () => SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: [
-            controller.chatmyfriendsNotes(
-              controller.currentUserAccounts.value.user.value,
-            ),
-            ...List.generate(
-              controller.friendlist.value == null
-                  ? 0
-                  : controller.friendlist.value!.length,
-              (index) {
-                return controller.chatmyfriendsNotes(
-                  User(
-                    userID: controller.friendlist.value![index].playerID,
-                    userName: Rx(controller.friendlist.value![index].username),
-                    displayName:
-                        Rx(controller.friendlist.value![index].displayName),
-                    avatar: Media(
-                      mediaID: 0,
-                      mediaURL: MediaURL(
-                        bigURL: Rx(
-                          controller.friendlist.value![index].avatar.bigURL,
-                        ),
-                        normalURL: Rx(
-                          controller.friendlist.value![index].avatar.normalURL,
-                        ),
-                        minURL: Rx(
-                          controller.friendlist.value![index].avatar.minURL,
+      () => Scrollbar(
+        controller: controller.scrollController.value,
+        thumbVisibility: true,
+        child: SingleChildScrollView(
+          controller: controller.scrollController.value,
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              controller.chatmyfriendsNotes(
+                controller.currentUserAccounts.value.user.value,
+              ),
+              ...List.generate(
+                controller.friendlist.value == null
+                    ? 0
+                    : controller.friendlist.value!.length,
+                (index) {
+                  return controller.chatmyfriendsNotes(
+                    User(
+                      userID: controller.friendlist.value![index].playerID,
+                      userName:
+                          Rx(controller.friendlist.value![index].username),
+                      displayName:
+                          Rx(controller.friendlist.value![index].displayName),
+                      avatar: Media(
+                        mediaID: 0,
+                        mediaURL: MediaURL(
+                          bigURL: Rx(
+                            controller.friendlist.value![index].avatar.bigURL,
+                          ),
+                          normalURL: Rx(
+                            controller
+                                .friendlist.value![index].avatar.normalURL,
+                          ),
+                          minURL: Rx(
+                            controller.friendlist.value![index].avatar.minURL,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                );
-              },
-            ),
-          ],
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -397,6 +404,7 @@ class ChatWidget {
     );
     return LayoutBuilder(
       builder: (context, constraints) {
+        double availableWidth = constraints.maxWidth;
         return Stack(
           children: [
             Container(
@@ -423,12 +431,16 @@ class ChatWidget {
                       children: [
                         Padding(
                           padding: EdgeInsets.symmetric(
-                              vertical: Get.width * 0.2 / 10),
+                              vertical: availableWidth * 0.2 / 10),
                           child: ClipOval(
                             child: CachedNetworkImage(
                               imageUrl: chat.user.avatar!.mediaURL.minURL.value,
-                              width: Get.width / 5 > 200 ? 200 : Get.width / 5,
-                              height: Get.width / 5 > 200 ? 200 : Get.width / 5,
+                              width: availableWidth / 5 > 200
+                                  ? 200
+                                  : availableWidth / 5,
+                              height: availableWidth / 5 > 200
+                                  ? 200
+                                  : availableWidth / 5,
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -464,7 +476,8 @@ class ChatWidget {
                 ),
                 const Spacer(),
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: Get.width * 0.2 / 10),
+                  padding:
+                      EdgeInsets.symmetric(vertical: availableWidth * 0.2 / 10),
                   child: Column(
                     children: [
                       Obx(

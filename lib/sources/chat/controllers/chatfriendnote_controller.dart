@@ -14,6 +14,7 @@ class SourceChatfriendnoteController extends GetxController {
   final ARMOYUServices service;
   SourceChatfriendnoteController(this.service);
 
+  var scrollController = ScrollController().obs;
   var friendlist = Rxn<List<APIProfileFriendlist>>();
   var currentUserAccounts = Rx<UserAccounts>(
     UserAccounts(

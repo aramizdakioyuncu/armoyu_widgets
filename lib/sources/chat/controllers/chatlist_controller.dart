@@ -76,6 +76,7 @@ class SourceChatlistController extends GetxController {
     for (APIChatList element in response.response!) {
       currentUserAccounts.value.chatList!.add(
         Chat(
+          chatID: element.kullID, //sonradan chat id olarak değişecek
           user: User(
             userID: element.kullID,
             userName: Rx(element.kullAdi!),
@@ -100,6 +101,7 @@ class SourceChatlistController extends GetxController {
             ),
           ),
           chatType: "ozel",
+          calling: false.obs,
         ),
       );
     }

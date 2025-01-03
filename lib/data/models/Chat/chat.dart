@@ -12,6 +12,7 @@ class Chat {
   RxList<ChatMessage>? messages;
   String? chatType;
   Rx<bool> chatNotification;
+  Rx<bool>? calling = false.obs;
 
   Chat({
     this.chatID,
@@ -20,6 +21,7 @@ class Chat {
     this.messages,
     this.chatType,
     required this.chatNotification,
+    this.calling,
   });
 
   // Chat nesnesinden JSON'a dönüşüm
@@ -31,6 +33,7 @@ class Chat {
       'messages': messages?.map((message) => message.toJson()).toList(),
       'chatType': chatType,
       'chatNotification': chatNotification.value,
+      'calling': calling?.value ?? false,
     };
   }
 
@@ -50,6 +53,7 @@ class Chat {
               .obs,
       chatType: json['chatType'],
       chatNotification: (json['chatNotification'] as bool).obs,
+      calling: (json['calling'] as bool?)?.obs ?? false.obs,
     );
   }
 

@@ -1,3 +1,3 @@
-## [1.0.0+12]
+## [1.0.0+15]
 
-- Chat deki bug düzeltmesi.
+- Chat notları kaydırılabilir hale getirildi.
