@@ -19,6 +19,9 @@ class SourceChatcallController extends GetxController {
   var callingtext = "".obs;
   var stopwatch = Stopwatch().obs;
   Timer? timer;
+
+  var speaker = false.obs;
+  var videocall = false.obs;
 //Mic
   // Stream<Uint8List>? stream;
   Stream<List<int>>? stream;

@@ -157,7 +157,10 @@ class ChatWidget {
     required Function onClose,
     required Function(int userID, String username) onPressedtoProfile,
   }) {
-    final controller = Get.put(SourceChatdetailController(service, chat));
+    final controller = Get.put(
+      SourceChatdetailController(service, chat),
+      tag: chat.user.userID.toString(),
+    );
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
@@ -381,237 +384,271 @@ class ChatWidget {
     );
   }
 
-  Widget chatcallWidget(BuildContext context, {required Chat chat}) {
-    final controller = Get.put(SourceChatcallController());
-    return Stack(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              colorFilter: ColorFilter.mode(
-                Colors.black.withOpacity(0.75),
-                BlendMode.darken,
-              ),
-              image: CachedNetworkImageProvider(
-                chat.user.avatar!.mediaURL.normalURL.value,
-              ),
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
-        Column(
+  Widget chatcallWidget(
+    BuildContext context, {
+    required Chat chat,
+    required Function(Chat chat) onClose,
+    required Function(bool value) speaker,
+    required Function(bool value) videocall,
+  }) {
+    final controller = Get.put(
+      SourceChatcallController(),
+      tag: chat.user.userID.toString(),
+    );
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Stack(
           children: [
-            const SizedBox(height: 150),
-            ClipOval(
-              child: CachedNetworkImage(
-                imageUrl: chat.user.avatar!.mediaURL.minURL.value,
-                width: 150,
-                height: 150,
-                fit: BoxFit.cover,
+            Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  colorFilter: ColorFilter.mode(
+                    Colors.black.withOpacity(0.75),
+                    BlendMode.darken,
+                  ),
+                  image: CachedNetworkImageProvider(
+                    chat.user.avatar!.mediaURL.normalURL.value,
+                  ),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Obx(
-                  () => Column(
+            Column(
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical: Get.width * 0.2 / 10),
+                          child: ClipOval(
+                            child: CachedNetworkImage(
+                              imageUrl: chat.user.avatar!.mediaURL.minURL.value,
+                              width: Get.width / 5 > 200 ? 200 : Get.width / 5,
+                              height: Get.width / 5 > 200 ? 200 : Get.width / 5,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Obx(
+                            () => Column(
+                              children: [
+                                Text(
+                                  chat.user.displayName!.value,
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 5),
+                                Text(controller.callingtext.value),
+                                const SizedBox(height: 5),
+                                Text(
+                                  controller.formatTime(
+                                    controller
+                                        .stopwatch.value.elapsedMilliseconds,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const Spacer(),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: Get.width * 0.2 / 10),
+                  child: Column(
                     children: [
-                      const SizedBox(height: 20),
-                      Text(
-                        chat.user.displayName!.value,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+                      Obx(
+                        () => Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Container(
+                              width: 65.0,
+                              height: 65.0,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: controller.micIcon.value != Icons.mic
+                                    ? Colors.red
+                                    : controller.iconsbgColor.value,
+                              ),
+                              child: IconButton(
+                                onPressed: () async {
+                                  if (controller.micMute.value) {
+                                    controller.micMute.value = false;
+                                    controller.micIcon.value = Icons.mic;
+                                  } else {
+                                    controller.micMute.value = true;
+                                    controller.micIcon.value = Icons.mic_off;
+                                  }
+
+                                  try {
+                                    await controller.player.value.play(
+                                      UrlSource(
+                                        'https://aramizdakioyuncu.com/muzikler/tantasci-yalan.mp3',
+                                      ),
+                                    );
+                                  } catch (e) {
+                                    log(e.toString());
+                                  }
+                                },
+                                icon: Icon(controller.micIcon.value),
+                                color: controller.iconsColor.value,
+                              ),
+                            ),
+                            Container(
+                              width: 65.0,
+                              height: 65.0,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: controller.iconsbgColor.value,
+                              ),
+                              child: IconButton(
+                                icon: const Icon(Icons.video_call),
+                                color: controller.iconsColor.value,
+                                onPressed: () async {
+                                  controller.videocall.value =
+                                      !controller.videocall.value;
+                                  videocall(controller.videocall.value);
+                                  try {
+                                    await controller.player.value.play(
+                                      UrlSource(
+                                        'https://aramizdakioyuncu.com/galeri/muzikler/11324orijinal1689174596.m4a',
+                                      ),
+                                    );
+                                  } catch (e) {
+                                    log(e.toString());
+                                  }
+                                },
+                              ),
+                            ),
+                            Container(
+                              width: 65.0,
+                              height: 65.0,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: controller.speaker.value
+                                    ? Colors.white
+                                    : controller.iconsbgColor.value,
+                              ),
+                              child: IconButton(
+                                icon: Icon(
+                                  Icons.volume_up_rounded,
+                                  color: controller.speaker.value
+                                      ? Colors.black
+                                      : controller.iconsColor.value,
+                                ),
+                                onPressed: () async {
+                                  controller.speaker.value =
+                                      !controller.speaker.value;
+                                  speaker(controller.speaker.value);
+                                  try {
+                                    await controller.player.value.play(
+                                      UrlSource(
+                                        'https://www.sanalsantral.com.tr/tema/default/music/karsilama.mp3',
+                                      ),
+                                    );
+                                  } catch (e) {
+                                    log(e.toString());
+                                  }
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      const SizedBox(height: 5),
-                      Text(controller.callingtext.value),
-                      const SizedBox(height: 5),
-                      Text(
-                        controller.formatTime(
-                          controller.stopwatch.value.elapsedMilliseconds,
+                      const SizedBox(height: 20),
+                      Obx(
+                        () => Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Container(
+                              width: 65.0,
+                              height: 65.0,
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: controller.iconsbgColor.value),
+                              child: IconButton(
+                                onPressed: () async {
+                                  try {
+                                    await controller.player.value.play(
+                                      UrlSource(
+                                        'https://aramizdakioyuncu.com/muzikler/kalbenhaydisoyle.mp3',
+                                      ),
+                                    );
+                                  } catch (e) {
+                                    log(e.toString());
+                                  }
+                                },
+                                icon: const Icon(Icons.numbers_rounded),
+                                color: controller.iconsColor.value,
+                              ),
+                            ),
+                            Container(
+                              width: 65.0,
+                              height: 65.0,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.red,
+                              ),
+                              child: IconButton(
+                                onPressed: () async {
+                                  try {
+                                    controller.player.value.play(
+                                      AssetSource("sounds/calling_end.mp3"),
+                                    );
+
+                                    onClose(chat);
+                                  } catch (e) {
+                                    log(e.toString());
+                                  }
+                                },
+                                icon: const Icon(Icons.call_end),
+                                color: controller.iconsColor.value,
+                              ),
+                            ),
+                            Container(
+                              width: 65.0,
+                              height: 65.0,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: controller.iconsbgColor.value,
+                              ),
+                              child: IconButton(
+                                onPressed: () async {
+                                  try {
+                                    await controller.player.value.play(
+                                      UrlSource(
+                                        'https://cdn.pixabay.com/audio/2024/12/09/audio_5c5be993bd.mp3',
+                                      ),
+                                    );
+                                  } catch (e) {
+                                    log(e.toString());
+                                  }
+                                },
+                                icon: const Icon(Icons.person_add),
+                                color: controller.iconsColor.value,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
                 ),
-              ),
-            ),
-            const SizedBox(height: 100),
-            SizedBox(
-              height: 220,
-              child: Column(
-                children: [
-                  Obx(
-                    () => Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Container(
-                          width: 65.0,
-                          height: 65.0,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: controller.iconsbgColor.value,
-                          ),
-                          child: IconButton(
-                            onPressed: () async {
-                              try {
-                                await controller.player.value.play(
-                                  UrlSource(
-                                    'https://www.sanalsantral.com.tr/tema/default/music/karsilama.mp3',
-                                  ),
-                                );
-                              } catch (e) {
-                                log(e.toString());
-                              }
-                            },
-                            icon: Icon(
-                              Icons.surround_sound_outlined,
-                              color: controller.iconsColor.value,
-                            ),
-                          ),
-                        ),
-                        Container(
-                          width: 65.0,
-                          height: 65.0,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: controller.iconsbgColor.value,
-                          ),
-                          child: IconButton(
-                            onPressed: () async {
-                              try {
-                                await controller.player.value.play(
-                                  UrlSource(
-                                    'https://aramizdakioyuncu.com/galeri/muzikler/11324orijinal1689174596.m4a',
-                                  ),
-                                );
-                              } catch (e) {
-                                log(e.toString());
-                              }
-                            },
-                            icon: const Icon(Icons.video_call),
-                            color: controller.iconsColor.value,
-                          ),
-                        ),
-                        Container(
-                          width: 65.0,
-                          height: 65.0,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: controller.micIcon.value != Icons.mic
-                                ? Colors.red
-                                : controller.iconsbgColor.value,
-                          ),
-                          child: IconButton(
-                            onPressed: () async {
-                              if (controller.micMute.value) {
-                                controller.micMute.value = false;
-                                controller.micIcon.value = Icons.mic;
-                              } else {
-                                controller.micMute.value = true;
-                                controller.micIcon.value = Icons.mic_off;
-                              }
-
-                              try {
-                                await controller.player.value.play(
-                                  UrlSource(
-                                    'https://aramizdakioyuncu.com/muzikler/tantasci-yalan.mp3',
-                                  ),
-                                );
-                              } catch (e) {
-                                log(e.toString());
-                              }
-                            },
-                            icon: Icon(controller.micIcon.value),
-                            color: controller.iconsColor.value,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Obx(
-                    () => Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Container(
-                          width: 65.0,
-                          height: 65.0,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: controller.iconsbgColor.value),
-                          child: IconButton(
-                            onPressed: () async {
-                              try {
-                                await controller.player.value.play(
-                                  UrlSource(
-                                    'https://aramizdakioyuncu.com/muzikler/kalbenhaydisoyle.mp3',
-                                  ),
-                                );
-                              } catch (e) {
-                                log(e.toString());
-                              }
-                            },
-                            icon: const Icon(Icons.numbers_rounded),
-                            color: controller.iconsColor.value,
-                          ),
-                        ),
-                        Container(
-                          width: 65.0,
-                          height: 65.0,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.red,
-                          ),
-                          child: IconButton(
-                            onPressed: () async {
-                              try {
-                                controller.player.value.play(
-                                  AssetSource("sounds/calling_end.mp3"),
-                                );
-
-                                Get.back();
-                              } catch (e) {
-                                log(e.toString());
-                              }
-                            },
-                            icon: const Icon(Icons.call_end),
-                            color: controller.iconsColor.value,
-                          ),
-                        ),
-                        Container(
-                          width: 65.0,
-                          height: 65.0,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: controller.iconsbgColor.value,
-                          ),
-                          child: IconButton(
-                            onPressed: () async {
-                              try {
-                                await controller.player.value.play(
-                                  UrlSource(
-                                    'https://cdn.pixabay.com/audio/2024/12/09/audio_5c5be993bd.mp3',
-                                  ),
-                                );
-                              } catch (e) {
-                                log(e.toString());
-                              }
-                            },
-                            icon: const Icon(Icons.person_add),
-                            color: controller.iconsColor.value,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+              ],
             ),
           ],
-        ),
-      ],
+        );
+      },
     );
   }
 }

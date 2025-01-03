@@ -13,6 +13,11 @@ class ChatcallView extends StatelessWidget {
       body: AppService.widgets.chat.chatcallWidget(
         context,
         chat: controller.chat.value!,
+        onClose: (chat) {
+          Get.back();
+        },
+        speaker: (value) {},
+        videocall: (value) {},
       ),
     );
   }
