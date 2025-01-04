@@ -23,7 +23,9 @@ import 'package:video_player/video_player.dart';
 
 class PostController extends GetxController {
   final ARMOYUServices service;
-  PostController(this.service);
+  String? category;
+  int? userID;
+  PostController(this.service, this.category, this.userID);
 
   final Rxn<List<APIPostList>> postsList = Rxn<List<APIPostList>>(null);
   var postscount = 1.obs;
@@ -50,8 +52,16 @@ class PostController extends GetxController {
     }
     postsProccess.value = true;
 
-    PostFetchListResponse response =
-        await service.postsServices.getPosts(page: postscount.value);
+    PostFetchListResponse response;
+    if (userID != null) {
+      response = await service.postsServices.getprofilePosts(
+        userID: userID.toString(),
+        category: category,
+        page: postscount.value,
+      );
+    } else {
+      response = await service.postsServices.getPosts(page: postscount.value);
+    }
 
     if (!response.result.status) {
       postsProccess.value = false;

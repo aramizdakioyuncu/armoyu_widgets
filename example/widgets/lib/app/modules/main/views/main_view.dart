@@ -1,6 +1,6 @@
 import 'package:armoyu_services/armoyu_services.dart';
+import 'package:armoyu_widgets/armoyuwidgets.dart';
 
-import 'package:armoyu_widgets/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:widgets/app/modules/main/controllers/main_controller.dart';
@@ -72,7 +72,7 @@ class MainView extends StatelessWidget {
                             usePreviousAPI: true,
                           );
                           AppService.widgets =
-                              ARMOYUWidget(service: AppService.service);
+                              ARMOYUWidgets(service: AppService.service);
                           AppService.service.authServices.setbarriertoken(
                             barriertoken:
                                 "5221d07eb0049191ed17b3d1ea773941aa3ab1960c9696c64de2281766d13df2",
@@ -92,6 +92,16 @@ class MainView extends StatelessWidget {
             ),
             Wrap(
               children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: AppService.widgets.elevatedButton.costum1(
+                    text: "PostDetail",
+                    onPressed: () {
+                      Get.toNamed("/posts/detail");
+                    },
+                    loadingStatus: false,
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: AppService.widgets.elevatedButton.costum1(

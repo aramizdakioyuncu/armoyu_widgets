@@ -1,16 +1,15 @@
-# armoyu_widgets
+# ARMOYU Widgets
 
-A new Flutter project.
+ARMOYU Widgets, projelerinizde tutarlı bir kullanıcı deneyimi sağlamak için kullanabileceğiniz hazır widget'lar sunar.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+Bu proje, Flutter uygulamaları için ortak bir widget kütüphanesi sağlamayı amaçlar. Projelerinizde kolayca entegre ederek zamandan tasarruf edebilir ve profesyonel bir görünüm elde edebilirsiniz.
 
-A few resources to get you started if this is your first Flutter project:
+### Kurulum
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+`pubspec.yaml` dosyanıza aşağıdaki bağımlılığı ekleyin:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```yaml
+dependencies:
+  armoyu_widget: ^1.0.0

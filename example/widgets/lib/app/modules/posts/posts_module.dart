@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
-import 'package:widgets/app/modules/posts/views/posts_view.dart';
+import 'package:widgets/app/modules/posts/postdetail/views/postdetail_view.dart';
+import 'package:widgets/app/modules/posts/_main/views/posts_view.dart';
+import 'package:widgets/app/modules/posts/postprofile/views/postprofile_view.dart';
 import 'package:widgets/app/routes/app_route.dart';
 
 class PostsModule {
@@ -9,6 +11,14 @@ class PostsModule {
     GetPage(
       name: route,
       page: () => const PostsView(),
+    ),
+    GetPage(
+      name: "$route/detail",
+      page: () => const PostdetailView(),
+    ),
+    GetPage(
+      name: "$route/profile",
+      page: () => const PostprofileView(),
     ),
   ];
 }

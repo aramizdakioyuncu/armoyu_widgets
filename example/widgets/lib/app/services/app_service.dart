@@ -1,10 +1,10 @@
 import 'package:armoyu_services/armoyu_services.dart';
-import 'package:armoyu_widgets/widget.dart';
+import 'package:armoyu_widgets/armoyuwidgets.dart';
 
 class AppService {
   static ARMOYUServices service = ARMOYUServices(
     apiKey: "",
     usePreviousAPI: true,
   );
-  static ARMOYUWidget widgets = ARMOYUWidget(service: service);
+  static ARMOYUWidgets widgets = ARMOYUWidgets(service: service);
 }

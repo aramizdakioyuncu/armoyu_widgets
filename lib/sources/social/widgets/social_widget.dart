@@ -26,8 +26,13 @@ class SocialWidget {
     required ScrollController scrollController,
     required Function(int userID, String username) profileFunction,
     bool isPostdetail = false,
+    String? category,
+    int? userID,
   }) {
-    final controller = Get.put(PostController(service));
+    final controller = Get.put(
+      PostController(service, category, userID),
+      tag: "postWidgetUniq-${DateTime.now().millisecondsSinceEpoch}",
+    );
     return Obx(
       () => controller.postsList.value == null
           ? const Center(
@@ -253,10 +258,8 @@ class SocialWidget {
                                 children: [
                                   InkWell(
                                     onLongPress: () {
-                                      if (isPostdetail == false) {
-                                        controller
-                                            .showpostlikers(postdetail.value);
-                                      }
+                                      controller
+                                          .showpostlikers(postdetail.value);
                                     },
                                     child: Obx(
                                       () => likebutton.value,

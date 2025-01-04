@@ -9,7 +9,7 @@ import 'package:armoyu_widgets/sources/searchbar/searchbar.dart';
 import 'package:armoyu_widgets/sources/textfield.dart';
 import 'package:get/get.dart';
 
-class ARMOYUWidget {
+class ARMOYUWidgets {
   final ARMOYUServices service;
 
   late final ARMOYUElevatedButton elevatedButton;
@@ -21,7 +21,7 @@ class ARMOYUWidget {
   late final AccountUserController accountController;
   late final SocketioController socketIO;
 
-  ARMOYUWidget({required this.service}) {
+  ARMOYUWidgets({required this.service}) {
     elevatedButton = ARMOYUElevatedButton();
     textField = ARMOYUTextfields(service);
     mention = ARMOYUMention(service);
