@@ -22,6 +22,8 @@ class PostsView extends StatelessWidget {
             AppService.widgets.social.posts(
               context: context,
               scrollController: scrollController,
+              userID: 1,
+              shrinkWrap: true,
               profileFunction: (userID, username) {
                 log('$userID $username');
               },

@@ -1,3 +1,3 @@
-## [1.0.0+16]
+## [1.0.0+17]
 
-- Posts kategori getirildi.
+- Posts listviewbuilder olarak değiştirildi hadi hayırlısı.

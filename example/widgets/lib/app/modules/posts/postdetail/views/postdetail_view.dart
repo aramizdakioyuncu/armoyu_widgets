@@ -27,8 +27,9 @@ class PostdetailView extends StatelessWidget {
                 profileFunction: (userID, username) {
                   log('$userID $username');
                 },
+                shrinkWrap: true,
                 category: "etiketlenmis",
-                userID: 1,
+                username: "berkaytikenoglu",
               ),
             ],
           ),

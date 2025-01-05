@@ -25,7 +25,8 @@ class PostController extends GetxController {
   final ARMOYUServices service;
   String? category;
   int? userID;
-  PostController(this.service, this.category, this.userID);
+  String? username;
+  PostController(this.service, this.category, this.userID, this.username);
 
   final Rxn<List<APIPostList>> postsList = Rxn<List<APIPostList>>(null);
   var postscount = 1.obs;
@@ -52,16 +53,12 @@ class PostController extends GetxController {
     }
     postsProccess.value = true;
 
-    PostFetchListResponse response;
-    if (userID != null) {
-      response = await service.postsServices.getprofilePosts(
-        userID: userID.toString(),
-        category: category,
-        page: postscount.value,
-      );
-    } else {
-      response = await service.postsServices.getPosts(page: postscount.value);
-    }
+    PostFetchListResponse response = await service.postsServices.getPosts(
+      userID: userID,
+      username: username,
+      category: category,
+      page: postscount.value,
+    );
 
     if (!response.result.status) {
       postsProccess.value = false;
@@ -608,7 +605,11 @@ class PostController extends GetxController {
     return;
   }
 
-  Widget buildMediaContent(BuildContext context, Rx<APIPostList> postInfo) {
+  Widget buildMediaContent(
+    BuildContext context,
+    Rx<APIPostList> postInfo,
+    double availableWidth,
+  ) {
     Widget mediaSablon(
       String mediaUrl, {
       required int indexlength,
@@ -675,7 +676,7 @@ class PostController extends GetxController {
           child: CachedNetworkImage(
             imageUrl: mediaUrl,
             fit: fit,
-            // width: width, Genişlik Kafayı yediği için yorum satırına aldık
+            width: width, // Genişlik Kafayı yediği için yorum satırına aldık
             height: height,
             placeholder: (context, url) => const CupertinoActivityIndicator(),
             errorWidget: (context, url, error) => const Icon(Icons.error),
@@ -716,8 +717,9 @@ class PostController extends GetxController {
           mediadirection = BoxFit.contain;
         }
 
-        double mediawidth = ARMOYU.screenWidth;
+        double mediawidth = availableWidth;
         double mediaheight = ARMOYU.screenHeight;
+
         if (postInfo.value.media!.length == 1) {
           mediawidth = mediawidth / 1;
 

@@ -42,7 +42,7 @@ dependencies:
 
 
 
-  armoyu_services: ^1.0.0+37
+  armoyu_services: ^1.0.0+40
 
 
 dev_dependencies:

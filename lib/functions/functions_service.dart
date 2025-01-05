@@ -228,9 +228,8 @@ class FunctionService {
 
   Future<PostFetchListResponse> getprofilePosts(
       int page, int userID, String category) async {
-    PostFetchListResponse jsonData =
-        await service.postsServices.getprofilePosts(
-      userID: userID.toString(),
+    PostFetchListResponse jsonData = await service.postsServices.getPosts(
+      userID: userID,
       page: page,
       category: category,
     );
