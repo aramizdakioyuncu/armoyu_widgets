@@ -23,10 +23,12 @@ import 'package:video_player/video_player.dart';
 
 class PostController extends GetxController {
   final ARMOYUServices service;
+  ScrollController? scrollController;
   String? category;
   int? userID;
   String? username;
-  PostController(this.service, this.category, this.userID, this.username);
+  PostController(this.service, this.scrollController, this.category,
+      this.userID, this.username);
 
   final Rxn<List<APIPostList>> postsList = Rxn<List<APIPostList>>(null);
   var postscount = 1.obs;
@@ -37,6 +39,8 @@ class PostController extends GetxController {
 
   User? currentUser;
 
+  Rxn<ScrollController> xscrollController = Rxn<ScrollController>();
+
   @override
   void onInit() {
     super.onInit();
@@ -44,7 +48,22 @@ class PostController extends GetxController {
     final findCurrentAccountController = Get.find<AccountUserController>();
     currentUser =
         findCurrentAccountController.currentUserAccounts.value.user.value;
+
+    if (scrollController != null) {
+      xscrollController.value = scrollController;
+    } else {
+      xscrollController.value = ScrollController();
+    }
     fetchsocailposts();
+
+    if (xscrollController.value != null) {
+      xscrollController.value!.addListener(() {
+        if (xscrollController.value!.position.pixels >=
+            xscrollController.value!.position.maxScrollExtent) {
+          fetchsocailposts();
+        }
+      });
+    }
   }
 
   Future<void> fetchsocailposts() async {
@@ -70,6 +89,7 @@ class PostController extends GetxController {
       postsList.value!.add(element);
     }
     postsList.refresh();
+    postscount.value++;
     postsProccess.value = false;
   }
 

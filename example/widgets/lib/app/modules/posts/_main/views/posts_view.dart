@@ -15,21 +15,20 @@ class PostsView extends StatelessWidget {
         forceMaterialTransparency: true,
         title: const Text('Posts'),
       ),
-      body: SingleChildScrollView(
-        controller: scrollController,
-        child: Column(
-          children: [
-            AppService.widgets.social.posts(
+      body: Column(
+        children: [
+          Expanded(
+            child: AppService.widgets.social.posts(
               context: context,
               scrollController: scrollController,
               userID: 1,
-              shrinkWrap: true,
+              // shrinkWrap: true,
               profileFunction: (userID, username) {
                 log('$userID $username');
               },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

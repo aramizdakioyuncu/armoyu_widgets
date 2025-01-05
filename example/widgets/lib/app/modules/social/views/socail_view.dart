@@ -13,23 +13,24 @@ class SocailView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Socail'),
+        forceMaterialTransparency: true,
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AppService.widgets.social.widgetStorycircle(),
-              AppService.widgets.social.posts(
-                context: context,
-                scrollController: scrollController,
-                profileFunction: (userID, username) {
-                  log('$userID $username');
-                },
-              ),
-            ],
-          ),
+      body: SingleChildScrollView(
+        controller: scrollController,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AppService.widgets.social.widgetStorycircle(),
+            AppService.widgets.social.posts(
+              context: context,
+              scrollController: scrollController,
+              shrinkWrap: true,
+              profileFunction: (userID, username) {
+                log('$userID $username');
+              },
+            ),
+          ],
         ),
       ),
     );

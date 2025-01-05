@@ -35,7 +35,7 @@ class SocialWidget {
     Key? key,
   }) {
     final controller = Get.put(
-      PostController(service, category, userID, username),
+      PostController(service, scrollController, category, userID, username),
       tag:
           "postWidget-$category$userID-Uniq-${DateTime.now().millisecondsSinceEpoch}",
     );
@@ -45,6 +45,8 @@ class SocialWidget {
               child: CupertinoActivityIndicator(),
             )
           : ListView.builder(
+              controller:
+                  shrinkWrap ? null : controller.xscrollController.value,
               key: key,
               shrinkWrap: shrinkWrap,
               padding: padding,
