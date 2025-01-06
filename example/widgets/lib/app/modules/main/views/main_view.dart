@@ -142,6 +142,16 @@ class MainView extends StatelessWidget {
                     loadingStatus: false,
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: AppService.widgets.elevatedButton.costum1(
+                    text: "Profile",
+                    onPressed: () {
+                      Get.toNamed(Routes.PROFILE);
+                    },
+                    loadingStatus: false,
+                  ),
+                ),
               ],
             ),
           ],

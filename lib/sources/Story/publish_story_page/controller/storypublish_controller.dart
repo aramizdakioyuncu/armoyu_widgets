@@ -1,6 +1,5 @@
 import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_services/core/models/ARMOYU/_response/service_result.dart';
-import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -8,12 +7,10 @@ import 'package:get/get.dart';
 class StorypublishController extends GetxController {
   final ARMOYUServices service;
 
-  final User currentUser;
   final String imageURL; // Gezdirilecek fotoğrafların listesi
   final int imageID; // Gezdirilecek fotoğrafların ID listesi
   StorypublishController({
     required this.service,
-    required this.currentUser,
     required this.imageURL,
     required this.imageID,
   });

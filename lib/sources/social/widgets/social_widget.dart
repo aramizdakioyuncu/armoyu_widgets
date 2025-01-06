@@ -3,6 +3,7 @@ import 'package:armoyu_services/core/models/ARMOYU/API/post/post_detail.dart';
 import 'package:armoyu_widgets/data/models/Story/storylist.dart';
 import 'package:armoyu_widgets/data/services/accountuser_services.dart';
 import 'package:armoyu_widgets/sources/Story/story_screen_page/views/story_screen_view.dart';
+import 'package:armoyu_widgets/sources/gallery/views/gallery_view.dart';
 import 'package:armoyu_widgets/sources/postscomment/views/postcomment_view.dart';
 import 'package:armoyu_widgets/sources/social/controllers/post_controller.dart';
 import 'package:armoyu_widgets/sources/social/controllers/story_controller.dart';
@@ -496,7 +497,9 @@ class SocialWidget {
                             return;
                           }
 
-                          Get.toNamed("/gallery");
+                          Get.to(GalleryView(
+                            service: service,
+                          ));
                         } else {
                           Get.to(
                             StoryScreenView(service: service),

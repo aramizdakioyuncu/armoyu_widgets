@@ -3,6 +3,7 @@ import 'package:armoyu_widgets/data/services/accountuser_services.dart';
 import 'package:armoyu_widgets/data/services/socketio.dart';
 import 'package:armoyu_widgets/sources/chat/views/chat_widget.dart';
 import 'package:armoyu_widgets/sources/elevatedbutton.dart';
+import 'package:armoyu_widgets/sources/gallery/widgets/gallery_widget.dart';
 import 'package:armoyu_widgets/sources/mention.dart';
 import 'package:armoyu_widgets/sources/social/widgets/social_widget.dart';
 import 'package:armoyu_widgets/sources/searchbar/searchbar.dart';
@@ -18,6 +19,8 @@ class ARMOYUWidgets {
   late final ARMOYUSearchBar searchBar;
   late final SocialWidget social;
   late final ChatWidget chat;
+  late final GalleryWidget gallery;
+
   late final AccountUserController accountController;
   late final SocketioController socketIO;
 
@@ -28,6 +31,7 @@ class ARMOYUWidgets {
     searchBar = ARMOYUSearchBar(service);
     social = SocialWidget(service);
     chat = ChatWidget(service);
+    gallery = GalleryWidget(service);
 
     accountController = Get.put(AccountUserController(), permanent: true);
 

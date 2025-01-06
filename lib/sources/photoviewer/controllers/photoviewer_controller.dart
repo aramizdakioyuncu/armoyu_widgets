@@ -1,8 +1,14 @@
 import 'package:get/get.dart';
 
 class PhotoviewerController extends GetxController {
-  bool isRotationedit = false;
-  bool isRotationprocces = false;
-  double mediaAngle = 0;
-  double rotateangle = 0;
+  var isRotationedit = false.obs;
+  var isRotationprocces = false.obs;
+  Rx<double> mediaAngle = 0.0.obs;
+  Rx<double> rotateangle = 0.0.obs;
+
+  @override
+  // ignore: unnecessary_overrides
+  void onInit() {
+    super.onInit();
+  }
 }

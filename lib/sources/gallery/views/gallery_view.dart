@@ -1,7 +1,7 @@
 import 'package:armoyu_services/armoyu_services.dart';
-import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
 import 'package:armoyu_widgets/data/services/accountuser_services.dart';
 import 'package:armoyu_widgets/sources/gallery/controllers/gallery_controller.dart';
+import 'package:armoyu_widgets/sources/gallery/widgets/gallery_widget.dart';
 import 'package:armoyu_widgets/sources/photoviewer/views/photoviewer_view.dart';
 import 'package:armoyu_widgets/widgets/buttons.dart';
 import 'package:armoyu_widgets/widgets/text.dart';
@@ -58,10 +58,14 @@ class GalleryView extends StatelessWidget {
                       controller: controller.galleryscrollcontroller.value,
                       child: Column(
                         children: [
-                          Media.mediaList(
+                          // Media.mediaList(
+                          //   controller.mediaList,
+                          //   big: false,
+                          //   currentUser: currentUser,
+                          // ),
+                          GalleryWidget(service).mediaList(
                             controller.mediaList,
                             big: false,
-                            currentUser: currentUser,
                           ),
                           SizedBox(
                             height: 150,
@@ -81,28 +85,8 @@ class GalleryView extends StatelessWidget {
                               ],
                             ),
                           ),
-                          GridView.builder(
-                            controller: ScrollController(),
-                            itemCount: controller.mediaGallery.length,
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              return controller.mediaGallery[index]
-                                  .mediaGallery(
-                                service: service,
-                                context: context,
-                                index: index,
-                                medialist: controller.mediaGallery,
-                                storyShare: true,
-                                currentUser: currentUser,
-                              );
-                            },
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3, // Her satırda 3 görsel
-                              crossAxisSpacing: 5.0, // Yatayda boşluk
-                              mainAxisSpacing: 5.0, // Dikeyde boşluk
-                            ),
-                          ),
+
+                          GalleryWidget(service).mediaGallery(context: context)
                         ],
                       ),
                     ),

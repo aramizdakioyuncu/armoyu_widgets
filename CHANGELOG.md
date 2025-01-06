@@ -1,3 +1,3 @@
-## [1.0.0+19]
+## [1.0.0+20]
 
-- Posts listviewbuilder olarak değiştirildi hadi hayırlısı olmayabilir controller eklendi.
+- Medialist ve gallerymedia eklendi tarzı bir şeyler daha çok güncelleme gelir .

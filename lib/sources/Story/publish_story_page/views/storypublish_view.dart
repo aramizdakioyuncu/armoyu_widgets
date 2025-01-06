@@ -1,6 +1,5 @@
 import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_widgets/core/armoyu.dart';
-import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/sources/Story/publish_story_page/controller/storypublish_controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -9,14 +8,12 @@ import 'package:get/get.dart';
 class StorypublishView extends StatelessWidget {
   final ARMOYUServices service;
 
-  final User currentUser;
   final String imageURL; // Gezdirilecek fotoğrafların listesi
   final int imageID; // Gezdirilecek fotoğrafların ID listesi
 
   const StorypublishView({
     super.key,
     required this.service,
-    required this.currentUser,
     required this.imageURL,
     required this.imageID,
   });
@@ -26,7 +23,6 @@ class StorypublishView extends StatelessWidget {
     final controller = Get.put(
       StorypublishController(
         service: service,
-        currentUser: currentUser,
         imageURL: imageURL,
         imageID: imageID,
       ),
@@ -181,17 +177,17 @@ class StorypublishView extends StatelessWidget {
                             onPressed: () {
                               controller.isEveryonepublish.value = true;
                             },
-                            child: Row(
+                            child: const Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 CircleAvatar(
-                                  foregroundImage: CachedNetworkImageProvider(
-                                    currentUser.avatar!.mediaURL.minURL.value,
-                                  ),
+                                  // foregroundImage: CachedNetworkImageProvider(
+                                  //   currentUser.avatar!.mediaURL.minURL.value,
+                                  // ),
                                   radius: 16,
                                 ),
-                                const SizedBox(width: 10),
-                                const Text("Herkes"),
+                                SizedBox(width: 10),
+                                Text("Herkes"),
                               ],
                             ),
                           ),
