@@ -12,7 +12,8 @@ import 'package:get/get.dart';
 
 class MediagalleryController extends GetxController {
   final ARMOYUServices service;
-  MediagalleryController({required this.service});
+  final int? userID;
+  MediagalleryController({required this.service, this.userID});
 
   Rxn<List<Media>> mediaList = Rxn();
   var mediafetchProccess = false.obs;
@@ -35,7 +36,7 @@ class MediagalleryController extends GetxController {
     fetchgallery();
   }
 
-  fetchgallery({int? userID}) async {
+  fetchgallery() async {
     if (mediafetchProccess.value) {
       return;
     }

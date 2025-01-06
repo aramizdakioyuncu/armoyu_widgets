@@ -23,7 +23,8 @@ class GalleryWidget {
     int? userID,
     bool storyShare = false,
   }) {
-    final controller = Get.put(MediagalleryController(service: service));
+    final controller =
+        Get.put(MediagalleryController(service: service, userID: userID));
     return Obx(
       () => controller.mediaList.value == null
           ? const Center(
