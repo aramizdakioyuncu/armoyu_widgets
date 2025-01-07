@@ -22,9 +22,12 @@ class PostcommentView {
     ARMOYUServices service, {
     required Function(int userID, String username) profileFunction,
   }) {
+    String uniqueTag = DateTime.now().millisecondsSinceEpoch.toString();
+
     final controller = Get.put(
-        PostscommentControllerV2(comment: comment, service: service),
-        tag: comment.commentID.toString());
+      PostscommentControllerV2(comment: comment, service: service),
+      tag: "${comment.commentID}-$uniqueTag",
+    );
     return GestureDetector(
       onDoubleTap: () {
         controller.likeButtonKey.value.currentState?.onTap();

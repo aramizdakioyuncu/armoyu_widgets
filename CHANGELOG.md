@@ -1,3 +1,3 @@
-## [1.0.0+20]
+## [1.0.0+25]
 
-- Medialist ve gallerymedia eklendi tarzı bir şeyler daha çok güncelleme gelir .
+- Kritik social düzeltmesi.

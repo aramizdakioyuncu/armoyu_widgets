@@ -325,7 +325,7 @@ class SocialWidget {
                             child: Column(
                               children: [
                                 SizedBox(
-                                  width: double.infinity,
+                                  width: availableWidth,
                                   child: Stack(
                                     children: [
                                       const SizedBox(height: 20),
