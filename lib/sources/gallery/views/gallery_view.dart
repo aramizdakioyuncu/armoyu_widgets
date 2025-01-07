@@ -86,7 +86,10 @@ class GalleryView extends StatelessWidget {
                             ),
                           ),
 
-                          GalleryWidget(service).mediaGallery(context: context)
+                          GalleryWidget(service).mediaGallery(
+                            context: context,
+                            storyShare: true,
+                          )
                         ],
                       ),
                     ),

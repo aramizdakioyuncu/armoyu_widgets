@@ -1,19 +1,41 @@
+import 'dart:developer';
+
+import 'package:armoyu_widgets/data/models/user.dart';
+import 'package:armoyu_widgets/data/models/useraccounts.dart';
+import 'package:armoyu_widgets/data/services/accountuser_services.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:widgets/app/services/app_service.dart';
 
 class ProfileController extends GetxController
     with GetSingleTickerProviderStateMixin {
-  Rxn<TabController> tabController = Rxn<TabController>();
+  late TabController tabController;
 
   Rxn<Widget> widget1 = Rxn();
   Rxn<Widget> widget2 = Rxn();
   Rxn<Widget> widget3 = Rxn();
 
+  var currentUserAccounts = Rx<UserAccounts>(
+    UserAccounts(
+      user: User().obs,
+      sessionTOKEN: Rx(""),
+      language: Rx(""),
+    ),
+  );
+
   @override
   void onInit() {
     super.onInit();
-    tabController.value = TabController(
+
+    final findCurrentAccountController = Get.find<AccountUserController>();
+    log("Current AccountUser :: ${findCurrentAccountController.currentUserAccounts.value.user.value.displayName}");
+
+    /////
+    currentUserAccounts.value =
+        findCurrentAccountController.currentUserAccounts.value;
+    /////
+    ///
+    tabController = TabController(
       initialIndex: 0,
       length: 3,
       vsync: this,
@@ -23,6 +45,7 @@ class ProfileController extends GetxController
       context: Get.context!,
       shrinkWrap: true,
       userID: 1,
+      // userID: currentUserAccounts.value.user.value.userID,
       profileFunction: (userID, username) {},
     );
 
@@ -34,6 +57,7 @@ class ProfileController extends GetxController
       context: Get.context!,
       shrinkWrap: true,
       userID: 1,
+      // userID: currentUserAccounts.value.user.value.userID,
       category: "etiketlenmis",
       profileFunction: (userID, username) {},
     );

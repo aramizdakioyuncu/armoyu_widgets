@@ -497,9 +497,11 @@ class SocialWidget {
                             return;
                           }
 
-                          Get.to(GalleryView(
-                            service: service,
-                          ));
+                          Get.to(
+                            GalleryView(
+                              service: service,
+                            ),
+                          );
                         } else {
                           Get.to(
                             StoryScreenView(service: service),
