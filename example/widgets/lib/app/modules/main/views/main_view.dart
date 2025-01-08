@@ -203,6 +203,16 @@ class MainView extends StatelessWidget {
                     loadingStatus: false,
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: AppService.widgets.elevatedButton.costum1(
+                    text: "Search",
+                    onPressed: () {
+                      Get.toNamed(Routes.SEARCH);
+                    },
+                    loadingStatus: false,
+                  ),
+                ),
               ],
             ),
           ],

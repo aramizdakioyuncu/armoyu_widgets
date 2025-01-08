@@ -1,6 +1,5 @@
 import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_widgets/translations/app_translation.dart';
-import 'package:armoyu_widgets/widgets/cards/cards_view.dart.dart';
 import 'package:armoyu_widgets/widgets/text.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -17,36 +16,6 @@ class ARMOYUWidget {
     required this.firstFetch,
     required this.service,
   });
-
-  Widget widgetTPlist() {
-    return CustomCards(
-      service: service,
-      firstFetch: firstFetch,
-      title: "TP",
-      effectcolor: const Color.fromARGB(255, 10, 84, 175).withOpacity(0.7),
-      content: content,
-      icon: const Icon(
-        Icons.auto_graph_outlined,
-        size: 15,
-        color: Colors.white,
-      ),
-    ).build(Get.context!, profileFunction: () {});
-  }
-
-  Widget widgetPOPlist() {
-    return CustomCards(
-      service: service,
-      firstFetch: firstFetch,
-      title: "POP",
-      effectcolor: const Color.fromARGB(255, 175, 10, 10).withOpacity(0.7),
-      content: content,
-      icon: const Icon(
-        Icons.remove_red_eye_outlined,
-        size: 15,
-        color: Colors.white,
-      ),
-    ).build(Get.context!, profileFunction: () {});
-  }
 
   static void stackbarNotification(BuildContext context, String text) {
     ScaffoldMessenger.of(context).showSnackBar(

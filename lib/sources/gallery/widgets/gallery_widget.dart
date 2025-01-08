@@ -23,8 +23,10 @@ class GalleryWidget {
     int? userID,
     bool storyShare = false,
   }) {
-    final controller =
-        Get.put(MediagalleryController(service: service, userID: userID));
+    final controller = Get.put(
+        MediagalleryController(service: service, userID: userID),
+        tag:
+            "mediagallery-$userID-Uniq-${DateTime.now().millisecondsSinceEpoch}");
     return Obx(
       () => controller.mediaList.value == null
           ? const Center(

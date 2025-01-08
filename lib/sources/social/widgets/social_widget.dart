@@ -31,6 +31,7 @@ class SocialWidget {
     bool shrinkWrap = false,
     EdgeInsetsGeometry padding = EdgeInsets.zero,
     ScrollPhysics physics = const ClampingScrollPhysics(),
+    bool sliverWidget = false,
     Key? key,
   }) {
     final controller = Get.put(
@@ -43,44 +44,68 @@ class SocialWidget {
           ? const Center(
               child: CupertinoActivityIndicator(),
             )
-          : CustomScrollView(
-              physics: refreshPosts != null
-                  ? const BouncingScrollPhysics()
-                  : const ClampingScrollPhysics(),
-              slivers: [
-                refreshPosts != null
-                    ? CupertinoSliverRefreshControl(
-                        onRefresh: () async {
-                          await refreshPosts();
-                        },
-                      )
-                    : const SliverToBoxAdapter(child: SizedBox.shrink()),
-                SliverToBoxAdapter(
-                  child: ListView.builder(
-                    controller:
-                        shrinkWrap ? null : controller.xscrollController.value,
-                    key: key,
-                    shrinkWrap: shrinkWrap,
-                    padding: padding,
-                    physics: shrinkWrap
-                        ? const NeverScrollableScrollPhysics()
-                        : physics,
-                    itemCount: controller.postsList.value!.length,
-                    itemBuilder: (context, postIndex) {
-                      var postdetail = Rx<APIPostList>(
-                          controller.postsList.value![postIndex]);
+          : !sliverWidget
+              ? ListView.builder(
+                  controller:
+                      shrinkWrap ? null : controller.xscrollController.value,
+                  key: key,
+                  shrinkWrap: shrinkWrap,
+                  padding: padding,
+                  physics: shrinkWrap
+                      ? const NeverScrollableScrollPhysics()
+                      : physics,
+                  itemCount: controller.postsList.value!.length,
+                  itemBuilder: (context, postIndex) {
+                    var postdetail =
+                        Rx<APIPostList>(controller.postsList.value![postIndex]);
 
-                      return PostWidget2.postWidget(
-                        service: service,
-                        postdetail: postdetail,
-                        controller: controller,
-                        profileFunction: profileFunction,
-                      );
-                    },
-                  ),
+                    return PostWidget2.postWidget(
+                      service: service,
+                      postdetail: postdetail,
+                      controller: controller,
+                      profileFunction: profileFunction,
+                    );
+                  },
+                )
+              : CustomScrollView(
+                  physics: refreshPosts != null
+                      ? const BouncingScrollPhysics()
+                      : const ClampingScrollPhysics(),
+                  slivers: [
+                    refreshPosts != null
+                        ? CupertinoSliverRefreshControl(
+                            onRefresh: () async {
+                              await refreshPosts();
+                            },
+                          )
+                        : const SliverToBoxAdapter(child: SizedBox.shrink()),
+                    SliverToBoxAdapter(
+                      child: ListView.builder(
+                        controller: shrinkWrap
+                            ? null
+                            : controller.xscrollController.value,
+                        key: key,
+                        shrinkWrap: shrinkWrap,
+                        padding: padding,
+                        physics: shrinkWrap
+                            ? const NeverScrollableScrollPhysics()
+                            : physics,
+                        itemCount: controller.postsList.value!.length,
+                        itemBuilder: (context, postIndex) {
+                          var postdetail = Rx<APIPostList>(
+                              controller.postsList.value![postIndex]);
+
+                          return PostWidget2.postWidget(
+                            service: service,
+                            postdetail: postdetail,
+                            controller: controller,
+                            profileFunction: profileFunction,
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
     );
   }
 

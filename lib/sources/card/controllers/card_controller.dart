@@ -1,11 +1,12 @@
+import 'dart:developer';
+
 import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_services/core/models/ARMOYU/API/utils/player_pop_list.dart';
 import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
-import 'package:armoyu_widgets/functions/functions_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class CardsController extends GetxController {
+class CardsControllerV2 extends GetxController {
   final ARMOYUServices service;
   final String title;
   final List<Map<String, String>> content;
@@ -13,13 +14,13 @@ class CardsController extends GetxController {
   final Color effectcolor;
   final bool firstFetch;
 
-  CardsController({
+  CardsControllerV2({
+    required this.service,
     required this.title,
     required this.content,
     required this.icon,
     required this.effectcolor,
     required this.firstFetch,
-    required this.service,
   });
 
   var morefetchProcces = false.obs;
@@ -61,16 +62,29 @@ class CardsController extends GetxController {
     }
     morefetchProcces.value = true;
 
-    FunctionService f = FunctionService(service);
     log("${xtitle.value}  ${xtitle.value}  ");
 
+    // Sayfa başına gösterilecek içerik sayısı
+    int itemsPerPage = 10;
+
+// Şu anki içerik sayısını alıyoruz
+    int currentContentCount = xcontent.value!.length;
+
+// Sayfa numarasını içerik sayısına göre hesaplıyoruz
+    int currentPage = (currentContentCount / itemsPerPage).ceil() + 1;
+
+    // int currentPage = xcontent.value!.length ~/ 10 + 1;
+
+    log(">>$currentPage");
     PlayerPopResponse response;
     if (xtitle.value == "POP") {
-      response = await f.getplayerpop(
-          int.parse(((xcontent.value!.length ~/ 10) + 1).toString()));
+      response = await service.utilsServices.getplayerpop(
+        page: currentPage,
+      );
     } else {
-      response = await f.getplayerxp(
-          int.parse(((xcontent.value!.length ~/ 10) + 1).toString()));
+      response = await service.utilsServices.getplayerxp(
+        page: int.parse(((xcontent.value!.length ~/ 10) + 1).toString()),
+      );
     }
 
     if (!response.result.status) {
@@ -78,6 +92,11 @@ class CardsController extends GetxController {
       morefetchProcces.value = false;
       return;
     }
+
+    if (response.response!.isNotEmpty) {
+      currentPage++;
+    }
+
     xcontent.value ??= <Map<String, String>>[];
     for (APIPlayerPop element in response.response!) {
       xcontent.value!.add({
@@ -90,7 +109,6 @@ class CardsController extends GetxController {
       });
     }
 
-    log(((xcontent.value!.length ~/ 10)).toString());
     morefetchProcces.value = false;
   }
 }

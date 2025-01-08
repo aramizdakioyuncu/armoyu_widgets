@@ -1,37 +1,32 @@
 import 'package:armoyu_services/armoyu_services.dart';
+import 'package:armoyu_widgets/sources/card/controllers/card_controller.dart';
 import 'package:armoyu_widgets/widgets/Skeletons/cards_skeleton.dart';
-import 'package:armoyu_widgets/widgets/cards/cards_controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class CustomCards {
+class CustomCardsV2 {
   final ARMOYUServices service;
-  final String title;
-  final List<Map<String, String>> content;
-  final Icon icon;
-  final Color effectcolor;
-  final bool firstFetch;
+  const CustomCardsV2(this.service);
 
-  const CustomCards({
-    required this.title,
-    required this.content,
-    required this.icon,
-    required this.effectcolor,
-    required this.firstFetch,
-    required this.service,
-  });
-
-  Widget build(BuildContext context, {required Function profileFunction}) {
+  Widget cardWidget({
+    required BuildContext context,
+    required String title,
+    required List<Map<String, String>> content,
+    required Icon icon,
+    required Color effectcolor,
+    required bool firstFetch,
+  }) {
     final controller = Get.put(
-      CardsController(
-          content: content,
-          effectcolor: effectcolor,
-          firstFetch: firstFetch,
-          icon: icon,
-          title: title,
-          service: service),
+      CardsControllerV2(
+        service: service,
+        content: content,
+        effectcolor: effectcolor,
+        firstFetch: firstFetch,
+        icon: icon,
+        title: title,
+      ),
       tag: DateTime.now().microsecondsSinceEpoch.toString() + title,
     );
 
@@ -62,7 +57,13 @@ class CustomCards {
                   return InkWell(
                     borderRadius: BorderRadius.circular(15),
                     onTap: () {
-                      profileFunction();
+                      // PageFunctions functions = PageFunctions();
+                      // functions.pushProfilePage(
+                      //   context,
+                      //   User(
+                      //     userID: int.parse(cardData["userID"].toString()),
+                      //   ),
+                      // );
                     },
                     child: Container(
                       width: 150,

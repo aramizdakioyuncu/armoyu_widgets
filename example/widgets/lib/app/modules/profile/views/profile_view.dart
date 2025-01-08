@@ -47,15 +47,13 @@ class ProfileView extends StatelessWidget {
                 controller: controller.tabController,
                 children: [
                   Obx(
-                    () => Material(
-                        child: controller.widget1.value ?? Container()),
+                    () => controller.widget1.value ?? Container(),
                   ),
                   Obx(
                     () => controller.widget2.value ?? Container(),
                   ),
                   Obx(
-                    () => Material(
-                        child: controller.widget3.value ?? Container()),
+                    () => controller.widget3.value ?? Container(),
                   ),
                 ],
               ),

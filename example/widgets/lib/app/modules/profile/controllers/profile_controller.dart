@@ -46,7 +46,9 @@ class ProfileController extends GetxController
       shrinkWrap: true,
       userID: 1,
       // userID: currentUserAccounts.value.user.value.userID,
+      sliverWidget: true,
       refreshPosts: () {},
+
       profileFunction: (userID, username) {},
     );
 
