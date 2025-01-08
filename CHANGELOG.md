@@ -1,3 +1,3 @@
-## [1.0.0+25]
+## [1.0.0+26]
 
-- Kritik social düzeltmesi.
+- Ufak düzeltme.

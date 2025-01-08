@@ -20,7 +20,7 @@ class ProfileView extends StatelessWidget {
           length: 3, // Tab sayısı
           child: Scaffold(
             body: NestedScrollView(
-              physics: const BouncingScrollPhysics(
+              physics: const ClampingScrollPhysics(
                 parent: AlwaysScrollableScrollPhysics(),
               ),
               headerSliverBuilder: (context, innerBoxIsScrolled) {
