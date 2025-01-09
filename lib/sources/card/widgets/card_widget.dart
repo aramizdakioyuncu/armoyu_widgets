@@ -9,9 +9,9 @@ import 'package:get/get.dart';
 
 enum CustomCardType { playerXP, playerPOP }
 
-class CustomCardsV2 {
+class CardWidget {
   final ARMOYUServices service;
-  const CustomCardsV2(this.service);
+  const CardWidget(this.service);
 
   Widget cardWidget({
     required BuildContext context,

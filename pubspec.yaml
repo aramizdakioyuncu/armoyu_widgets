@@ -1,7 +1,7 @@
 name: armoyu_widgets
 description: "ARMOYU Widget kütüphanesidir"
 repository: https://github.com/aramizdakioyuncu/armoyu_widgets
-version: 1.0.0+31
+version: 1.0.0+33
 
 environment:
   sdk: ">=3.4.4 <4.0.0"
@@ -43,6 +43,7 @@ dependencies:
   marquee: ^2.3.0
   socket_io_client: ^3.0.0
   audioplayers: ^6.1.0
+  carousel_slider: ^5.0.0
 
 
 

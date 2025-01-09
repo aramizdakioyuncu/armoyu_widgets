@@ -12,7 +12,7 @@ import 'package:get/get.dart';
 import 'package:like_button/like_button.dart';
 import 'package:share_plus/share_plus.dart';
 
-class PostWidget2 {
+class PostWidget {
   static postWidget({
     required ARMOYUServices service,
     required Rx<APIPostList> postdetail,
@@ -361,7 +361,7 @@ class PostWidget2 {
                 ),
               ),
               showPOPcard
-                  ? CustomCardsV2(service).cardWidget(
+                  ? CardWidget(service).cardWidget(
                       context: Get.context!,
                       title: CustomCardType.playerPOP,
                       content: [],
@@ -370,7 +370,7 @@ class PostWidget2 {
                     )
                   : const SizedBox.shrink(),
               showTPcard
-                  ? CustomCardsV2(service).cardWidget(
+                  ? CardWidget(service).cardWidget(
                       context: Get.context!,
                       title: CustomCardType.playerXP,
                       content: [],

@@ -6,6 +6,7 @@ import 'package:armoyu_widgets/sources/chat/widgets/chat_widget.dart';
 import 'package:armoyu_widgets/sources/elevatedbutton.dart';
 import 'package:armoyu_widgets/sources/gallery/widgets/gallery_widget.dart';
 import 'package:armoyu_widgets/sources/mention.dart';
+import 'package:armoyu_widgets/sources/news/widgets/news_widget.dart';
 import 'package:armoyu_widgets/sources/social/widgets/social_widget.dart';
 import 'package:armoyu_widgets/sources/searchbar/searchbar.dart';
 import 'package:armoyu_widgets/sources/textfield.dart';
@@ -21,7 +22,8 @@ class ARMOYUWidgets {
   late final SocialWidget social;
   late final ChatWidget chat;
   late final GalleryWidget gallery;
-  late final CustomCardsV2 cards;
+  late final CardWidget cards;
+  late final NewsWidget news;
 
   late final AccountUserController accountController;
   late final SocketioController socketIO;
@@ -34,10 +36,16 @@ class ARMOYUWidgets {
     social = SocialWidget(service);
     chat = ChatWidget(service);
     gallery = GalleryWidget(service);
-    cards = CustomCardsV2(service);
+    cards = CardWidget(service);
+    news = NewsWidget(service);
 
     accountController = Get.put(AccountUserController(), permanent: true);
 
     socketIO = Get.put(SocketioController(), permanent: true);
+  }
+
+  Future<bool> setup() async {
+    log("ARMOYU Widget initalized");
+    return true;
   }
 }

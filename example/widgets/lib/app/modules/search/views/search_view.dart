@@ -17,6 +17,9 @@ class SearchView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Obx(
+            () => controller.widget3.value!,
+          ),
+          Obx(
             () => controller.widget.value!,
           ),
           Obx(

@@ -8,7 +8,7 @@ import 'package:armoyu_widgets/sources/social/controllers/post_controller.dart';
 import 'package:armoyu_widgets/sources/social/controllers/story_controller.dart';
 import 'package:armoyu_widgets/translations/app_translation.dart';
 import 'package:armoyu_widgets/widgets/text.dart';
-import 'package:armoyu_widgets/widgetsv2/post/post_widget2.dart';
+import 'package:armoyu_widgets/widgetsv2/post/post_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -59,7 +59,7 @@ class SocialWidget {
                     var postdetail =
                         Rx<APIPostList>(controller.postsList.value![postIndex]);
 
-                    return PostWidget2.postWidget(
+                    return PostWidget.postWidget(
                       service: service,
                       postdetail: postdetail,
                       controller: controller,
@@ -96,7 +96,7 @@ class SocialWidget {
                         itemBuilder: (context, postIndex) {
                           var postdetail = Rx<APIPostList>(
                               controller.postsList.value![postIndex]);
-                          return PostWidget2.postWidget(
+                          return PostWidget.postWidget(
                             service: service,
                             postdetail: postdetail,
                             controller: controller,

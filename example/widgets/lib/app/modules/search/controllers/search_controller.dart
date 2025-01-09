@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:armoyu_widgets/sources/card/widgets/card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -6,6 +8,7 @@ import 'package:widgets/app/services/app_service.dart';
 class SearchViewController extends GetxController {
   Rxn<Widget> widget = Rxn();
   Rxn<Widget> widget2 = Rxn();
+  Rxn<Widget> widget3 = Rxn();
 
   @override
   void onInit() {
@@ -28,6 +31,11 @@ class SearchViewController extends GetxController {
       content: [],
       firstFetch: true,
       profileFunction: (userID, username) {},
+    );
+    widget3.value = AppService.widgets.news.newsCarouselWidget(
+      newsFunction: (news) {
+        log(news.newsID.toString());
+      },
     );
   }
 }

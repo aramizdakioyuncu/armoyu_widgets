@@ -9,7 +9,7 @@ import 'package:armoyu_widgets/sources/chat/controllers/chatlist_controller.dart
 import 'package:armoyu_widgets/sources/chat/controllers/newchatlist_controller.dart';
 import 'package:armoyu_widgets/translations/app_translation.dart';
 import 'package:armoyu_widgets/widgets/text.dart';
-import 'package:armoyu_widgets/widgetsv2/chat/chat_widgetv2.dart';
+import 'package:armoyu_widgets/widgetsv2/chat/chat_widget.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';

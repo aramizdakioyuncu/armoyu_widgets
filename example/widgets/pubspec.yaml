@@ -39,6 +39,7 @@ dependencies:
   marquee: ^2.3.0
   socket_io_client: ^3.0.0
   audioplayers: ^6.1.0
+  carousel_slider: ^5.0.0
 
 
 
