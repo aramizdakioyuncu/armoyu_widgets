@@ -363,39 +363,19 @@ class PostWidget2 {
               showPOPcard
                   ? CustomCardsV2(service).cardWidget(
                       context: Get.context!,
-                      title: "POP",
+                      title: CustomCardType.playerPOP,
                       content: [],
-                      icon: const Icon(
-                        Icons.remove_red_eye_outlined,
-                        size: 15,
-                        color: Colors.white,
-                      ),
-                      effectcolor: const Color.fromARGB(255, 175, 10, 10)
-                          .withOpacity(0.7),
                       firstFetch: true,
-                      profileFunction: (userID, username) {
-                        log(userID.toString());
-                        log(username.toString());
-                      },
+                      profileFunction: profileFunction,
                     )
                   : const SizedBox.shrink(),
               showTPcard
                   ? CustomCardsV2(service).cardWidget(
                       context: Get.context!,
-                      title: "TP",
+                      title: CustomCardType.playerXP,
                       content: [],
-                      icon: const Icon(
-                        Icons.auto_graph_outlined,
-                        size: 15,
-                        color: Colors.white,
-                      ),
-                      effectcolor: const Color.fromARGB(255, 10, 84, 175)
-                          .withOpacity(0.7),
                       firstFetch: true,
-                      profileFunction: (userID, username) {
-                        log(userID.toString());
-                        log(username.toString());
-                      },
+                      profileFunction: profileFunction,
                     )
                   : const SizedBox.shrink(),
             ],

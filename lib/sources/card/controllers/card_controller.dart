@@ -1,30 +1,28 @@
 import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_services/core/models/ARMOYU/API/utils/player_pop_list.dart';
 import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
+import 'package:armoyu_widgets/sources/card/widgets/card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class CardsControllerV2 extends GetxController {
   final ARMOYUServices service;
-  final String title;
+  final CustomCardType title;
   final List<APIPlayerPop> content;
-  final Icon icon;
-  final Color effectcolor;
+
   final bool firstFetch;
 
   CardsControllerV2({
     required this.service,
     required this.title,
     required this.content,
-    required this.icon,
-    required this.effectcolor,
     required this.firstFetch,
   });
 
   var morefetchProcces = false.obs;
   var firstFetchProcces = false.obs;
 
-  var xtitle = Rxn<String>(null);
+  var xtitle = Rxn<CustomCardType>(null);
   var xcontent = Rxn<List<APIPlayerPop>>(null);
   var xicon = Rxn<Icon>(null);
   var xeffectcolor = Rxn<Color>(null);
@@ -37,8 +35,25 @@ class CardsControllerV2 extends GetxController {
 
     xtitle.value = title;
     xcontent.value = content;
-    xicon.value = icon;
-    xeffectcolor.value = effectcolor;
+
+    if (xtitle.value == CustomCardType.playerPOP) {
+      xicon.value = const Icon(
+        Icons.remove_red_eye_outlined,
+        size: 15,
+        color: Colors.white,
+      );
+      xeffectcolor.value =
+          const Color.fromARGB(255, 175, 10, 10).withOpacity(0.7);
+    } else {
+      xicon.value = const Icon(
+        Icons.auto_graph_outlined,
+        size: 15,
+        color: Colors.white,
+      );
+      xeffectcolor.value =
+          const Color.fromARGB(255, 10, 84, 175).withOpacity(0.7);
+    }
+
     xscrollController.value = ScrollController();
     xfirstFetch.value = firstFetch;
 
@@ -75,7 +90,7 @@ class CardsControllerV2 extends GetxController {
 
     log(">>$currentPage");
     PlayerPopResponse response;
-    if (xtitle.value == "POP") {
+    if (xtitle.value == CustomCardType.playerPOP) {
       response = await service.utilsServices.getplayerpop(
         page: currentPage,
       );

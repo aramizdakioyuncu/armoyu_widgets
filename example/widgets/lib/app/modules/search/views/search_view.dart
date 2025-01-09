@@ -14,14 +14,14 @@ class SearchView extends StatelessWidget {
         forceMaterialTransparency: true,
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("data"),
           Obx(
             () => controller.widget.value!,
           ),
-          // Obx(
-          //   () => controller.widget2.value!,
-          // ),
+          Obx(
+            () => controller.widget2.value!,
+          ),
         ],
       ),
     );

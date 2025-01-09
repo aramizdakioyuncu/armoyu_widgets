@@ -7,16 +7,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+enum CustomCardType { playerXP, playerPOP }
+
 class CustomCardsV2 {
   final ARMOYUServices service;
   const CustomCardsV2(this.service);
 
   Widget cardWidget({
     required BuildContext context,
-    required String title,
+    required CustomCardType title,
     required List<APIPlayerPop> content,
-    required Icon icon,
-    required Color effectcolor,
     required bool firstFetch,
     required Function(int userID, String username) profileFunction,
   }) {
@@ -24,12 +24,10 @@ class CustomCardsV2 {
       CardsControllerV2(
         service: service,
         content: content,
-        effectcolor: effectcolor,
         firstFetch: firstFetch,
-        icon: icon,
         title: title,
       ),
-      tag: DateTime.now().microsecondsSinceEpoch.toString() + title,
+      tag: DateTime.now().microsecondsSinceEpoch.toString() + title.name,
     );
 
     return Obx(
@@ -134,7 +132,10 @@ class CustomCardsV2 {
                                         controller.xicon.value!,
                                         const SizedBox(width: 5),
                                         Text(
-                                          cardData.oyuncuPop.toString(),
+                                          title == CustomCardType.playerXP
+                                              ? cardData.oyuncuSeviyeSezonlukXP
+                                                  .toString()
+                                              : cardData.oyuncuPop.toString(),
                                           style: const TextStyle(
                                             color: Colors.white,
                                           ),

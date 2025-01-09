@@ -1,3 +1,4 @@
+import 'package:armoyu_widgets/sources/card/widgets/card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:widgets/app/services/app_service.dart';
@@ -9,27 +10,24 @@ class SearchViewController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    initfunction();
+  }
 
-    // widget.value = AppService.widgets.gallery.mediaGallery(
-    //   context: Get.context!,
-    // );
-
+  initfunction() async {
     widget.value = AppService.widgets.cards.cardWidget(
       context: Get.context!,
-      title: "POP",
+      title: CustomCardType.playerPOP,
       content: [],
-      icon: const Icon(Icons.abc),
-      effectcolor: Colors.black,
       firstFetch: true,
       profileFunction: (userID, username) {},
     );
-    // widget2.value = AppService.widgets.cards.cardWidget(
-    //   context: Get.context!,
-    //   title: "POP",
-    //   content: [],
-    //   icon: Icon(Icons.abc),
-    //   effectcolor: Colors.black,
-    //   firstFetch: true,
-    // );
+
+    widget2.value = AppService.widgets.cards.cardWidget(
+      context: Get.context!,
+      title: CustomCardType.playerXP,
+      content: [],
+      firstFetch: true,
+      profileFunction: (userID, username) {},
+    );
   }
 }

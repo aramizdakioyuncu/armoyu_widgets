@@ -64,8 +64,8 @@ class SocialWidget {
                       postdetail: postdetail,
                       controller: controller,
                       profileFunction: profileFunction,
-                      showPOPcard: postIndex / 3 == 1 || postIndex / 12 == 1,
-                      showTPcard: postIndex / 8 == 1 || postIndex / 17 == 1,
+                      showPOPcard: postIndex % 5 == 0 && postIndex != 0,
+                      showTPcard: postIndex % 5 == 3 && postIndex != 0,
                     );
                   },
                 )
@@ -96,16 +96,13 @@ class SocialWidget {
                         itemBuilder: (context, postIndex) {
                           var postdetail = Rx<APIPostList>(
                               controller.postsList.value![postIndex]);
-
                           return PostWidget2.postWidget(
                             service: service,
                             postdetail: postdetail,
                             controller: controller,
                             profileFunction: profileFunction,
-                            showPOPcard:
-                                postIndex / 3 == 1 || postIndex / 12 == 1,
-                            showTPcard:
-                                postIndex / 8 == 1 || postIndex / 17 == 1,
+                            showPOPcard: postIndex % 5 == 0 && postIndex != 0,
+                            showTPcard: postIndex % 5 == 3 && postIndex != 0,
                           );
                         },
                       ),
