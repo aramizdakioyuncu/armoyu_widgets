@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:armoyu_widgets/data/models/ARMOYU/group.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/news.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/school.dart';
@@ -7,13 +9,14 @@ import 'package:armoyu_widgets/data/models/Chat/chat.dart';
 import 'package:armoyu_widgets/data/models/Social/post.dart';
 import 'package:armoyu_widgets/data/models/Story/storylist.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class UserAccounts {
   Rx<User> user;
   Rx<String> sessionTOKEN;
 
-  Rx<String> language;
+  Rxn<String> language;
   //Sosyal KISIM
   List<Post>? widgetPosts;
   List<StoryList>? widgetStoriescard;
@@ -80,6 +83,21 @@ class UserAccounts {
 
   get value => null;
 
+  String localeToJson(Locale locale) {
+    return jsonEncode({
+      'languageCode': locale.languageCode,
+      'countryCode': locale.countryCode,
+    });
+  }
+
+  Locale localeFromJson(String jsonString) {
+    final Map<String, dynamic> jsonMap = jsonDecode(jsonString);
+    return Locale(
+      jsonMap['languageCode'],
+      jsonMap['countryCode'],
+    );
+  }
+
   // Convert UserAccounts instance to JSON
   Map<String, dynamic> toJson() {
     return {
@@ -122,7 +140,7 @@ class UserAccounts {
     return UserAccounts(
       user: User.fromJson(json['user']).obs,
       sessionTOKEN: Rx(json['sessionTOKEN']),
-      language: Rx(json['language']),
+      language: Rxn(json['language']),
       widgetPosts: (json['widgetPosts'] as List<dynamic>?)
           ?.map((post) => Post.fromJson(post))
           .toList(),

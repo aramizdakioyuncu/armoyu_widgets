@@ -80,15 +80,12 @@ class CardsControllerV2 extends GetxController {
     // Sayfa başına gösterilecek içerik sayısı
     int itemsPerPage = 10;
 
-// Şu anki içerik sayısını alıyoruz
+    // Şu anki içerik sayısını alıyoruz
     int currentContentCount = xcontent.value!.length;
 
-// Sayfa numarasını içerik sayısına göre hesaplıyoruz
+    // Sayfa numarasını içerik sayısına göre hesaplıyoruz
     int currentPage = (currentContentCount / itemsPerPage).ceil() + 1;
 
-    // int currentPage = xcontent.value!.length ~/ 10 + 1;
-
-    log(">>$currentPage");
     PlayerPopResponse response;
     if (xtitle.value == CustomCardType.playerPOP) {
       response = await service.utilsServices.getplayerpop(

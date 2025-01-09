@@ -53,7 +53,7 @@ class FunctionService {
       UserAccounts(
         user: userdetail.obs,
         sessionTOKEN: Rx(response.result.description),
-        language: Rx(""),
+        language: Rxn(),
       ),
     );
 
@@ -96,7 +96,7 @@ class FunctionService {
     UserAccounts userdetail = UserAccounts(
       user: ARMOYUFunctions.userfetch(oyuncubilgi).obs,
       sessionTOKEN: Rx(response.result.description),
-      language: Rx(""),
+      language: Rxn(),
     );
 
     //İlk defa giriş yapılıyorsa

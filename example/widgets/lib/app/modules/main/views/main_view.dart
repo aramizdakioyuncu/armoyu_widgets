@@ -127,7 +127,7 @@ class MainView extends StatelessWidget {
                               sessionTOKEN: Rx(
                                 response.result.description,
                               ),
-                              language: Rx("TR"),
+                              language: Rxn(),
                             ),
                           );
                           bool status = await AppService.service.setup();

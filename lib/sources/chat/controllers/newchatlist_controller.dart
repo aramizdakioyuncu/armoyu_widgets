@@ -25,7 +25,7 @@ class SourceNewchatlistController extends GetxController {
     UserAccounts(
       user: User().obs,
       sessionTOKEN: Rx(""),
-      language: Rx(""),
+      language: Rxn(),
     ),
   );
 

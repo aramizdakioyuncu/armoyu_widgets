@@ -36,7 +36,7 @@ class MainController extends GetxController {
         ).obs,
         sessionTOKEN: Rx(
             "5221d07eb0049191ed17b3d1ea773941aa3ab1960c9696c64de2281766d13df2"),
-        language: Rx(""),
+        language: Rxn(),
       ),
     );
   }
