@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_services/core/models/ARMOYU/API/utils/player_pop_list.dart';
 import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
@@ -9,7 +7,7 @@ import 'package:get/get.dart';
 class CardsControllerV2 extends GetxController {
   final ARMOYUServices service;
   final String title;
-  final List<Map<String, String>> content;
+  final List<APIPlayerPop> content;
   final Icon icon;
   final Color effectcolor;
   final bool firstFetch;
@@ -27,7 +25,7 @@ class CardsControllerV2 extends GetxController {
   var firstFetchProcces = false.obs;
 
   var xtitle = Rxn<String>(null);
-  var xcontent = Rxn<List<Map<String, String>>>(null);
+  var xcontent = Rxn<List<APIPlayerPop>>(null);
   var xicon = Rxn<Icon>(null);
   var xeffectcolor = Rxn<Color>(null);
   var xscrollController = Rxn<ScrollController>(null);
@@ -97,16 +95,9 @@ class CardsControllerV2 extends GetxController {
       currentPage++;
     }
 
-    xcontent.value ??= <Map<String, String>>[];
+    xcontent.value ??= <APIPlayerPop>[];
     for (APIPlayerPop element in response.response!) {
-      xcontent.value!.add({
-        "userID": element.oyuncuID.toString(),
-        "image": element.oyuncuAvatar,
-        "displayname": element.oyuncuAdSoyad,
-        "score": xtitle.value == "POP"
-            ? element.oyuncuPop.toString()
-            : element.oyuncuSeviyeSezonlukXP.toString()
-      });
+      xcontent.value!.add(element);
     }
 
     morefetchProcces.value = false;

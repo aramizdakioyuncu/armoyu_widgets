@@ -1,5 +1,6 @@
 import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_services/core/models/ARMOYU/API/post/post_detail.dart';
+import 'package:armoyu_widgets/sources/card/widgets/card_widget.dart';
 import 'package:armoyu_widgets/sources/postscomment/views/postcomment_view.dart';
 import 'package:armoyu_widgets/sources/social/controllers/post_controller.dart';
 import 'package:armoyu_widgets/translations/app_translation.dart';
@@ -17,6 +18,8 @@ class PostWidget2 {
     required Rx<APIPostList> postdetail,
     required PostController controller,
     required Function(int userID, String username) profileFunction,
+    bool showTPcard = false,
+    bool showPOPcard = false,
   }) {
     var likeButtonKey = GlobalKey<LikeButtonState>().obs;
     var likebutton = LikeButton(
@@ -357,6 +360,44 @@ class PostWidget2 {
                   ],
                 ),
               ),
+              showPOPcard
+                  ? CustomCardsV2(service).cardWidget(
+                      context: Get.context!,
+                      title: "POP",
+                      content: [],
+                      icon: const Icon(
+                        Icons.remove_red_eye_outlined,
+                        size: 15,
+                        color: Colors.white,
+                      ),
+                      effectcolor: const Color.fromARGB(255, 175, 10, 10)
+                          .withOpacity(0.7),
+                      firstFetch: true,
+                      profileFunction: (userID, username) {
+                        log(userID.toString());
+                        log(username.toString());
+                      },
+                    )
+                  : const SizedBox.shrink(),
+              showTPcard
+                  ? CustomCardsV2(service).cardWidget(
+                      context: Get.context!,
+                      title: "TP",
+                      content: [],
+                      icon: const Icon(
+                        Icons.auto_graph_outlined,
+                        size: 15,
+                        color: Colors.white,
+                      ),
+                      effectcolor: const Color.fromARGB(255, 10, 84, 175)
+                          .withOpacity(0.7),
+                      firstFetch: true,
+                      profileFunction: (userID, username) {
+                        log(userID.toString());
+                        log(username.toString());
+                      },
+                    )
+                  : const SizedBox.shrink(),
             ],
           ),
         );

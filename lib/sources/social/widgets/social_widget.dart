@@ -64,6 +64,8 @@ class SocialWidget {
                       postdetail: postdetail,
                       controller: controller,
                       profileFunction: profileFunction,
+                      showPOPcard: postIndex / 3 == 1 || postIndex / 12 == 1,
+                      showTPcard: postIndex / 8 == 1 || postIndex / 17 == 1,
                     );
                   },
                 )
@@ -100,6 +102,10 @@ class SocialWidget {
                             postdetail: postdetail,
                             controller: controller,
                             profileFunction: profileFunction,
+                            showPOPcard:
+                                postIndex / 3 == 1 || postIndex / 12 == 1,
+                            showTPcard:
+                                postIndex / 8 == 1 || postIndex / 17 == 1,
                           );
                         },
                       ),

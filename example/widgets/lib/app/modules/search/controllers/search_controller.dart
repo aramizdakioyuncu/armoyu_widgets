@@ -21,6 +21,7 @@ class SearchViewController extends GetxController {
       icon: const Icon(Icons.abc),
       effectcolor: Colors.black,
       firstFetch: true,
+      profileFunction: (userID, username) {},
     );
     // widget2.value = AppService.widgets.cards.cardWidget(
     //   context: Get.context!,

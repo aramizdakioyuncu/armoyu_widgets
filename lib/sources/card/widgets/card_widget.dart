@@ -1,4 +1,5 @@
 import 'package:armoyu_services/armoyu_services.dart';
+import 'package:armoyu_services/core/models/ARMOYU/API/utils/player_pop_list.dart';
 import 'package:armoyu_widgets/sources/card/controllers/card_controller.dart';
 import 'package:armoyu_widgets/widgets/Skeletons/cards_skeleton.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -13,10 +14,11 @@ class CustomCardsV2 {
   Widget cardWidget({
     required BuildContext context,
     required String title,
-    required List<Map<String, String>> content,
+    required List<APIPlayerPop> content,
     required Icon icon,
     required Color effectcolor,
     required bool firstFetch,
+    required Function(int userID, String username) profileFunction,
   }) {
     final controller = Get.put(
       CardsControllerV2(
@@ -52,18 +54,14 @@ class CustomCardsV2 {
                     );
                   }
 
-                  Map<String, String> cardData =
-                      controller.xcontent.value![index];
+                  APIPlayerPop cardData = controller.xcontent.value![index];
                   return InkWell(
                     borderRadius: BorderRadius.circular(15),
                     onTap: () {
-                      // PageFunctions functions = PageFunctions();
-                      // functions.pushProfilePage(
-                      //   context,
-                      //   User(
-                      //     userID: int.parse(cardData["userID"].toString()),
-                      //   ),
-                      // );
+                      profileFunction(
+                        cardData.oyuncuID,
+                        cardData.oyuncuKullaniciAdi,
+                      );
                     },
                     child: Container(
                       width: 150,
@@ -73,7 +71,7 @@ class CustomCardsV2 {
                           fit: BoxFit.cover,
                           filterQuality: FilterQuality.high,
                           image: CachedNetworkImageProvider(
-                            cardData["image"]!,
+                            cardData.oyuncuAvatar,
                           ),
                         ),
                       ),
@@ -122,7 +120,7 @@ class CustomCardsV2 {
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     Text(
-                                      cardData["displayname"]!,
+                                      cardData.oyuncuAdSoyad,
                                       style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w500,
@@ -136,7 +134,7 @@ class CustomCardsV2 {
                                         controller.xicon.value!,
                                         const SizedBox(width: 5),
                                         Text(
-                                          cardData["score"].toString(),
+                                          cardData.oyuncuPop.toString(),
                                           style: const TextStyle(
                                             color: Colors.white,
                                           ),
