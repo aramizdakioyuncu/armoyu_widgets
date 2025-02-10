@@ -1,3 +1,3 @@
-## [1.0.0+34]
+## [1.0.0+35]
 
-- photoviewer da küçük bir değişiklik.
+- photoviewer page olarak gidilmesi yerine dialog olarak gidilmesi postcontroller da denendi.

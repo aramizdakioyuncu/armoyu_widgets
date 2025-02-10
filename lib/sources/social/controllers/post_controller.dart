@@ -762,27 +762,57 @@ class PostController extends GetxController {
 
         GestureDetector aa = GestureDetector(
           onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => PhotoviewerView(
-                  service: service,
-                  currentUserID: currentUser!.userID!,
-                  media: postInfo.value.media!
-                      .map(
-                        (e) => Media(
-                          mediaID: e.mediaID,
-                          mediaURL: MediaURL(
-                            bigURL: Rx(e.mediaURL.bigURL),
-                            normalURL: Rx(e.mediaURL.normalURL),
-                            minURL: Rx(e.mediaURL.minURL),
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return Dialog(
+                  insetPadding: EdgeInsets.zero, // Kenar boşluğunu kaldırır
+
+                  backgroundColor: Colors.transparent,
+                  child: PhotoviewerView(
+                    service: service,
+                    media: postInfo.value.media!
+                        .map(
+                          (e) => Media(
+                            mediaID: e.mediaID,
+                            mediaURL: MediaURL(
+                              bigURL: Rx(e.mediaURL.bigURL),
+                              normalURL: Rx(e.mediaURL.normalURL),
+                              minURL: Rx(e.mediaURL.minURL),
+                            ),
                           ),
-                        ),
-                      )
-                      .toList(),
-                  initialIndex: i,
-                ),
-              ),
+                        )
+                        .toList(),
+                    initialIndex: i,
+                    currentUserID: currentUser!.userID!,
+                    // isFile: isFile,
+                    // isMemory: isMemory,
+                  ),
+                );
+              },
             );
+
+            // Navigator.of(context).push(
+            //   MaterialPageRoute(
+            //     builder: (context) => PhotoviewerView(
+            //       service: service,
+            //       currentUserID: currentUser!.userID!,
+            //       media: postInfo.value.media!
+            //           .map(
+            //             (e) => Media(
+            //               mediaID: e.mediaID,
+            //               mediaURL: MediaURL(
+            //                 bigURL: Rx(e.mediaURL.bigURL),
+            //                 normalURL: Rx(e.mediaURL.normalURL),
+            //                 minURL: Rx(e.mediaURL.minURL),
+            //               ),
+            //             ),
+            //           )
+            //           .toList(),
+            //       initialIndex: i,
+            //     ),
+            //   ),
+            // );
           },
           child: mediaSablon(
             indexlength: postInfo.value.media!.length,
