@@ -36,105 +36,107 @@ class PhotoviewerView extends StatelessWidget {
         tag: media[initialIndex].mediaID.toString());
     return Scaffold(
       appBar: AppBar(
-        actions: [
-          Obx(
-            () => Visibility(
-              visible: controller.isRotationprocces.value,
-              child: const Column(
-                children: [
-                  CircularProgressIndicator(
-                    color: Colors.red,
+        actions: media[initialIndex].ownerID != currentUserID
+            ? null
+            : [
+                Obx(
+                  () => Visibility(
+                    visible: controller.isRotationprocces.value,
+                    child: const Column(
+                      children: [
+                        CircularProgressIndicator(
+                          color: Colors.red,
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
-            ),
-          ),
-          Obx(
-            () => Visibility(
-              visible: controller.isRotationedit.value &&
-                  !controller.isRotationprocces.value,
-              child: Column(
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      controller.mediaAngle.value -= pi / 2;
-                      controller.rotateangle.value -= 90;
-                    },
-                    icon: const Icon(Icons.rotate_left_sharp),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.isRotationedit.value &&
+                        !controller.isRotationprocces.value,
+                    child: Column(
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            controller.mediaAngle.value -= pi / 2;
+                            controller.rotateangle.value -= 90;
+                          },
+                          icon: const Icon(Icons.rotate_left_sharp),
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
-            ),
-          ),
-          Obx(
-            () => Visibility(
-              visible: controller.isRotationedit.value &&
-                  !controller.isRotationprocces.value,
-              child: Column(
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      controller.mediaAngle += pi / 2;
-                      controller.rotateangle += 90;
-                    },
-                    icon: const Icon(Icons.rotate_right_sharp),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.isRotationedit.value &&
+                        !controller.isRotationprocces.value,
+                    child: Column(
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            controller.mediaAngle += pi / 2;
+                            controller.rotateangle += 90;
+                          },
+                          icon: const Icon(Icons.rotate_right_sharp),
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
-            ),
-          ),
-          Obx(
-            () => Visibility(
-              visible: controller.isRotationedit.value &&
-                  !controller.isRotationprocces.value,
-              child: Column(
-                children: [
-                  IconButton(
-                    onPressed: () async {
-                      if (controller.isRotationprocces.value) {
-                        return;
-                      }
-                      controller.isRotationprocces.value = true;
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.isRotationedit.value &&
+                        !controller.isRotationprocces.value,
+                    child: Column(
+                      children: [
+                        IconButton(
+                          onPressed: () async {
+                            if (controller.isRotationprocces.value) {
+                              return;
+                            }
+                            controller.isRotationprocces.value = true;
 
-                      MediaRotationResponse response =
-                          await service.mediaServices.rotation(
-                        mediaID: media[initialIndex].mediaID,
-                        rotate: 360 - (controller.rotateangle % 360),
-                      );
+                            MediaRotationResponse response =
+                                await service.mediaServices.rotation(
+                              mediaID: media[initialIndex].mediaID,
+                              rotate: 360 - (controller.rotateangle % 360),
+                            );
 
-                      if (!response.result.status) {
+                            if (!response.result.status) {
+                              controller.mediaAngle.value = 0;
+                              controller.isRotationedit.value = false;
+                              controller.isRotationprocces.value = false;
+                              return;
+                            }
+
+                            controller.isRotationedit.value = false;
+                            controller.isRotationprocces.value = false;
+                          },
+                          icon: const Icon(Icons.check),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: (media[initialIndex].ownerID == currentUserID) &&
+                            !controller.isRotationprocces.value
+                        ? true
+                        : false,
+                    child: IconButton(
+                      icon: const Icon(Icons.crop_rotate_outlined),
+                      onPressed: () async {
+                        controller.isRotationedit.value =
+                            !controller.isRotationedit.value;
                         controller.mediaAngle.value = 0;
-                        controller.isRotationedit.value = false;
-                        controller.isRotationprocces.value = false;
-                        return;
-                      }
-
-                      controller.isRotationedit.value = false;
-                      controller.isRotationprocces.value = false;
-                    },
-                    icon: const Icon(Icons.check),
+                      },
+                    ),
                   ),
-                ],
-              ),
-            ),
-          ),
-          Obx(
-            () => Visibility(
-              visible: (media[initialIndex].ownerID == currentUserID) &&
-                      !controller.isRotationprocces.value
-                  ? true
-                  : false,
-              child: IconButton(
-                icon: const Icon(Icons.crop_rotate_outlined),
-                onPressed: () async {
-                  controller.isRotationedit.value =
-                      !controller.isRotationedit.value;
-                  controller.mediaAngle.value = 0;
-                },
-              ),
-            ),
-          ),
-        ],
+                ),
+              ],
       ),
       body: Obx(
         () => Transform.rotate(

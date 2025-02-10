@@ -1,3 +1,3 @@
-## [1.0.0+33]
+## [1.0.0+34]
 
-- Test sürümü sonu.
+- photoviewer da küçük bir değişiklik.
