@@ -1,8 +1,6 @@
 import 'package:armoyu_services/armoyu_services.dart';
-import 'package:armoyu_services/core/models/ARMOYU/API/login&register&password/login.dart';
 import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
 import 'package:armoyu_widgets/armoyuwidgets.dart';
-import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/data/models/useraccounts.dart';
 
@@ -80,12 +78,6 @@ class MainView extends StatelessWidget {
                           AppService.widgets =
                               ARMOYUWidgets(service: AppService.service);
 
-                          // LoginResponse response = await AppService
-                          //     .service.authServices
-                          //     .loginwithbarriertoken(
-                          //   barriertoken:
-                          //       "5221d07eb0049191ed17b3d1ea773941aa3ab1960c9696c64de2281766d13df2",
-                          // );
                           LoginResponse response = await AppService
                               .service.authServices
                               .login(username: "deneme", password: "deneme");
@@ -93,40 +85,11 @@ class MainView extends StatelessWidget {
                           if (!response.result.status) {
                             return;
                           }
-                          APILogin userinfo = response.response!;
 
                           AppService.widgets.accountController.changeUser(
                             UserAccounts(
-                              user: User(
-                                userID: userinfo.playerID,
-                                displayName: Rx(userinfo.displayName!),
-                                userName: Rx(userinfo.username!),
-                                avatar: Media(
-                                  mediaID: 0,
-                                  mediaURL: MediaURL(
-                                    bigURL:
-                                        Rx(userinfo.avatar!.mediaURL.bigURL),
-                                    normalURL:
-                                        Rx(userinfo.avatar!.mediaURL.normalURL),
-                                    minURL:
-                                        Rx(userinfo.avatar!.mediaURL.minURL),
-                                  ),
-                                ),
-                                banner: Media(
-                                  mediaID: 0,
-                                  mediaURL: MediaURL(
-                                    bigURL:
-                                        Rx(userinfo.banner!.mediaURL.bigURL),
-                                    normalURL:
-                                        Rx(userinfo.banner!.mediaURL.normalURL),
-                                    minURL:
-                                        Rx(userinfo.banner!.mediaURL.minURL),
-                                  ),
-                                ),
-                              ).obs,
-                              sessionTOKEN: Rx(
-                                response.result.description,
-                              ),
+                              user: User.apilogintoUser(response.response!).obs,
+                              sessionTOKEN: Rx(response.result.description),
                               language: Rxn(),
                             ),
                           );

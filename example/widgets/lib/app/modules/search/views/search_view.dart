@@ -1,6 +1,11 @@
+import 'dart:developer';
+
+import 'package:armoyu_services/core/models/ARMOYU/API/search/search_list.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:widgets/app/modules/search/controllers/search_controller.dart';
+import 'package:widgets/app/services/app_service.dart';
 
 class SearchView extends StatelessWidget {
   const SearchView({super.key});
@@ -8,6 +13,9 @@ class SearchView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(SearchViewController());
+    final filteredItemsv2 = <APISearchDetail>[].obs;
+    final allItemsv2 = <APISearchDetail>[].obs;
+    var search = SearchController().obs;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Search'),
@@ -24,6 +32,23 @@ class SearchView extends StatelessWidget {
           ),
           Obx(
             () => controller.widget2.value!,
+          ),
+          AppService.widgets.searchBar.custom1(
+            allItems: allItemsv2,
+            filteredItems: filteredItemsv2,
+            searchController: search.value,
+            autofocus: true,
+            itemSelected: (id, val, username, type) {
+              log(id.toString());
+              log(val.toString());
+              log(username.toString());
+              log(type.toString());
+              // Get.toNamed("/home"),
+              // Functions.gotoPage(
+              //   "/oyuncular/$username",
+              //   getnavgiate: true,
+              // );
+            },
           ),
         ],
       ),

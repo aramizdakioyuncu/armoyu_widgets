@@ -54,8 +54,28 @@ class SourceNewchatlistController extends GetxController {
               user: User(
                 userID: element.userID,
                 displayName: element.displayName,
-                lastlogin: element.lastlogin,
-                lastloginv2: element.lastloginv2,
+                // lastlogin: element.lastlogin,
+                // lastloginv2: element.lastloginv2,
+                detailInfo: Rxn(
+                  UserDetailInfo(
+                    about: Rxn(),
+                    age: Rxn(),
+                    email: Rxn(),
+                    friends: Rxn(),
+                    posts: Rxn(),
+                    awards: Rxn(),
+                    phoneNumber: Rxn(),
+                    birthdayDate: Rxn(),
+                    inviteCode: Rxn(),
+                    lastloginDate:
+                        Rxn(element.detailInfo!.value!.lastloginDate.value),
+                    lastloginDateV2:
+                        Rxn(element.detailInfo!.value!.lastloginDateV2.value),
+                    lastfailedDate: Rxn(),
+                    country: Rxn(),
+                    province: Rxn(),
+                  ),
+                ),
                 avatar: element.avatar,
               ),
               lastmessage: ChatMessage(
@@ -64,8 +84,28 @@ class SourceNewchatlistController extends GetxController {
                 user: User(
                   userID: element.userID,
                   displayName: element.displayName,
-                  lastlogin: element.lastlogin,
-                  lastloginv2: element.lastloginv2,
+                  // lastlogin: element.lastlogin,
+                  // lastloginv2: element.lastloginv2,
+                  detailInfo: Rxn(
+                    UserDetailInfo(
+                      about: Rxn(),
+                      age: Rxn(),
+                      email: Rxn(),
+                      friends: Rxn(),
+                      posts: Rxn(),
+                      awards: Rxn(),
+                      phoneNumber: Rxn(),
+                      birthdayDate: Rxn(),
+                      inviteCode: Rxn(),
+                      lastloginDate:
+                          Rxn(element.detailInfo!.value!.lastloginDate.value),
+                      lastloginDateV2:
+                          Rxn(element.detailInfo!.value!.lastloginDateV2.value),
+                      lastfailedDate: Rxn(),
+                      country: Rxn(),
+                      province: Rxn(),
+                    ),
+                  ),
                 ),
                 isMe: false,
               ).obs,
@@ -117,8 +157,28 @@ class SourceNewchatlistController extends GetxController {
           user: User(
             userID: element.playerID,
             displayName: Rx(element.displayName),
-            lastlogin: Rx(element.lastLogin),
-            lastloginv2: Rx(element.lastLogin),
+            // lastlogin: Rx(element.lastLogin),
+            // lastloginv2: Rx(element.lastLogin),
+
+            detailInfo: Rxn(
+              UserDetailInfo(
+                about: Rxn(),
+                age: Rxn(),
+                email: Rxn(),
+                friends: Rxn(),
+                posts: Rxn(),
+                awards: Rxn(),
+                phoneNumber: Rxn(),
+                birthdayDate: Rxn(),
+                inviteCode: Rxn(),
+                lastloginDate: Rxn(element.lastLogin),
+                lastloginDateV2: Rxn(element.lastLogin),
+                lastfailedDate: Rxn(),
+                country: Rxn(),
+                province: Rxn(),
+              ),
+            ),
+
             avatar: Media(
               mediaID: 0,
               mediaURL: MediaURL(
@@ -134,8 +194,26 @@ class SourceNewchatlistController extends GetxController {
             user: User(
               userID: element.playerID,
               displayName: Rx(element.displayName),
-              lastlogin: Rx(element.lastLogin),
-              lastloginv2: Rx(element.lastLogin),
+              // lastlogin: Rx(element.lastLogin),
+              // lastloginv2: Rx(element.lastLogin),
+              detailInfo: Rxn(
+                UserDetailInfo(
+                  about: Rxn(),
+                  age: Rxn(),
+                  email: Rxn(),
+                  friends: Rxn(),
+                  posts: Rxn(),
+                  awards: Rxn(),
+                  phoneNumber: Rxn(),
+                  birthdayDate: Rxn(),
+                  inviteCode: Rxn(),
+                  lastloginDate: Rxn(element.lastLogin),
+                  lastloginDateV2: Rxn(element.lastLogin),
+                  lastfailedDate: Rxn(),
+                  country: Rxn(),
+                  province: Rxn(),
+                ),
+              ),
             ),
             isMe: false,
           ).obs,

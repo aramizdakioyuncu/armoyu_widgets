@@ -2,10 +2,11 @@ import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_services/core/debouncer.dart';
 import 'package:armoyu_services/core/models/ARMOYU/API/search/search_list.dart';
 import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
-import 'package:armoyu_services/core/models/ARMOYU/user.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+enum ARMOYUSearchType { group, user, station, food }
 
 class ARMOYUSearchBar {
   final ARMOYUServices service;
@@ -14,21 +15,21 @@ class ARMOYUSearchBar {
   final Debouncer debouncer =
       Debouncer(delay: const Duration(milliseconds: 500));
 
-  List<User> filter(List<User> users, String? value) {
+  List<APISearchDetail> filter(List<APISearchDetail> users, String? value) {
     final o1 = users
         .where((element) =>
-            element.displayname!.toLowerCase().startsWith(value!.toLowerCase()))
+            element.value.toLowerCase().startsWith(value!.toLowerCase()))
         .toList();
     final o2 = users
         .where((element) =>
-            element.displayname!.toLowerCase().contains(value!.toLowerCase()))
+            element.value.toLowerCase().contains(value!.toLowerCase()))
         .toList();
 
     final result = o1;
-    final temp = result.map((r) => r.userID.toString()).toSet();
+    final temp = result.map((r) => r.id.toString()).toSet();
 
-    for (User u in o2) {
-      if (temp.add(u.userID.toString())) {
+    for (APISearchDetail u in o2) {
+      if (temp.add(u.id.toString())) {
         result.add(u);
       }
     }
@@ -37,10 +38,12 @@ class ARMOYUSearchBar {
   }
 
   Widget custom1({
-    required RxList<User> allItems,
-    required RxList<User> filteredItems,
+    required RxList<APISearchDetail> allItems,
+    required RxList<APISearchDetail> filteredItems,
     required SearchController searchController,
-    required Function(int id, String val, String username)? itemSelected,
+    required Function(
+            int id, String val, String username, ARMOYUSearchType type)?
+        itemSelected,
     bool autofocus = false,
   }) {
     return SearchAnchor(
@@ -72,13 +75,14 @@ class ARMOYUSearchBar {
           // Yeni kullanıcıları ekleme
           for (APISearchDetail element in response.response!.search) {
             if (!allItems
-                .any((filterelement) => filterelement.userID == element.id)) {
+                .any((filterelement) => filterelement.id == element.id)) {
               allItems.add(
-                User(
-                  userID: element.id,
-                  displayname: element.value,
+                APISearchDetail(
+                  id: element.id,
+                  value: element.value,
                   avatar: element.avatar,
                   username: element.username,
+                  turu: element.turu,
                 ),
               );
             }
@@ -118,18 +122,20 @@ class ARMOYUSearchBar {
                         ),
                       ),
                       title: Text(
-                        filteredItems[index].displayname!,
+                        filteredItems[index].value,
                       ),
                       onTap: () {
                         if (itemSelected != null) {
                           itemSelected(
-                            filteredItems[index].userID!,
-                            filteredItems[index].displayname!,
+                            filteredItems[index].id,
+                            filteredItems[index].value,
                             filteredItems[index].username!,
+                            filteredItems[index].turu == "oyuncu"
+                                ? ARMOYUSearchType.user
+                                : ARMOYUSearchType.group,
                           );
                         }
-                        searchController.text =
-                            filteredItems[index].displayname!;
+                        searchController.text = filteredItems[index].value;
                       },
                     );
                   },

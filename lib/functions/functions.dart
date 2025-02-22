@@ -44,8 +44,8 @@ class ARMOYUFunctions {
       firstName: Rx<String>(response.firstName!),
       lastName: Rx<String>(response.lastName!),
       displayName: Rx<String>(response.displayName!),
-      userMail: Rx<String>(response.detailInfo!.email!),
-      aboutme: Rx<String>(response.detailInfo!.about!),
+      // userMail: Rx<String>(response.detailInfo!.email!),
+      // aboutme: Rx<String>(response.detailInfo!.about!),
       avatar: Media(
         mediaID: response.avatar!.mediaID,
         ownerID: response.playerID,
@@ -65,18 +65,18 @@ class ARMOYUFunctions {
         ),
       ),
       burc: response.burc == null ? null : Rx<String>(response.burc!),
-      invitecode: response.detailInfo!.inviteCode == null
-          ? null
-          : Rx<String>(response.detailInfo!.inviteCode!),
-      lastlogin: response.detailInfo!.lastloginDate == null
-          ? null
-          : Rx<String>(response.detailInfo!.lastloginDate!),
-      lastloginv2: response.detailInfo!.lastloginDateV2 == null
-          ? null
-          : Rx<String>(response.detailInfo!.lastloginDateV2!),
-      lastfaillogin: response.detailInfo!.lastfailedDate == null
-          ? null
-          : Rx<String>(response.detailInfo!.lastfailedDate!),
+      // invitecode: response.detailInfo!.inviteCode == null
+      //     ? null
+      //     : Rx<String>(response.detailInfo!.inviteCode!),
+      // lastlogin: response.detailInfo!.lastloginDate == null
+      //     ? null
+      //     : Rx<String>(response.detailInfo!.lastloginDate!),
+      // lastloginv2: response.detailInfo!.lastloginDateV2 == null
+      //     ? null
+      //     : Rx<String>(response.detailInfo!.lastloginDateV2!),
+      // lastfaillogin: response.detailInfo!.lastfailedDate == null
+      //     ? null
+      //     : Rx<String>(response.detailInfo!.lastfailedDate!),
       job: response.job == null
           ? null
           : armoyujob.Job(
@@ -84,36 +84,74 @@ class ARMOYUFunctions {
               name: response.job!.jobName,
               shortName: response.job!.jobShortName,
             ),
+      detailInfo: response.detailInfo == null
+          ? null
+          : Rxn(
+              UserDetailInfo(
+                about: Rxn(response.detailInfo!.about),
+                age: Rxn(response.detailInfo!.age),
+                email: Rxn(response.detailInfo!.email),
+                friends: Rxn(response.detailInfo!.friends),
+                posts: Rxn(response.detailInfo!.posts),
+                awards: Rxn(response.detailInfo!.awards),
+                phoneNumber: Rxn(response.detailInfo!.phoneNumber),
+                birthdayDate: Rxn(response.detailInfo!.birthdayDate),
+                inviteCode: Rxn(response.detailInfo!.inviteCode),
+                lastloginDate: Rxn(response.detailInfo!.lastloginDate),
+                lastloginDateV2: Rxn(response.detailInfo!.lastloginDateV2),
+                lastfailedDate: Rxn(response.detailInfo!.lastfailedDate),
+                country: response.detailInfo!.country == null
+                    ? Rxn()
+                    : Rxn(
+                        Country(
+                          countryID: response.detailInfo!.country!.countryID,
+                          name: response.detailInfo!.country!.name,
+                          countryCode: response.detailInfo!.country!.code,
+                          phoneCode: response.detailInfo!.country!.phonecode,
+                        ),
+                      ),
+                province: response.detailInfo!.province == null
+                    ? Rxn()
+                    : Rxn(
+                        Province(
+                          provinceID: response.detailInfo!.province!.provinceID,
+                          name: response.detailInfo!.province!.name,
+                          plateCode: response.detailInfo!.province!.platecode,
+                          phoneCode: response.detailInfo!.province!.phonecode,
+                        ),
+                      ),
+              ),
+            ),
       level: Rx<int>(response.level!),
       levelColor: Rx<String>(response.levelColor!),
       xp: Rx<String>(response.levelXP!),
-      awardsCount: response.detailInfo!.awards,
-      postsCount: response.detailInfo!.posts,
-      friendsCount: response.detailInfo!.friends,
-      country: response.detailInfo!.country == null
-          ? null
-          : Country(
-              countryID: response.detailInfo!.country!.countryID,
-              name: response.detailInfo!.country!.name,
-              countryCode: response.detailInfo!.country!.code,
-              phoneCode: response.detailInfo!.country!.phonecode,
-            ).obs,
-      province: response.detailInfo!.province == null
-          ? null
-          : Province(
-              provinceID: response.detailInfo!.province!.provinceID,
-              name: response.detailInfo!.province!.name,
-              plateCode: response.detailInfo!.province!.platecode,
-              phoneCode: response.detailInfo!.province!.phonecode,
-            ).obs,
+      // awardsCount: response.detailInfo!.awards,
+      // postsCount: response.detailInfo!.posts,
+      // friendsCount: response.detailInfo!.friends,
+      // country: response.detailInfo!.country == null
+      //     ? null
+      //     : Country(
+      //         countryID: response.detailInfo!.country!.countryID,
+      //         name: response.detailInfo!.country!.name,
+      //         countryCode: response.detailInfo!.country!.code,
+      //         phoneCode: response.detailInfo!.country!.phonecode,
+      //       ).obs,
+      // province: response.detailInfo!.province == null
+      //     ? null
+      //     : Province(
+      //         provinceID: response.detailInfo!.province!.provinceID,
+      //         name: response.detailInfo!.province!.name,
+      //         plateCode: response.detailInfo!.province!.platecode,
+      //         phoneCode: response.detailInfo!.province!.phonecode,
+      //       ).obs,
       registerDate: response.registeredDateV2,
       role: Role(
         roleID: response.roleID!,
         name: response.roleName!,
         color: response.roleColor!,
       ),
-      birthdayDate: Rxn<String>(response.detailInfo!.birthdayDate),
-      phoneNumber: Rxn<String>(response.detailInfo!.phoneNumber),
+      // birthdayDate: Rxn<String>(response.detailInfo!.birthdayDate),
+      // phoneNumber: Rxn<String>(response.detailInfo!.phoneNumber),
       favTeam: response.favTeam != null
           ? Team(
               teamID: response.favTeam!.teamID,
@@ -346,11 +384,18 @@ class ARMOYUFunctions {
         ),
       );
 
-      if (currentUserAccounts.user.value.country != null) {
+      if (currentUserAccounts.user.value.detailInfo == null) {
+        log("İZİN YOK (COUNTRY)");
+        return;
+      }
+      if (currentUserAccounts.user.value.detailInfo!.value!.country.value !=
+          null) {
         if (country.countryID ==
-            currentUserAccounts.user.value.country!.value.countryID) {
+            currentUserAccounts
+                .user.value.detailInfo!.value!.country.value!.countryID) {
           fetchProvince(
-            currentUserAccounts.user.value.country!.value.countryID,
+            currentUserAccounts
+                .user.value.detailInfo!.value!.country.value!.countryID,
             ARMOYU.countryList.length - 1,
           );
         }
@@ -414,26 +459,50 @@ class ARMOYUFunctions {
     lastName.value.text = currentUserAccounts.user.value.lastName.toString();
 
     var aboutme = TextEditingController().obs;
-    aboutme.value.text = currentUserAccounts.user.value.aboutme.toString();
+
+    if (currentUserAccounts.user.value.detailInfo != null) {
+      aboutme.value.text =
+          currentUserAccounts.user.value.detailInfo!.value!.about.toString();
+    }
 
     var email = TextEditingController().obs;
-    email.value.text = currentUserAccounts.user.value.userMail.toString();
 
-    var birthday = currentUserAccounts.user.value.birthdayDate;
+    if (currentUserAccounts.user.value.detailInfo != null) {
+      email.value.text =
+          currentUserAccounts.user.value.detailInfo!.value!.email.toString();
+    }
+
+    var birthday = "";
+    if (currentUserAccounts.user.value.detailInfo != null) {
+      birthday = currentUserAccounts
+          .user.value.detailInfo!.value!.birthdayDate.value
+          .toString();
+    }
 
     var country = (ProfileKeys.profileselectcountry.tr).obs;
     int? countryIndex = 0;
 
-    if (currentUserAccounts.user.value.country != null) {
-      country.value = currentUserAccounts.user.value.country!.value.name;
-      countryIndex = currentUserAccounts.user.value.country!.value.countryID;
+    if (currentUserAccounts.user.value.detailInfo != null) {
+      if (currentUserAccounts.user.value.detailInfo!.value!.country.value !=
+          null) {
+        country.value = currentUserAccounts
+            .user.value.detailInfo!.value!.country.value!.name;
+        countryIndex = currentUserAccounts
+            .user.value.detailInfo!.value!.country.value!.countryID;
+      }
     }
 
     var province = (ProfileKeys.profileselectcity.tr).obs;
     int? provinceIndex = 0;
-    if (currentUserAccounts.user.value.province != null) {
-      province.value = currentUserAccounts.user.value.province!.value.name;
-      provinceIndex = currentUserAccounts.user.value.province!.value.provinceID;
+
+    if (currentUserAccounts.user.value.detailInfo != null) {
+      if (currentUserAccounts.user.value.detailInfo!.value!.province.value !=
+          null) {
+        province.value = currentUserAccounts
+            .user.value.detailInfo!.value!.province.value!.name;
+        provinceIndex = currentUserAccounts
+            .user.value.detailInfo!.value!.province.value!.provinceID;
+      }
     }
 
     if (ARMOYU.countryList.isNotEmpty) {
@@ -449,9 +518,13 @@ class ARMOYUFunctions {
     }
 
     var phoneNumber = TextEditingController().obs;
-    phoneNumber.value.text =
-        formatString(currentUserAccounts.user.value.phoneNumber.toString());
 
+    if (currentUserAccounts.user.value.detailInfo != null) {
+      phoneNumber.value.text = formatString(
+        currentUserAccounts.user.value.detailInfo!.value!.phoneNumber
+            .toString(),
+      );
+    }
     var passwordControl = TextEditingController().obs;
     var profileeditProcess = false.obs;
     showModalBottomSheet<void>(
@@ -525,8 +598,8 @@ class ARMOYUFunctions {
                               ),
                               Expanded(
                                 child: CustomTextfields(service).costum3(
-                                  placeholder: currentUserAccounts
-                                      .user.value.aboutme!.value,
+                                  placeholder: currentUserAccounts.user.value
+                                      .detailInfo!.value!.about.value,
                                   controller: aboutme,
                                 ),
                               )
@@ -551,8 +624,8 @@ class ARMOYUFunctions {
                               ),
                               Expanded(
                                 child: CustomTextfields(service).costum3(
-                                  placeholder: currentUserAccounts
-                                      .user.value.userMail!.value,
+                                  placeholder: currentUserAccounts.user.value
+                                      .detailInfo!.value!.email.value,
                                   controller: email,
                                 ),
                               )
@@ -694,12 +767,12 @@ class ARMOYUFunctions {
                               Expanded(
                                 child: Obx(
                                   () => CustomButtons.costum1(
-                                    text: birthday!.value!,
+                                    text: birthday,
                                     onPressed: () {
                                       WidgetUtility.cupertinoDatePicker(
                                         context: context,
                                         onChanged: (selectedValue) {
-                                          birthday.value = selectedValue;
+                                          birthday = selectedValue;
                                         },
                                       );
                                     },
@@ -773,8 +846,7 @@ class ARMOYUFunctions {
                                     .value.text
                                     .replaceAll(RegExp(r'[()\s]'), '');
 
-                                List<String> words =
-                                    birthday!.value!.split(".");
+                                List<String> words = birthday.split(".");
                                 if (words.isEmpty) {
                                   return;
                                 }
@@ -844,12 +916,12 @@ class ARMOYUFunctions {
                                         .user.value.displayName!.value =
                                     "${firstName.value.text} ${lastName.value.text}";
 
-                                currentUserAccounts.user.value.aboutme!.value =
-                                    aboutme.value.text;
-                                currentUserAccounts.user.value.userMail =
-                                    email.value.text.obs;
-                                currentUserAccounts.user.value.country!.value =
-                                    Country(
+                                currentUserAccounts.user.value.detailInfo!
+                                    .value!.about.value = aboutme.value.text;
+                                currentUserAccounts.user.value.detailInfo!
+                                    .value!.email.value = email.value.text;
+                                currentUserAccounts.user.value.detailInfo!
+                                    .value!.country.value = Country(
                                   countryID: int.parse(countryID),
                                   name: ARMOYU.countryList[countryIndex!].name,
                                   countryCode: ARMOYU
@@ -857,7 +929,8 @@ class ARMOYUFunctions {
                                   phoneCode: ARMOYU
                                       .countryList[countryIndex!].phoneCode,
                                 );
-                                currentUserAccounts.user.value.province =
+                                currentUserAccounts.user.value
+                                        .detailInfo!.value!.province.value =
                                     provinceID == ""
                                         ? null
                                         : Province(
@@ -874,11 +947,16 @@ class ARMOYUFunctions {
                                                 .countryList[countryIndex!]
                                                 .provinceList![provinceIndex!]
                                                 .phoneCode,
-                                          ).obs;
-                                currentUserAccounts.user.value.phoneNumber!
+                                          );
+                                currentUserAccounts
+                                    .user
+                                    .value
+                                    .detailInfo!
+                                    .value!
+                                    .phoneNumber
                                     .value = cleanedphoneNumber;
-                                currentUserAccounts.user.value.birthdayDate!
-                                    .value = birthday.value;
+                                currentUserAccounts.user.value.detailInfo!
+                                    .value!.birthdayDate.value = birthday;
 
                                 ARMOYUWidget.toastNotification(
                                   response.description,

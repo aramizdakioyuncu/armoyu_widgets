@@ -195,18 +195,27 @@ class ChatWidget {
                         ),
                         Row(
                           children: [
-                            controller.xchat.value!.user.lastloginv2 == null
+                            controller.xchat.value!.user.detailInfo!.value!
+                                        .lastloginDateV2.value ==
+                                    null
                                 ? Shimmer.fromColors(
                                     baseColor: Colors.grey[300]!,
                                     highlightColor: Colors.grey[100]!,
                                     child: Container(width: 20),
                                   )
                                 : Text(
-                                    controller.xchat.value!.user.lastloginv2 ==
+                                    controller.xchat.value!.user.detailInfo!
+                                                .value!.lastloginDateV2.value ==
                                             null
                                         ? ""
                                         : controller
-                                            .xchat.value!.user.lastloginv2
+                                            .xchat
+                                            .value!
+                                            .user
+                                            .detailInfo!
+                                            .value!
+                                            .lastloginDateV2
+                                            .value
                                             .toString()
                                             .toString()
                                             .replaceAll(
@@ -228,7 +237,12 @@ class ChatWidget {
                                     style: TextStyle(
                                       fontSize: 10,
                                       color: controller
-                                                  .xchat.value!.user.lastloginv2
+                                                  .xchat
+                                                  .value!
+                                                  .user
+                                                  .detailInfo!
+                                                  .value!
+                                                  .lastloginDateV2
                                                   .toString() ==
                                               "Çevrimiçi"
                                           ? Colors.green
