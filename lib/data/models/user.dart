@@ -669,7 +669,7 @@ class UserDetailInfo {
       lastloginDate: Rxn(json['lastloginDate']),
       lastloginDateV2: Rxn(json['lastloginDateV2']),
       lastfailedDate: Rxn(json['lastfailedDate']),
-      country: Rxn(json['country']),
+      country: Rxn(Country.fromJson(json['country'])),
       province: Rxn(Province.fromJson(json['province'])),
     );
   }

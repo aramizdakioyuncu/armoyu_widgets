@@ -21,7 +21,11 @@ class Country {
       name: json['name'],
       countryCode: json['countryCode'],
       phoneCode: json['phoneCode'],
-      provinceList: json['provinceList'],
+      provinceList: json['provinceList'] != null
+          ? (json['provinceList'] as List<dynamic>?)
+              ?.map((friendJson) => Province.fromJson(friendJson))
+              .toList()
+          : null,
     );
   }
 
@@ -31,7 +35,8 @@ class Country {
       'name': name,
       'countryCode': countryCode,
       'phoneCode': phoneCode,
-      'provinceList': provinceList,
+      'provinceList':
+          provinceList?.map((province) => province.toJson()).toList(),
     };
   }
 }

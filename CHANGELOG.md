@@ -1,3 +1,3 @@
-## [1.0.0+35]
+## [1.0.0+40]
 
-- photoviewer page olarak gidilmesi yerine dialog olarak gidilmesi postcontroller da denendi.
+- Country classındaki sorun çözüldü.
