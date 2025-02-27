@@ -94,7 +94,7 @@ class FilterItem {
                 child: CachedNetworkImage(
                   imageUrl: media!.mediaURL.normalURL.value,
                   fit: BoxFit.cover,
-                  color: color!.withOpacity(0.5),
+                  color: color!.withValues(alpha: 0.5),
                   colorBlendMode: BlendMode.hardLight,
                 ),
               ),

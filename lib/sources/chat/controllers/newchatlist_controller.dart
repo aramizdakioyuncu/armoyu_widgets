@@ -1,5 +1,6 @@
 import 'package:armoyu_services/armoyu_services.dart';
-import 'package:armoyu_services/core/models/ARMOYU/API/profile/profile_friendlist.dart';
+import 'package:armoyu_services/core/models/ARMOYU/API/chat/chat.dart';
+import 'package:armoyu_services/core/models/ARMOYU/API/chat/chat_list.dart';
 import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
 import 'package:armoyu_widgets/data/models/Chat/chat.dart';
@@ -47,74 +48,74 @@ class SourceNewchatlistController extends GetxController {
       }
     });
 
-    if (currentUserAccounts.value.user.value.myFriends != null) {
-      chatList.value = currentUserAccounts.value.user.value.myFriends
-          ?.map(
-            (element) => Chat(
-              user: User(
-                userID: element.userID,
-                displayName: element.displayName,
-                // lastlogin: element.lastlogin,
-                // lastloginv2: element.lastloginv2,
-                detailInfo: Rxn(
-                  UserDetailInfo(
-                    about: Rxn(),
-                    age: Rxn(),
-                    email: Rxn(),
-                    friends: Rxn(),
-                    posts: Rxn(),
-                    awards: Rxn(),
-                    phoneNumber: Rxn(),
-                    birthdayDate: Rxn(),
-                    inviteCode: Rxn(),
-                    lastloginDate:
-                        Rxn(element.detailInfo!.value!.lastloginDate.value),
-                    lastloginDateV2:
-                        Rxn(element.detailInfo!.value!.lastloginDateV2.value),
-                    lastfailedDate: Rxn(),
-                    country: Rxn(),
-                    province: Rxn(),
-                  ),
-                ),
-                avatar: element.avatar,
-              ),
-              lastmessage: ChatMessage(
-                messageID: 0,
-                messageContext: "",
-                user: User(
-                  userID: element.userID,
-                  displayName: element.displayName,
-                  // lastlogin: element.lastlogin,
-                  // lastloginv2: element.lastloginv2,
-                  detailInfo: Rxn(
-                    UserDetailInfo(
-                      about: Rxn(),
-                      age: Rxn(),
-                      email: Rxn(),
-                      friends: Rxn(),
-                      posts: Rxn(),
-                      awards: Rxn(),
-                      phoneNumber: Rxn(),
-                      birthdayDate: Rxn(),
-                      inviteCode: Rxn(),
-                      lastloginDate:
-                          Rxn(element.detailInfo!.value!.lastloginDate.value),
-                      lastloginDateV2:
-                          Rxn(element.detailInfo!.value!.lastloginDateV2.value),
-                      lastfailedDate: Rxn(),
-                      country: Rxn(),
-                      province: Rxn(),
-                    ),
-                  ),
-                ),
-                isMe: false,
-              ).obs,
-              chatType: "ozel",
-              chatNotification: false.obs,
-            ),
-          )
-          .toList();
-    }
+    // if (currentUserAccounts.value.user.value.myFriends != null) {
+    //   chatList.value = currentUserAccounts.value.user.value.myFriends
+    //       ?.map(
+    //         (element) => Chat(
+    //           user: User(
+    //             userID: element.userID,
+    //             displayName: element.displayName,
+    //             detailInfo: element.detailInfo == null
+    //                 ? Rxn()
+    //                 : Rxn(
+    //                     UserDetailInfo(
+    //                       about: Rxn(),
+    //                       age: Rxn(),
+    //                       email: Rxn(),
+    //                       friends: Rxn(),
+    //                       posts: Rxn(),
+    //                       awards: Rxn(),
+    //                       phoneNumber: Rxn(),
+    //                       birthdayDate: Rxn(),
+    //                       inviteCode: Rxn(),
+    //                       lastloginDate: Rxn(
+    //                           element.detailInfo!.value!.lastloginDate.value),
+    //                       lastloginDateV2: Rxn(
+    //                           element.detailInfo!.value!.lastloginDateV2.value),
+    //                       lastfailedDate: Rxn(),
+    //                       country: Rxn(),
+    //                       province: Rxn(),
+    //                     ),
+    //                   ),
+    //             avatar: element.avatar,
+    //           ),
+    //           lastmessage: ChatMessage(
+    //             messageID: 0,
+    //             messageContext: "",
+    //             user: User(
+    //               userID: element.userID,
+    //               displayName: element.displayName,
+    //               detailInfo: element.detailInfo == null
+    //                   ? Rxn()
+    //                   : Rxn(
+    //                       UserDetailInfo(
+    //                         about: Rxn(),
+    //                         age: Rxn(),
+    //                         email: Rxn(),
+    //                         friends: Rxn(),
+    //                         posts: Rxn(),
+    //                         awards: Rxn(),
+    //                         phoneNumber: Rxn(),
+    //                         birthdayDate: Rxn(),
+    //                         inviteCode: Rxn(),
+    //                         lastloginDate: Rxn(
+    //                             element.detailInfo!.value!.lastloginDate.value),
+    //                         lastloginDateV2: Rxn(element
+    //                             .detailInfo!.value!.lastloginDateV2.value),
+    //                         lastfailedDate: Rxn(),
+    //                         country: Rxn(),
+    //                         province: Rxn(),
+    //                       ),
+    //                     ),
+    //             ),
+    //             isMe: false,
+    //           ).obs,
+    //           chatType: "ozel",
+    //           chatNotification: false.obs,
+    //         ),
+    //       )
+    //       .toList();
+    // }
 
     getnewchat();
   }
@@ -129,9 +130,7 @@ class SourceNewchatlistController extends GetxController {
     }
 
     chatsearchprocess.value = true;
-    ProfileFriendListResponse response =
-        await service.profileServices.friendlist(
-      userID: chatPage.value,
+    ChatNewListResponse response = await service.chatServices.newChatlist(
       page: chatPage.value,
     );
     if (!response.result.status) {
@@ -151,15 +150,12 @@ class SourceNewchatlistController extends GetxController {
       isFirstFetch.value = false;
       return;
     }
-    for (APIProfileFriendlist element in response.response!) {
+    for (APIChatList element in response.response!) {
       chatList.value!.add(
         Chat(
           user: User(
-            userID: element.playerID,
-            displayName: Rx(element.displayName),
-            // lastlogin: Rx(element.lastLogin),
-            // lastloginv2: Rx(element.lastLogin),
-
+            userID: element.kullID,
+            displayName: Rx(element.adSoyad),
             detailInfo: Rxn(
               UserDetailInfo(
                 about: Rxn(),
@@ -171,20 +167,19 @@ class SourceNewchatlistController extends GetxController {
                 phoneNumber: Rxn(),
                 birthdayDate: Rxn(),
                 inviteCode: Rxn(),
-                lastloginDate: Rxn(element.lastLogin),
-                lastloginDateV2: Rxn(element.lastLogin),
+                lastloginDate: Rxn(element.sonGiris),
+                lastloginDateV2: Rxn(element.sonGiris),
                 lastfailedDate: Rxn(),
                 country: Rxn(),
                 province: Rxn(),
               ),
             ),
-
             avatar: Media(
               mediaID: 0,
               mediaURL: MediaURL(
-                bigURL: Rx(element.avatar.bigURL),
-                normalURL: Rx(element.avatar.normalURL),
-                minURL: Rx(element.avatar.minURL),
+                bigURL: Rx(element.chatImage.mediaURL.bigURL),
+                normalURL: Rx(element.chatImage.mediaURL.normalURL),
+                minURL: Rx(element.chatImage.mediaURL.minURL),
               ),
             ),
           ),
@@ -192,10 +187,8 @@ class SourceNewchatlistController extends GetxController {
             messageID: 0,
             messageContext: "",
             user: User(
-              userID: element.playerID,
-              displayName: Rx(element.displayName),
-              // lastlogin: Rx(element.lastLogin),
-              // lastloginv2: Rx(element.lastLogin),
+              userID: element.kullID,
+              displayName: Rx(element.adSoyad),
               detailInfo: Rxn(
                 UserDetailInfo(
                   about: Rxn(),
@@ -207,8 +200,8 @@ class SourceNewchatlistController extends GetxController {
                   phoneNumber: Rxn(),
                   birthdayDate: Rxn(),
                   inviteCode: Rxn(),
-                  lastloginDate: Rxn(element.lastLogin),
-                  lastloginDateV2: Rxn(element.lastLogin),
+                  lastloginDate: Rxn(element.sonGiris),
+                  lastloginDateV2: Rxn(element.sonGiris),
                   lastfailedDate: Rxn(),
                   country: Rxn(),
                   province: Rxn(),
@@ -217,7 +210,7 @@ class SourceNewchatlistController extends GetxController {
             ),
             isMe: false,
           ).obs,
-          chatType: "ozel",
+          chatType: element.sohbetTuru == "grup" ? APIChat.grup : APIChat.ozel,
           chatNotification: false.obs,
         ),
       );

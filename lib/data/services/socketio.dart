@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:armoyu_services/core/models/ARMOYU/API/chat/chat.dart';
 import 'package:armoyu_widgets/data/models/Chat/chat.dart';
 import 'package:armoyu_widgets/data/models/Chat/chat_message.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
@@ -182,6 +183,7 @@ class SocketioController extends GetxController {
             chatNotification: false.obs,
             lastmessage: chat.obs,
             messages: <ChatMessage>[].obs,
+            chatType: APIChat.ozel,
           ),
         );
       }

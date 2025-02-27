@@ -40,8 +40,9 @@ class SourceChatdetailController extends GetxController {
   }
 
   Future<void> getlivechat({bool restartFetch = false}) async {
-    ChatFetchDetailResponse response =
-        await service.utilsServices.getdetailchats(chatID: chat.user.userID!);
+    ChatFetchDetailResponse response = await service.chatServices
+        .fetchdetailChat(
+            chatID: chat.user.userID!, chatCategory: chat.chatType);
     if (!response.result.status) {
       log(response.result.description);
       return;
@@ -145,7 +146,7 @@ class SourceChatdetailController extends GetxController {
       chat.user.userID,
     );
 
-    ServiceResult response = await service.utilsServices.sendchatmessage(
+    ServiceResult response = await service.chatServices.sendchatmessage(
       userID: chat.user.userID!,
       message: message,
       type: "ozel",

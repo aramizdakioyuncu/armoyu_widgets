@@ -2,7 +2,7 @@ import 'package:armoyu_widgets/data/models/user.dart';
 
 class ChatMessage {
   int messageID;
-  String messageContext;
+  String? messageContext;
   User user;
   bool isMe;
 

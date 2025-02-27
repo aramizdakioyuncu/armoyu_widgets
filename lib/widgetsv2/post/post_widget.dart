@@ -125,7 +125,7 @@ class PostWidget {
                                         .replaceAll('Yıl', CommonKeys.year.tr),
                                     weight: FontWeight.normal,
                                     color: Get.theme.primaryColor
-                                        .withOpacity(0.69),
+                                        .withValues(alpha: 0.69),
                                   ),
                                 ),
                               ],
@@ -351,7 +351,8 @@ class PostWidget {
                             ),
                             child: CustomText.costum1(
                               "${postdetail.value.commentCount} ${SocialKeys.socialViewAllComments.tr}",
-                              color: Get.theme.primaryColor.withOpacity(0.8),
+                              color:
+                                  Get.theme.primaryColor.withValues(alpha: 0.8),
                             ),
                           ),
                         ),

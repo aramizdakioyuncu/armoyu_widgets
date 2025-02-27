@@ -425,7 +425,7 @@ class ChatWidget {
               decoration: BoxDecoration(
                 image: DecorationImage(
                   colorFilter: ColorFilter.mode(
-                    Colors.black.withOpacity(0.75),
+                    Colors.black..withValues(alpha: 0.75),
                     BlendMode.darken,
                   ),
                   image: CachedNetworkImageProvider(

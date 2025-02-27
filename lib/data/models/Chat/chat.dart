@@ -1,3 +1,4 @@
+import 'package:armoyu_services/core/models/ARMOYU/API/chat/chat.dart';
 import 'package:armoyu_widgets/data/models/Chat/chat_message.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/data/models/useraccounts.dart';
@@ -10,7 +11,7 @@ class Chat {
   User user;
   Rx<ChatMessage>? lastmessage;
   RxList<ChatMessage>? messages;
-  String? chatType;
+  APIChat chatType;
   Rx<bool> chatNotification;
   Rx<bool>? calling = false.obs;
 
@@ -19,7 +20,7 @@ class Chat {
     required this.user,
     this.lastmessage,
     this.messages,
-    this.chatType,
+    required this.chatType,
     required this.chatNotification,
     this.calling,
   });

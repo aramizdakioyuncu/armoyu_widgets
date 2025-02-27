@@ -49,7 +49,7 @@ class WidgetPostLikersView {
             date,
             style: TextStyle(
               fontSize: 13,
-              color: Get.theme.primaryColor.withOpacity(0.69),
+              color: Get.theme.primaryColor.withValues(alpha: 0.69),
             ),
           ),
         ],

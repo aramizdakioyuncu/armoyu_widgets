@@ -43,7 +43,7 @@ class CardsControllerV2 extends GetxController {
         color: Colors.white,
       );
       xeffectcolor.value =
-          const Color.fromARGB(255, 175, 10, 10).withOpacity(0.7);
+          const Color.fromARGB(255, 175, 10, 10).withValues(alpha: 0.7);
     } else {
       xicon.value = const Icon(
         Icons.auto_graph_outlined,
@@ -51,7 +51,7 @@ class CardsControllerV2 extends GetxController {
         color: Colors.white,
       );
       xeffectcolor.value =
-          const Color.fromARGB(255, 10, 84, 175).withOpacity(0.7);
+          const Color.fromARGB(255, 10, 84, 175).withValues(alpha: 0.7);
     }
 
     xscrollController.value = ScrollController();

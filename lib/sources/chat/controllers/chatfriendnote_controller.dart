@@ -142,7 +142,7 @@ class SourceChatfriendnoteController extends GetxController {
                                           hintStyle: TextStyle(
                                             fontSize: 12,
                                             color: Get.theme.primaryColor
-                                                .withOpacity(0.5),
+                                                .withValues(alpha: 0.5),
                                           ),
 
                                           border:
@@ -237,7 +237,8 @@ class SourceChatfriendnoteController extends GetxController {
                               Text(CommonKeys.everyone.tr),
                               Icon(
                                 Icons.keyboard_arrow_down_rounded,
-                                color: Get.theme.primaryColor.withOpacity(0.8),
+                                color: Get.theme.primaryColor
+                                    .withValues(alpha: 0.8),
                               )
                             ],
                           ),
@@ -302,8 +303,8 @@ class SourceChatfriendnoteController extends GetxController {
                       style: TextStyle(
                         fontSize: 12,
                         overflow: TextOverflow.ellipsis,
-                        color:
-                            Get.theme.primaryColor.withOpacity(isMe ? 0.8 : 1),
+                        color: Get.theme.primaryColor
+                            .withValues(alpha: isMe ? 0.8 : 1),
                       ),
                     ),
                   ),
@@ -361,7 +362,7 @@ class SourceChatfriendnoteController extends GetxController {
                                         fontSize: 10,
                                         fontWeight: FontWeight.bold,
                                         color: Get.theme.primaryColor
-                                            .withOpacity(0.5),
+                                            .withValues(alpha: 0.5),
                                       ),
                                     ),
                               !havetext
@@ -374,7 +375,7 @@ class SourceChatfriendnoteController extends GetxController {
                                           style: TextStyle(
                                             fontSize: 11,
                                             color: Get.theme.primaryColor
-                                                .withOpacity(0.8),
+                                                .withValues(alpha: 0.8),
                                           ),
                                         )
                                   : Text(

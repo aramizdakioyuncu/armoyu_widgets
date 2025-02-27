@@ -1,3 +1,4 @@
+import 'package:armoyu_services/core/models/ARMOYU/API/chat/chat.dart';
 import 'package:armoyu_widgets/data/models/Chat/chat.dart';
 import 'package:armoyu_widgets/data/models/Chat/chat_message.dart';
 import 'package:armoyu_widgets/widgets/text.dart';
@@ -11,6 +12,7 @@ class ChatWidgetv2 {
     required Chat chat,
     required Function(Chat chat) onPressed,
     required VoidCallback onDelete,
+    bool showlastlogindate = false,
   }) {
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 5),
@@ -45,19 +47,29 @@ class ChatWidgetv2 {
                           const WidgetSpan(
                             child: SizedBox(width: 5),
                           ),
-                        TextSpan(
-                          text: chat.lastmessage!.value.messageContext,
-                          style: TextStyle(
-                            color: Get.theme.primaryColor.withOpacity(0.8),
-                          ),
-                        ),
+                        showlastlogindate
+                            ? TextSpan(
+                                text: chat.user.detailInfo!.value!.lastloginDate
+                                    .toString(),
+                                style: TextStyle(
+                                  color: Get.theme.primaryColor
+                                      .withValues(alpha: 0.8),
+                                ),
+                              )
+                            : TextSpan(
+                                text: chat.lastmessage!.value.messageContext,
+                                style: TextStyle(
+                                  color: Get.theme.primaryColor
+                                      .withValues(alpha: 0.8),
+                                ),
+                              ),
                       ],
                     ),
                   ),
                 ),
               ],
             ),
-      trailing: chat.chatType == "ozel"
+      trailing: chat.chatType == APIChat.ozel
           ? const Icon(Icons.person)
           : const Icon(Icons.people_alt),
       onTap: () {
@@ -146,7 +158,7 @@ class ChatWidgetv2 {
                     Padding(
                       padding: const EdgeInsets.only(right: 15),
                       child: Text(
-                        message.messageContext,
+                        message.messageContext.toString(),
                         style: TextStyle(
                           color: message.isMe ? Colors.white : Colors.white,
                         ),

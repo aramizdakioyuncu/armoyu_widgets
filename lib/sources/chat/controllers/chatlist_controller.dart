@@ -1,4 +1,5 @@
 import 'package:armoyu_services/armoyu_services.dart';
+import 'package:armoyu_services/core/models/ARMOYU/API/chat/chat.dart';
 import 'package:armoyu_services/core/models/ARMOYU/API/chat/chat_list.dart';
 import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
@@ -53,7 +54,7 @@ class SourceChatlistController extends GetxController {
     chatsearchprocess.value = true;
 
     ChatListResponse response =
-        await service.utilsServices.getchats(page: chatPage.value);
+        await service.chatServices.currentChatList(page: chatPage.value);
     if (!response.result.status) {
       chatsearchprocess.value = false;
       isFirstFetch.value = false;
@@ -117,7 +118,7 @@ class SourceChatlistController extends GetxController {
               isMe: true,
             ),
           ),
-          chatType: "ozel",
+          chatType: element.sohbetTuru == "grup" ? APIChat.grup : APIChat.ozel,
           calling: false.obs,
         ),
       );

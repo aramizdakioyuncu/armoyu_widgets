@@ -261,25 +261,19 @@ class FunctionService {
 
   Future<ChatListResponse> getchats(int page) async {
     ChatListResponse jsonData =
-        await service.utilsServices.getchats(page: page);
+        await service.chatServices.currentChatList(page: page);
     return jsonData;
   }
 
-  Future<ServiceResult> getnewchatfriendlist(int page) async {
-    ServiceResult jsonData =
-        await service.utilsServices.getnewchatfriendlist(page: page);
-    return jsonData;
-  }
-
-  Future<ChatFetchDetailResponse> getdeailchats(int chatID) async {
-    ChatFetchDetailResponse jsonData =
-        await service.utilsServices.getdetailchats(chatID: chatID);
+  Future<ChatNewListResponse> getnewchatfriendlist(int page) async {
+    ChatNewListResponse jsonData =
+        await service.chatServices.newChatlist(page: page);
     return jsonData;
   }
 
   Future<ServiceResult> sendchatmessage(
       int userID, String message, String type) async {
-    ServiceResult jsonData = await service.utilsServices.sendchatmessage(
+    ServiceResult jsonData = await service.chatServices.sendchatmessage(
       userID: userID,
       message: message,
       type: type,
