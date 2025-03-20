@@ -18,7 +18,7 @@ import 'package:like_button/like_button.dart';
 class PostcommentView {
   static Widget commentlistv2(
     BuildContext context,
-    APIPostComments comment,
+    Comment comment,
     ARMOYUServices service, {
     required Function(int userID, String username) profileFunction,
   }) {
@@ -42,21 +42,27 @@ class PostcommentView {
                 children: [
                   CustomText.usercomments(
                     context,
-                    text: controller.comment.commentContent,
+                    text: controller.comment.content,
                     user: User(
-                      userID: controller.comment.postcommenter.userID,
+                      userID: controller.comment.user.userID,
                       displayName: Rx(
-                        controller.comment.postcommenter.displayname,
+                        controller.comment.user.displayName!.value,
                       ),
                       avatar: Media(
                         mediaID: 0,
                         mediaURL: MediaURL(
                           bigURL: Rx(
-                              controller.comment.postcommenter.avatar.bigURL),
-                          normalURL: Rx(controller
-                              .comment.postcommenter.avatar.normalURL),
+                            controller
+                                .comment.user.avatar!.mediaURL.bigURL.value,
+                          ),
+                          normalURL: Rx(
+                            controller
+                                .comment.user.avatar!.mediaURL.normalURL.value,
+                          ),
                           minURL: Rx(
-                              controller.comment.postcommenter.avatar.minURL),
+                            controller
+                                .comment.user.avatar!.mediaURL.minURL.value,
+                          ),
                         ),
                       ),
                     ),
@@ -70,7 +76,7 @@ class PostcommentView {
                 padding: const EdgeInsets.all(4.0),
                 child: LikeButton(
                   key: controller.likeButtonKey.value,
-                  isLiked: controller.comment.isLikedByMe,
+                  isLiked: controller.comment.didIlike,
                   likeCount: controller.comment.likeCount,
                   onTap: (isLiked) async =>
                       await controller.postLike(isLiked, service),

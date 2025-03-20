@@ -7,6 +7,10 @@ import 'package:armoyu_widgets/data/models/Chat/chat_message.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/data/models/useraccounts.dart';
 import 'package:armoyu_widgets/data/services/accountuser_services.dart';
+import 'package:armoyu_widgets/sources/popupnotifications/calling_widget.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_webrtc/flutter_webrtc.dart' as webrtc;
 import 'package:get/get.dart';
 // ignore: library_prefixes
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -26,7 +30,71 @@ class SocketioController extends GetxController {
   var isCallingMe = false.obs;
   var whichuserisCallingMe = "".obs;
 
-  var isSoundStreaming = false.obs;
+  //WEBRTC
+  webrtc.RTCPeerConnection? peerConnection;
+  webrtc.MediaStream? localStream;
+  webrtc.MediaStream? remoteStream;
+
+  var localRenderer = webrtc.RTCVideoRenderer().obs;
+  var remoteRenderer = webrtc.RTCVideoRenderer().obs;
+  var connectionState = Rx<webrtc.RTCPeerConnectionState?>(null);
+
+  Future<void> webRTCinit({bool restoresystem = false}) async {
+    if (restoresystem) {
+      // Önce eski bağlantıyı temizle
+      await peerConnection?.close();
+      peerConnection = null;
+
+      await localStream?.dispose();
+      localStream = null;
+    }
+
+    await localRenderer.value.initialize();
+    await remoteRenderer.value.initialize();
+
+    localStream = await webrtc.navigator.mediaDevices.getUserMedia({
+      "audio": true,
+      "video": true,
+    });
+
+    // Akışı bir renderer ile yerel videoda göster
+    localRenderer.value.srcObject = localStream;
+
+    peerConnection = await webrtc.createPeerConnection({
+      "iceServers": [
+        {"urls": "stun:stun.l.google.com:19302"}
+      ]
+    });
+
+    localStream!.getTracks().forEach((track) {
+      peerConnection!.addTrack(track, localStream!);
+    });
+
+    peerConnection!.onIceCandidate = (candidate) {
+      sendCandidate(candidate.toMap());
+    };
+
+    peerConnection!.onTrack = (event) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (event.track.kind == 'audio') {
+          log('Gelen ses verisi: ${event.streams[0]}');
+        }
+
+        if (event.track.kind == 'video') {
+          remoteStream = event.streams[0];
+          remoteRenderer.value.srcObject = remoteStream;
+        }
+      });
+
+      log('//**//');
+    };
+
+    peerConnection!.onConnectionState = (state) {
+      log("Connection state: $state");
+      connectionState.value = state; // Bağlantı durumunu güncelliyoruz
+    };
+  }
+  //WEBRTC
 
   @override
   void onInit() {
@@ -99,6 +167,96 @@ class SocketioController extends GetxController {
         log('Ping süresi: ${pingValue.value} ms');
       }
     });
+
+    //WEBRTC
+
+    // 'offer' olayını dinle
+    socket.on('offer', (data) async {
+      if (kDebugMode) {
+        print('Received offer');
+      }
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        // Burada arama popup'ı açılabilir
+        CallingWidget.showIncomingCallDialog(
+          callerName: "Birisi Arıyor",
+          callerAvatarUrl: "",
+          onAccept: () {
+            //
+            // Get.toNamed(Routes.CHATCALL,
+            //     arguments: {'chat': controller.chat.value});
+          },
+          onDecline: () {
+            if (kDebugMode) {
+              print("Arama reddedildi");
+            }
+          },
+        );
+      });
+
+      if (data is Map<String, dynamic>) {
+        var offer = webrtc.RTCSessionDescription(
+          data['sdp'], // SDP verisini al
+          data['type'], // Offer veya Answer tipi
+        );
+
+        //teklif geliyor ve kabul ediyoruz peerConnection oluşturuyoruz
+        await webRTCinit(restoresystem: true);
+        // Peer connection'ı remote description olarak ayarlıyoruz
+        peerConnection!.setRemoteDescription(offer).then((_) {
+          // Remote description ayarlandıktan sonra cevabı oluştur
+
+          createAnswer(offer);
+        }).catchError((e) {
+          if (kDebugMode) {
+            print("Error setting remote description: $e");
+          }
+        });
+      }
+    });
+
+    // 'answer' olayını dinle
+    socket.on('answer', (data) async {
+      if (kDebugMode) {
+        print('Received answer');
+      }
+
+      var answer = webrtc.RTCSessionDescription(
+        data['sdp'], // SDP verisini al
+        data['type'], // Offer veya Answer tipi
+      );
+
+      // Gelen "answer"ı remote description olarak ayarlıyoruz
+      try {
+        await peerConnection!.setRemoteDescription(answer);
+      } catch (e) {
+        if (kDebugMode) {
+          print("Error setting remote description for answer: $e");
+        }
+      }
+    });
+
+    socket.on('candidate', (data) async {
+      if (kDebugMode) {
+        print('Received candidate: $data');
+      }
+      var candidate = webrtc.RTCIceCandidate(
+        data['candidate'],
+        data['sdpMid'],
+        data['sdpMLineIndex'],
+      );
+      // Gelen candidate'ı peer connection'a ekliyoruz
+
+      try {
+        await peerConnection!.addCandidate(candidate);
+      } catch (e) {
+        if (kDebugMode) {
+          print("Error adding candidate: $e");
+        }
+      }
+    });
+
+    //WEBRTC
 
     socket.on('signaling', (data) {
       // Signaling verilerini dinleme
@@ -209,6 +367,23 @@ class SocketioController extends GetxController {
     return this;
   }
 
+// WEBRTC
+  Future<void> createOffer() async {
+    await webRTCinit();
+
+    webrtc.RTCSessionDescription offer = await peerConnection!.createOffer();
+    await peerConnection!.setLocalDescription(offer);
+    sendOffer(offer.toMap());
+  }
+// WEBRTC
+
+  Future<void> createAnswer(webrtc.RTCSessionDescription offer) async {
+    await peerConnection!.setRemoteDescription(offer);
+    webrtc.RTCSessionDescription answer = await peerConnection!.createAnswer();
+    await peerConnection!.setLocalDescription(answer);
+    sendAnswer(answer.toMap());
+  }
+
   // Socket.io ile mesaj gönderme
   void sendMessage(ChatMessage data, userID) {
     socket.emit("chat", {data.toJson(), userID});
@@ -234,6 +409,20 @@ class SocketioController extends GetxController {
     whichuserisCallingMe.value = "";
     isCallingMe.value = false;
   }
+
+  //WEBRTC
+  void sendOffer(dynamic offer) {
+    socket.emit("offer", offer);
+  }
+
+  void sendAnswer(dynamic answer) {
+    socket.emit("answer", answer);
+  }
+
+  void sendCandidate(dynamic candidate) {
+    socket.emit("candidate", candidate);
+  }
+  //WEBRTC
 
   // Kullanıcıyı sunucuya kaydetme
   void registerUser(User user) {

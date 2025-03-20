@@ -1,30 +1,30 @@
 import 'package:armoyu_services/armoyu_services.dart';
-import 'package:armoyu_services/core/models/ARMOYU/API/post/post_detail.dart';
 import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
 import 'package:armoyu_widgets/core/widgets.dart';
+import 'package:armoyu_widgets/data/models/Social/comment.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:like_button/like_button.dart';
 
 class PostscommentControllerV2 extends GetxController {
   final ARMOYUServices service;
-  final APIPostComments comment;
+  final Comment comment;
   PostscommentControllerV2({required this.comment, required this.service});
 
   var likeButtonKey = GlobalKey<LikeButtonState>().obs;
   var likeunlikeProcces = false.obs;
 
-  Rxn<APIPostComments>? xcomment;
+  Rxn<Comment>? xcomment;
   @override
   void onInit() {
     super.onInit();
 
-    xcomment = Rxn<APIPostComments>(comment);
+    xcomment = Rxn<Comment>(comment);
 
     var favoritestatus =
         const Icon(Icons.favorite_outline_rounded, color: Colors.grey, size: 20)
             .obs;
-    if (xcomment!.value!.isLikedByMe == true) {
+    if (xcomment!.value!.didIlike == true) {
       favoritestatus.value = const Icon(
         Icons.favorite_rounded,
         color: Colors.red,
@@ -52,16 +52,16 @@ class PostscommentControllerV2 extends GetxController {
   }
 
   Future<void> likeunlikefunction() async {
-    bool currentstatus = xcomment!.value!.isLikedByMe;
+    bool currentstatus = xcomment!.value!.didIlike;
     if (currentstatus) {
-      xcomment!.value!.isLikedByMe = false;
+      xcomment!.value!.didIlike = false;
       xcomment!.value!.likeCount--;
     } else {
-      xcomment!.value!.isLikedByMe = true;
+      xcomment!.value!.didIlike = true;
       xcomment!.value!.likeCount++;
     }
 
-    if (!xcomment!.value!.isLikedByMe) {
+    if (!xcomment!.value!.didIlike) {
       PostCommentUnLikeResponse response = await service.postsServices
           .commentunlike(commentID: xcomment!.value!.commentID);
 
@@ -72,7 +72,7 @@ class PostscommentControllerV2 extends GetxController {
         } else {
           xcomment!.value!.likeCount++;
         }
-        xcomment!.value!.isLikedByMe = !xcomment!.value!.isLikedByMe;
+        xcomment!.value!.didIlike = !xcomment!.value!.didIlike;
         return;
       }
     } else {
@@ -86,7 +86,7 @@ class PostscommentControllerV2 extends GetxController {
         } else {
           xcomment!.value!.likeCount++;
         }
-        xcomment!.value!.isLikedByMe = !xcomment!.value!.isLikedByMe;
+        xcomment!.value!.didIlike = !xcomment!.value!.didIlike;
         return;
       }
     }
@@ -107,7 +107,7 @@ class PostscommentControllerV2 extends GetxController {
       return;
     }
     comment.likeCount++;
-    comment.isLikedByMe = true;
+    comment.didIlike = true;
     likeunlikeProcces.value = false;
   }
 
@@ -126,7 +126,7 @@ class PostscommentControllerV2 extends GetxController {
       return;
     }
     comment.likeCount--;
-    comment.isLikedByMe = false;
+    comment.didIlike = false;
     likeunlikeProcces.value = false;
   }
 

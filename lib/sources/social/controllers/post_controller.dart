@@ -4,7 +4,9 @@ import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
 import 'package:armoyu_widgets/core/armoyu.dart';
 import 'package:armoyu_widgets/core/widgets.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
+import 'package:armoyu_widgets/data/models/Social/comment.dart';
 import 'package:armoyu_widgets/data/models/Social/like.dart';
+import 'package:armoyu_widgets/data/models/Social/post.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/data/services/accountuser_services.dart';
 import 'package:armoyu_widgets/sources/photoviewer/views/photoviewer_view.dart';
@@ -27,10 +29,18 @@ class PostController extends GetxController {
   String? category;
   int? userID;
   String? username;
-  PostController(this.service, this.scrollController, this.category,
-      this.userID, this.username);
+  List<Post>? cachedpostsList;
 
-  final Rxn<List<APIPostList>> postsList = Rxn<List<APIPostList>>(null);
+  PostController(
+    this.service,
+    this.scrollController,
+    this.category,
+    this.userID,
+    this.username,
+    this.cachedpostsList,
+  );
+
+  final Rxn<List<Post>> postsList = Rxn<List<Post>>(null);
   var postscount = 1.obs;
   var postsProccess = false.obs;
   var likeunlikeProcces = false.obs;
@@ -54,6 +64,13 @@ class PostController extends GetxController {
     } else {
       xscrollController.value = ScrollController();
     }
+
+    //Bellekteki paylaşımları yükle
+    if (cachedpostsList != null) {
+      postsList.value ??= [];
+      postsList.value = cachedpostsList;
+    }
+
     fetchsocailposts();
 
     if (xscrollController.value != null) {
@@ -85,16 +102,109 @@ class PostController extends GetxController {
     }
 
     postsList.value ??= [];
+
+    //Eğer en baştan veriler çekiliyorsa listeyi sıfıla
+    if (postscount.value == 1) {
+      postsList.value = [];
+    }
     for (APIPostList element in response.response!) {
-      postsList.value!.add(element);
+      postsList.value!.add(
+        Post(
+          postID: element.postID,
+          content: element.content,
+          postDate: element.date,
+          sharedDevice: element.postdevice,
+          likesCount: element.likeCount,
+          isLikeme: element.didilikeit == 1 ? true : false,
+          commentsCount: element.commentCount,
+          iscommentMe: element.didicommentit == 1 ? true : false,
+          owner: User(
+            userID: element.postOwner.ownerID,
+            displayName: Rx(element.postOwner.displayName),
+            avatar: Media(
+              mediaID: 0,
+              mediaURL: MediaURL(
+                bigURL: Rx(element.postOwner.avatar.bigURL),
+                normalURL: Rx(element.postOwner.avatar.normalURL),
+                minURL: Rx(element.postOwner.avatar.minURL),
+              ),
+            ),
+          ),
+          media: element.media == null
+              ? []
+              : element.media!
+                  .map(
+                    (media) => Media(
+                      mediaID: media.mediaID,
+                      mediaType: media.mediaType,
+                      mediaDirection: media.mediaDirection,
+                      mediaTime: media.mediaTime,
+                      mediaURL: MediaURL(
+                        bigURL: Rx(media.mediaURL.bigURL),
+                        normalURL: Rx(media.mediaURL.normalURL),
+                        minURL: Rx(media.mediaURL.minURL),
+                      ),
+                    ),
+                  )
+                  .toList(),
+          firstthreecomment: element.firstcomments
+              ?.map(
+                (comments) => Comment(
+                  commentID: comments.commentID,
+                  postID: comments.postID,
+                  user: User(
+                    userID: comments.postcommenter.userID,
+                    displayName: Rx(comments.postcommenter.displayname),
+                    avatar: Media(
+                      mediaID: 0,
+                      mediaURL: MediaURL(
+                        bigURL: Rx(comments.postcommenter.avatar.bigURL),
+                        normalURL: Rx(comments.postcommenter.avatar.normalURL),
+                        minURL: Rx(comments.postcommenter.avatar.minURL),
+                      ),
+                    ),
+                  ),
+                  content: comments.commentContent,
+                  likeCount: comments.likeCount,
+                  didIlike: comments.isLikedByMe,
+                  date: comments.commentTime,
+                ),
+              )
+              .toList(),
+          firstthreelike: element.firstlikers
+              ?.map(
+                (likers) => Like(
+                  likeID: likers.likerID,
+                  user: User(
+                    userID: likers.likerID,
+                    displayName: Rx(likers.likerdisplayname),
+                    avatar: Media(
+                      mediaID: 0,
+                      mediaURL: MediaURL(
+                        bigURL: Rx(likers.likeravatar.bigURL),
+                        normalURL: Rx(likers.likeravatar.normalURL),
+                        minURL: Rx(likers.likeravatar.minURL),
+                      ),
+                    ),
+                  ),
+                  date: likers.likedate,
+                ),
+              )
+              .toList(),
+          location: element.location,
+        ),
+      );
     }
     postsList.refresh();
+
+    //Verileri Belleğe Aktar
+    cachedpostsList = postsList.value;
     postscount.value++;
     postsProccess.value = false;
   }
 
   //// This function is used to add new post to the list
-  void likepost(APIPostList post) async {
+  void likepost(Post post) async {
     if (likeunlikeProcces.value) {
       return;
     }
@@ -108,12 +218,12 @@ class PostController extends GetxController {
       return;
     }
 
-    post.didilikeit = 1;
-    post.likeCount++;
+    post.isLikeme = true;
+    post.likesCount++;
     likeunlikeProcces.value = false;
   }
 
-  void unlikepost(APIPostList post) async {
+  void unlikepost(Post post) async {
     if (likeunlikeProcces.value) {
       return;
     }
@@ -126,13 +236,13 @@ class PostController extends GetxController {
       return;
     }
 
-    post.didilikeit = 0;
-    post.likeCount--;
+    post.isLikeme = false;
+    post.likesCount--;
 
     likeunlikeProcces.value = false;
   }
 
-  Future<bool> postLike(bool isLiked, APIPostList post) async {
+  Future<bool> postLike(bool isLiked, Post post) async {
     if (isLiked) {
       if (likeunlikeProcces.value) {
         return isLiked;
@@ -158,7 +268,7 @@ class PostController extends GetxController {
     Get.back();
   }
 
-  void postfeedback(APIPostList post) {
+  void postfeedback(Post post) {
     showModalBottomSheet<void>(
       backgroundColor: Get.theme.cardColor,
       shape: const RoundedRectangleBorder(
@@ -207,7 +317,7 @@ class PostController extends GetxController {
                     ),
                   ),
                   Visibility(
-                    visible: post.postOwner.ownerID == currentUser!.userID,
+                    visible: post.owner.userID == currentUser!.userID,
                     child: InkWell(
                       onTap: () async {},
                       child: ListTile(
@@ -223,7 +333,7 @@ class PostController extends GetxController {
                     child: Divider(),
                   ),
                   Visibility(
-                    visible: post.postOwner.ownerID != currentUser!.userID,
+                    visible: post.owner.userID != currentUser!.userID,
                     child: InkWell(
                       onTap: () {},
                       child: ListTile(
@@ -237,14 +347,14 @@ class PostController extends GetxController {
                     ),
                   ),
                   Visibility(
-                    visible: post.postOwner.ownerID != currentUser!.userID,
+                    visible: post.owner.userID != currentUser!.userID,
                     child: InkWell(
                       onTap: () async {
                         Get.back();
 
                         BlockingAddResponse response =
                             await service.blockingServices.add(
-                          userID: post.postOwner.ownerID,
+                          userID: post.owner.userID!,
                         );
 
                         ARMOYUWidget.toastNotification(
@@ -262,7 +372,7 @@ class PostController extends GetxController {
                     ),
                   ),
                   Visibility(
-                    visible: post.postOwner.ownerID == currentUser!.userID,
+                    visible: post.owner.userID == currentUser!.userID,
                     child: InkWell(
                       onTap: () async => ARMOYUWidget.showConfirmationDialog(
                         context,
@@ -323,8 +433,7 @@ class PostController extends GetxController {
     fetchCommentStatus.value = false;
   }
 
-  Future<void> postcomments(
-      APIPostList post, TextEditingController messageController,
+  Future<void> postcomments(Post post, TextEditingController messageController,
       {required Function profileFunction}) async {
     Rxn<List<APIPostComments>> comments = Rxn<List<APIPostComments>>();
 
@@ -490,7 +599,7 @@ class PostController extends GetxController {
     return;
   }
 
-  Future<void> postlikesfetch(Rxn<List<Like>> likers, APIPostList post,
+  Future<void> postlikesfetch(Rxn<List<Like>> likers, Post post,
       {bool fetchRestart = false}) async {
     if (!fetchRestart && likers.value != null) {
       return;
@@ -546,7 +655,7 @@ class PostController extends GetxController {
     fetchlikersStatus.value = false;
   }
 
-  void showpostlikers(APIPostList post) {
+  void showpostlikers(Post post) {
     Rxn<List<Like>> likerList = Rxn<List<Like>>();
 
     postlikesfetch(likerList, post);
@@ -627,7 +736,7 @@ class PostController extends GetxController {
 
   Widget buildMediaContent(
     BuildContext context,
-    Rx<APIPostList> postInfo,
+    Rx<Post> postInfo,
     double availableWidth,
   ) {
     Widget mediaSablon(
@@ -707,156 +816,154 @@ class PostController extends GetxController {
 
     Widget mediayerlesim = const Row();
 
-    if (postInfo.value.media != null) {
-      List<Row> mediaItems = [];
+    List<Row> mediaItems = [];
 
-      List<Widget> mediarow1 = [];
-      List<Widget> mediarow2 = [];
-      for (int i = 0; i < postInfo.value.media!.length; i++) {
-        if (i > 3) {
-          continue;
-        }
-
-        List media = postInfo.value.media![i].mediaType!.split('/');
-
-        if (media[0] == "video") {
-          mediarow1.clear();
-          mediarow1.add(
-            mediaSablon(
-              indexlength: postInfo.value.media!.length,
-              postInfo.value.media![i].mediaURL.normalURL,
-              isvideo: true,
-            ),
-          );
-          break;
-        }
-
-        BoxFit mediadirection = BoxFit.cover;
-        if (postInfo.value.media![i].mediaDirection.toString() == "yatay" &&
-            postInfo.value.media!.length == 1) {
-          mediadirection = BoxFit.contain;
-        }
-
-        double mediawidth = availableWidth;
-        double mediaheight = ARMOYU.screenHeight;
-
-        if (postInfo.value.media!.length == 1) {
-          mediawidth = mediawidth / 1;
-
-          mediaheight = mediaheight / 2;
-        } else if (postInfo.value.media!.length == 2) {
-          mediawidth = mediawidth / 2;
-          mediaheight = mediaheight / 4;
-        } else if (postInfo.value.media!.length == 3) {
-          if (i == 0) {
-            mediawidth = mediawidth / 1;
-            mediaheight = mediaheight / 2.5;
-          } else {
-            mediawidth = mediawidth / 2;
-            mediaheight = mediaheight / 4;
-          }
-        } else if (postInfo.value.media!.length >= 4) {
-          mediawidth = mediawidth / 2;
-          mediaheight = mediaheight / 4;
-        }
-
-        GestureDetector aa = GestureDetector(
-          onTap: () {
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return Dialog(
-                  insetPadding: EdgeInsets.zero, // Kenar boşluğunu kaldırır
-
-                  backgroundColor: Colors.transparent,
-                  child: PhotoviewerView(
-                    service: service,
-                    media: postInfo.value.media!
-                        .map(
-                          (e) => Media(
-                            mediaID: e.mediaID,
-                            mediaURL: MediaURL(
-                              bigURL: Rx(e.mediaURL.bigURL),
-                              normalURL: Rx(e.mediaURL.normalURL),
-                              minURL: Rx(e.mediaURL.minURL),
-                            ),
-                          ),
-                        )
-                        .toList(),
-                    initialIndex: i,
-                    currentUserID: currentUser!.userID!,
-                    // isFile: isFile,
-                    // isMemory: isMemory,
-                  ),
-                );
-              },
-            );
-
-            // Navigator.of(context).push(
-            //   MaterialPageRoute(
-            //     builder: (context) => PhotoviewerView(
-            //       service: service,
-            //       currentUserID: currentUser!.userID!,
-            //       media: postInfo.value.media!
-            //           .map(
-            //             (e) => Media(
-            //               mediaID: e.mediaID,
-            //               mediaURL: MediaURL(
-            //                 bigURL: Rx(e.mediaURL.bigURL),
-            //                 normalURL: Rx(e.mediaURL.normalURL),
-            //                 minURL: Rx(e.mediaURL.minURL),
-            //               ),
-            //             ),
-            //           )
-            //           .toList(),
-            //       initialIndex: i,
-            //     ),
-            //   ),
-            // );
-          },
-          child: mediaSablon(
-            indexlength: postInfo.value.media!.length,
-            postInfo.value.media![i].mediaURL.normalURL,
-            width: mediawidth,
-            height: mediaheight,
-            fit: mediadirection,
-            islastmedia: i == 3,
-          ),
-        );
-
-        if (postInfo.value.media!.length == 3) {
-          if (i == 0) {
-            mediarow1.add(aa);
-          } else {
-            mediarow2.add(aa);
-          }
-        } else if (postInfo.value.media!.length >= 4) {
-          if (i == 0 || i == 1) {
-            mediarow1.add(aa);
-          } else {
-            mediarow2.add(aa);
-          }
-        } else {
-          mediarow1.add(aa);
-        }
+    List<Widget> mediarow1 = [];
+    List<Widget> mediarow2 = [];
+    for (int i = 0; i < postInfo.value.media.length; i++) {
+      if (i > 3) {
+        continue;
       }
 
-      mediaItems.add(Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: mediarow1,
-      ));
-      mediaItems.add(Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: mediarow2,
-      ));
-      /////////////////////////////////////////////////
+      List media = postInfo.value.media[i].mediaType!.split('/');
 
-      /////////////////////////////////////////////////
-      mediayerlesim = Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: mediaItems,
+      if (media[0] == "video") {
+        mediarow1.clear();
+        mediarow1.add(
+          mediaSablon(
+            indexlength: postInfo.value.media.length,
+            postInfo.value.media[i].mediaURL.normalURL.value,
+            isvideo: true,
+          ),
+        );
+        break;
+      }
+
+      BoxFit mediadirection = BoxFit.cover;
+      if (postInfo.value.media[i].mediaDirection.toString() == "yatay" &&
+          postInfo.value.media.length == 1) {
+        mediadirection = BoxFit.contain;
+      }
+
+      double mediawidth = availableWidth;
+      double mediaheight = ARMOYU.screenHeight;
+
+      if (postInfo.value.media.length == 1) {
+        mediawidth = mediawidth / 1;
+
+        mediaheight = mediaheight / 2;
+      } else if (postInfo.value.media.length == 2) {
+        mediawidth = mediawidth / 2;
+        mediaheight = mediaheight / 4;
+      } else if (postInfo.value.media.length == 3) {
+        if (i == 0) {
+          mediawidth = mediawidth / 1;
+          mediaheight = mediaheight / 2.5;
+        } else {
+          mediawidth = mediawidth / 2;
+          mediaheight = mediaheight / 4;
+        }
+      } else if (postInfo.value.media.length >= 4) {
+        mediawidth = mediawidth / 2;
+        mediaheight = mediaheight / 4;
+      }
+
+      GestureDetector aa = GestureDetector(
+        onTap: () {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return Dialog(
+                insetPadding: EdgeInsets.zero, // Kenar boşluğunu kaldırır
+
+                backgroundColor: Colors.transparent,
+                child: PhotoviewerView(
+                  service: service,
+                  media: postInfo.value.media
+                      .map(
+                        (e) => Media(
+                          mediaID: e.mediaID,
+                          mediaURL: MediaURL(
+                            bigURL: Rx(e.mediaURL.bigURL.value),
+                            normalURL: Rx(e.mediaURL.normalURL.value),
+                            minURL: Rx(e.mediaURL.minURL.value),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                  initialIndex: i,
+                  currentUserID: currentUser!.userID!,
+                  // isFile: isFile,
+                  // isMemory: isMemory,
+                ),
+              );
+            },
+          );
+
+          // Navigator.of(context).push(
+          //   MaterialPageRoute(
+          //     builder: (context) => PhotoviewerView(
+          //       service: service,
+          //       currentUserID: currentUser!.userID!,
+          //       media: postInfo.value.media!
+          //           .map(
+          //             (e) => Media(
+          //               mediaID: e.mediaID,
+          //               mediaURL: MediaURL(
+          //                 bigURL: Rx(e.mediaURL.bigURL),
+          //                 normalURL: Rx(e.mediaURL.normalURL),
+          //                 minURL: Rx(e.mediaURL.minURL),
+          //               ),
+          //             ),
+          //           )
+          //           .toList(),
+          //       initialIndex: i,
+          //     ),
+          //   ),
+          // );
+        },
+        child: mediaSablon(
+          indexlength: postInfo.value.media.length,
+          postInfo.value.media[i].mediaURL.normalURL.value,
+          width: mediawidth,
+          height: mediaheight,
+          fit: mediadirection,
+          islastmedia: i == 3,
+        ),
       );
+
+      if (postInfo.value.media.length == 3) {
+        if (i == 0) {
+          mediarow1.add(aa);
+        } else {
+          mediarow2.add(aa);
+        }
+      } else if (postInfo.value.media.length >= 4) {
+        if (i == 0 || i == 1) {
+          mediarow1.add(aa);
+        } else {
+          mediarow2.add(aa);
+        }
+      } else {
+        mediarow1.add(aa);
+      }
     }
+
+    mediaItems.add(Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: mediarow1,
+    ));
+    mediaItems.add(Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: mediarow2,
+    ));
+    /////////////////////////////////////////////////
+
+    /////////////////////////////////////////////////
+    mediayerlesim = Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: mediaItems,
+    );
     return mediayerlesim;
   }
 }

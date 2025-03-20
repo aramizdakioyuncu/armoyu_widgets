@@ -1,5 +1,5 @@
 import 'package:armoyu_services/armoyu_services.dart';
-import 'package:armoyu_services/core/models/ARMOYU/API/post/post_detail.dart';
+import 'package:armoyu_widgets/data/models/Social/post.dart';
 import 'package:armoyu_widgets/data/models/Story/storylist.dart';
 import 'package:armoyu_widgets/data/services/accountuser_services.dart';
 import 'package:armoyu_widgets/sources/Story/story_screen_page/views/story_screen_view.dart';
@@ -20,9 +20,11 @@ class SocialWidget {
   const SocialWidget(this.service);
 
   Widget posts({
+    Key? key,
     required BuildContext context,
-    ScrollController? scrollController,
     required Function(int userID, String username) profileFunction,
+    ScrollController? scrollController,
+    List<Post>? cachedpostsList,
     Function? refreshPosts,
     bool isPostdetail = false,
     String? category,
@@ -32,10 +34,16 @@ class SocialWidget {
     EdgeInsetsGeometry padding = EdgeInsets.zero,
     ScrollPhysics physics = const ClampingScrollPhysics(),
     bool sliverWidget = false,
-    Key? key,
   }) {
     final controller = Get.put(
-      PostController(service, scrollController, category, userID, username),
+      PostController(
+        service,
+        scrollController,
+        category,
+        userID,
+        username,
+        cachedpostsList,
+      ),
       tag:
           "postWidget-$category$userID-Uniq-${DateTime.now().millisecondsSinceEpoch}",
     );
@@ -57,7 +65,7 @@ class SocialWidget {
                   itemCount: controller.postsList.value!.length,
                   itemBuilder: (context, postIndex) {
                     var postdetail =
-                        Rx<APIPostList>(controller.postsList.value![postIndex]);
+                        Rx<Post>(controller.postsList.value![postIndex]);
 
                     return PostWidget.postWidget(
                       service: service,
@@ -94,8 +102,8 @@ class SocialWidget {
                             : physics,
                         itemCount: controller.postsList.value!.length,
                         itemBuilder: (context, postIndex) {
-                          var postdetail = Rx<APIPostList>(
-                              controller.postsList.value![postIndex]);
+                          var postdetail =
+                              Rx<Post>(controller.postsList.value![postIndex]);
                           return PostWidget.postWidget(
                             service: service,
                             postdetail: postdetail,

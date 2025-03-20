@@ -12,6 +12,7 @@ class ChatdetailView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(ChatdetailController());
+
     return Scaffold(
       body: AppService.widgets.chat.chatdetailWidget(
         context,

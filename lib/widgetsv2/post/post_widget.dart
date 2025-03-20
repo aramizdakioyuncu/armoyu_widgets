@@ -1,5 +1,5 @@
 import 'package:armoyu_services/armoyu_services.dart';
-import 'package:armoyu_services/core/models/ARMOYU/API/post/post_detail.dart';
+import 'package:armoyu_widgets/data/models/Social/post.dart';
 import 'package:armoyu_widgets/sources/card/widgets/card_widget.dart';
 import 'package:armoyu_widgets/sources/postscomment/views/postcomment_view.dart';
 import 'package:armoyu_widgets/sources/social/controllers/post_controller.dart';
@@ -15,7 +15,7 @@ import 'package:share_plus/share_plus.dart';
 class PostWidget {
   static postWidget({
     required ARMOYUServices service,
-    required Rx<APIPostList> postdetail,
+    required Rx<Post> postdetail,
     required PostController controller,
     required Function(int userID, String username) profileFunction,
     bool showTPcard = false,
@@ -24,8 +24,8 @@ class PostWidget {
     var likeButtonKey = GlobalKey<LikeButtonState>().obs;
     var likebutton = LikeButton(
       key: likeButtonKey.value,
-      isLiked: postdetail.value.didilikeit == 1,
-      likeCount: postdetail.value.likeCount,
+      isLiked: postdetail.value.isLikeme,
+      likeCount: postdetail.value.likesCount,
       onTap: (isLiked) async =>
           await controller.postLike(isLiked, postdetail.value),
       likeBuilder: (bool isLiked) {
@@ -47,12 +47,12 @@ class PostWidget {
 
     var messageController = TextEditingController().obs;
 
-    if (postdetail.value.didicommentit == 1 ? true : false) {
+    if (postdetail.value.iscommentMe) {
       postcommentIcon.value = const Icon(Icons.comment);
       postcommentColor.value = Colors.blue;
     }
 
-    if (postdetail.value.didicommentit == 1 ? true : false) {
+    if (postdetail.value.iscommentMe) {
       postrepostIcon.value = const Icon(Icons.cyclone);
       postrepostColor.value = Colors.green;
     }
@@ -75,8 +75,9 @@ class PostWidget {
                 child: InkWell(
                   onTap: () {
                     profileFunction(
-                      postdetail.value.postOwner.ownerID,
-                      postdetail.value.postOwner.ownerURL.split('/')[4],
+                      postdetail.value.owner.userID!,
+                      postdetail.value.owner.userName!.value,
+                      // postdetail.value.owner.ownerURL.split('/')[4],
                     );
                   },
                   child: Row(
@@ -86,7 +87,8 @@ class PostWidget {
                         () => CircleAvatar(
                           backgroundColor: Colors.transparent,
                           foregroundImage: CachedNetworkImageProvider(
-                            postdetail.value.postOwner.avatar.minURL,
+                            postdetail
+                                .value.owner.avatar!.mediaURL.minURL.value,
                           ),
                           radius: 20,
                         ),
@@ -100,21 +102,21 @@ class PostWidget {
                               children: [
                                 Obx(
                                   () => CustomText.costum1(
-                                    postdetail.value.postOwner.displayName,
+                                    postdetail.value.owner.displayName!.value,
                                     size: 16,
                                     weight: FontWeight.bold,
                                   ),
                                 ),
                                 const SizedBox(width: 5),
                                 Obx(
-                                  () => postdetail.value.postdevice == "mobil"
+                                  () => postdetail.value.sharedDevice == "mobil"
                                       ? const Text("📱")
                                       : const Text("🌐"),
                                 ),
                                 const SizedBox(width: 5),
                                 Obx(
                                   () => CustomText.costum1(
-                                    postdetail.value.datecounting
+                                    postdetail.value.postDate
                                         .replaceAll(
                                             'Saniye', CommonKeys.second.tr)
                                         .replaceAll(
@@ -173,7 +175,7 @@ class PostWidget {
               ),
               InkWell(
                 onDoubleTap: () {
-                  if (!(postdetail.value.didilikeit == 1)) {
+                  if (!(postdetail.value.isLikeme)) {
                     likeButtonKey.value.currentState?.onTap();
                     controller.postLike(true, postdetail.value);
                   }
@@ -198,7 +200,7 @@ class PostWidget {
               ),
               InkWell(
                 onDoubleTap: () {
-                  if (!(postdetail.value.didilikeit == 1)) {
+                  if (!(postdetail.value.isLikeme)) {
                     likeButtonKey.value.currentState?.onTap();
                     controller.postLike(true, postdetail.value);
                   }
@@ -242,7 +244,7 @@ class PostWidget {
                     const SizedBox(width: 5),
                     Obx(
                       () => Text(
-                        postdetail.value.commentCount.toString(),
+                        postdetail.value.commentsCount.toString(),
                         style: const TextStyle(color: Colors.grey),
                       ),
                     ),
@@ -277,10 +279,10 @@ class PostWidget {
                       child: Stack(
                         children: [
                           const SizedBox(height: 20),
-                          ...List.generate(postdetail.value.firstlikers!.length,
-                              (index) {
+                          ...List.generate(
+                              postdetail.value.firstthreelike!.length, (index) {
                             int left =
-                                postdetail.value.firstlikers!.length * 10 -
+                                postdetail.value.firstthreelike!.length * 10 -
                                     (index + 1) * 10;
                             return Obx(
                               () => Positioned(
@@ -290,12 +292,15 @@ class PostWidget {
                                   foregroundImage: CachedNetworkImageProvider(
                                     postdetail
                                         .value
-                                        .firstlikers![postdetail
-                                                .value.firstlikers!.length -
+                                        .firstthreelike![postdetail
+                                                .value.firstthreelike!.length -
                                             index -
                                             1]
-                                        .likeravatar
-                                        .minURL,
+                                        .user
+                                        .avatar!
+                                        .mediaURL
+                                        .minURL
+                                        .value,
                                   ),
                                   radius: 10,
                                 ),
@@ -304,16 +309,17 @@ class PostWidget {
                           }),
                           Obx(
                             () => Positioned(
-                              left: postdetail.value.firstlikers!.length * 10 +
-                                  15,
-                              child: postdetail.value.firstlikers!.isNotEmpty
+                              left:
+                                  postdetail.value.firstthreelike!.length * 10 +
+                                      15,
+                              child: postdetail.value.firstthreelike!.isNotEmpty
                                   ? GestureDetector(
                                       onTap: () => controller
                                           .showpostlikers(postdetail.value),
                                       child: Obx(
                                         () => WidgetUtility.specialText(
                                           context,
-                                          "@${postdetail.value.firstlikers![0].likerusername.toString()}  ${(postdetail.value.likeCount - 1) <= 0 ? SocialKeys.socialLiked.tr : SocialKeys.socialandnumberpersonLiked.tr.replaceAll('#NUMBER#', "${postdetail.value.likeCount - 1}")}",
+                                          "@${postdetail.value.firstthreelike![0].user.userName.toString()}  ${(postdetail.value.likesCount - 1) <= 0 ? SocialKeys.socialLiked.tr : SocialKeys.socialandnumberpersonLiked.tr.replaceAll('#NUMBER#', "${postdetail.value.likesCount - 1}")}",
                                           profileFunction: profileFunction,
                                         ),
                                       ),
@@ -328,10 +334,11 @@ class PostWidget {
                     Obx(
                       () => Column(
                         children: List.generate(
-                            postdetail.value.firstcomments!.length, (index) {
+                            postdetail.value.firstthreecomment!.length,
+                            (index) {
                           return PostcommentView.commentlistv2(
                             context,
-                            postdetail.value.firstcomments![index],
+                            postdetail.value.firstthreecomment![index],
                             service,
                             profileFunction: profileFunction,
                           );
@@ -340,7 +347,7 @@ class PostWidget {
                     ),
                     Obx(
                       () => Visibility(
-                        visible: postdetail.value.commentCount > 3,
+                        visible: postdetail.value.commentsCount > 3,
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: GestureDetector(
@@ -350,7 +357,7 @@ class PostWidget {
                               profileFunction: profileFunction,
                             ),
                             child: CustomText.costum1(
-                              "${postdetail.value.commentCount} ${SocialKeys.socialViewAllComments.tr}",
+                              "${postdetail.value.commentsCount} ${SocialKeys.socialViewAllComments.tr}",
                               color:
                                   Get.theme.primaryColor.withValues(alpha: 0.8),
                             ),
