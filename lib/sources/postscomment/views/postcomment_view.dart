@@ -20,7 +20,11 @@ class PostcommentView {
     BuildContext context,
     Comment comment,
     ARMOYUServices service, {
-    required Function(int userID, String username) profileFunction,
+    required Function({
+      required int userID,
+      required String username,
+      User? user,
+    }) profileFunction,
   }) {
     String uniqueTag = DateTime.now().millisecondsSinceEpoch.toString();
 
@@ -187,7 +191,11 @@ class PostcommentView {
     BuildContext context,
     Comment comment,
     ARMOYUServices service, {
-    required Function(int userID, String username) profileFunction,
+    required Function({
+      required int userID,
+      required String username,
+      User? user,
+    }) profileFunction,
   }) {
     final controller = Get.put(
         PostscommentController(comment: comment, service: service),

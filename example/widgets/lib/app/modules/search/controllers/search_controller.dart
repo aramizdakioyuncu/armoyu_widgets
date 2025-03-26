@@ -22,7 +22,7 @@ class SearchViewController extends GetxController {
       title: CustomCardType.playerPOP,
       content: [],
       firstFetch: true,
-      profileFunction: (userID, username) {},
+      profileFunction: ({user, required userID, required username}) {},
     );
 
     widget2.value = AppService.widgets.cards.cardWidget(
@@ -30,7 +30,7 @@ class SearchViewController extends GetxController {
       title: CustomCardType.playerXP,
       content: [],
       firstFetch: true,
-      profileFunction: (userID, username) {},
+      profileFunction: ({user, required userID, required username}) {},
     );
     widget3.value = AppService.widgets.news.newsCarouselWidget(
       newsFunction: (news) {

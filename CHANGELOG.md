@@ -1,3 +1,3 @@
-## [1.0.0+40]
+## [1.0.0+42]
 
-- Country classındaki sorun çözüldü.
+- Ufak bir düzeltme.

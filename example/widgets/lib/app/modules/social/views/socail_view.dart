@@ -26,7 +26,7 @@ class SocailView extends StatelessWidget {
               context: context,
               scrollController: scrollController,
               shrinkWrap: true,
-              profileFunction: (userID, username) {
+              profileFunction: ({user, required userID, required username}) {
                 log('$userID $username');
               },
             ),

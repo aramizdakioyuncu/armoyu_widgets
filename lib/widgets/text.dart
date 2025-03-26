@@ -27,7 +27,11 @@ class CustomText {
     BuildContext context, {
     required String text,
     required User user,
-    required Function(int userID, String username) profileFunction,
+    required Function({
+      required int userID,
+      required String username,
+      User? user,
+    }) profileFunction,
   }) {
     final textSpans = <InlineSpan>[];
     textSpans.add(
@@ -41,7 +45,11 @@ class CustomText {
             ),
             recognizer: TapGestureRecognizer()
               ..onTap = () {
-                profileFunction(user.userID!, user.displayName!.value);
+                profileFunction(
+                  userID: user.userID!,
+                  username: user.displayName!.value,
+                  user: user,
+                );
               },
           )
         ],
@@ -63,7 +71,11 @@ class CustomText {
       WidgetSpan(
         child: InkWell(
           onTap: () {
-            profileFunction(user.userID!, user.displayName!.value);
+            profileFunction(
+              userID: user.userID!,
+              username: user.displayName!.value,
+              user: user,
+            );
           },
           child: CircleAvatar(
             backgroundColor: Colors.transparent,

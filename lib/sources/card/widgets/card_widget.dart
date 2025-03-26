@@ -1,5 +1,6 @@
 import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_services/core/models/ARMOYU/API/utils/player_pop_list.dart';
+import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/sources/card/controllers/card_controller.dart';
 import 'package:armoyu_widgets/widgets/Skeletons/cards_skeleton.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -18,7 +19,11 @@ class CardWidget {
     required CustomCardType title,
     required List<APIPlayerPop> content,
     required bool firstFetch,
-    required Function(int userID, String username) profileFunction,
+    required Function({
+      required int userID,
+      required String username,
+      User? user,
+    }) profileFunction,
   }) {
     final controller = Get.put(
       CardsControllerV2(
@@ -57,8 +62,8 @@ class CardWidget {
                     borderRadius: BorderRadius.circular(15),
                     onTap: () {
                       profileFunction(
-                        cardData.oyuncuID,
-                        cardData.oyuncuKullaniciAdi,
+                        userID: cardData.oyuncuID,
+                        username: cardData.oyuncuKullaniciAdi,
                       );
                     },
                     child: Container(

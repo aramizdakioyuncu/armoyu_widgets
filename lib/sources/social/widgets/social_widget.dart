@@ -1,6 +1,7 @@
 import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_widgets/data/models/Social/post.dart';
 import 'package:armoyu_widgets/data/models/Story/storylist.dart';
+import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/data/services/accountuser_services.dart';
 import 'package:armoyu_widgets/sources/Story/story_screen_page/views/story_screen_view.dart';
 import 'package:armoyu_widgets/sources/gallery/views/gallery_view.dart';
@@ -22,7 +23,11 @@ class SocialWidget {
   Widget posts({
     Key? key,
     required BuildContext context,
-    required Function(int userID, String username) profileFunction,
+    required Function({
+      required int userID,
+      required String username,
+      User? user,
+    }) profileFunction,
     ScrollController? scrollController,
     List<Post>? cachedpostsList,
     Function? refreshPosts,

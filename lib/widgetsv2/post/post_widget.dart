@@ -1,5 +1,6 @@
 import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_widgets/data/models/Social/post.dart';
+import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/sources/card/widgets/card_widget.dart';
 import 'package:armoyu_widgets/sources/postscomment/views/postcomment_view.dart';
 import 'package:armoyu_widgets/sources/social/controllers/post_controller.dart';
@@ -17,7 +18,11 @@ class PostWidget {
     required ARMOYUServices service,
     required Rx<Post> postdetail,
     required PostController controller,
-    required Function(int userID, String username) profileFunction,
+    required Function({
+      required int userID,
+      required String username,
+      User? user,
+    }) profileFunction,
     bool showTPcard = false,
     bool showPOPcard = false,
   }) {
@@ -75,9 +80,9 @@ class PostWidget {
                 child: InkWell(
                   onTap: () {
                     profileFunction(
-                      postdetail.value.owner.userID!,
-                      postdetail.value.owner.userName!.value,
-                      // postdetail.value.owner.ownerURL.split('/')[4],
+                      userID: postdetail.value.owner.userID!,
+                      username: postdetail.value.owner.userName!.value,
+                      user: postdetail.value.owner,
                     );
                   },
                   child: Row(

@@ -24,7 +24,7 @@ class PostdetailView extends StatelessWidget {
             child: AppService.widgets.social.posts(
               context: context,
               scrollController: scrollController.value,
-              profileFunction: (userID, username) {
+              profileFunction: ({user, required userID, required username}) {
                 log('$userID $username');
               },
               // category: "etiketlenmis",
