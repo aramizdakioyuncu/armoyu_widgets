@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:armoyu_widgets/core/armoyu.dart';
 import 'package:armoyu_widgets/core/widgets.dart';
+import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
 import 'package:armoyu_widgets/data/models/select.dart';
-import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +20,9 @@ class WidgetUtility {
     required Function({
       required int userID,
       required String username,
-      User? user,
+      required String? displayname,
+      required Media? avatar,
+      required Media? banner,
     }) profileFunction,
   }) {
     final lines = text.split('\n');
@@ -67,6 +69,9 @@ class WidgetUtility {
                   profileFunction(
                     userID: 0,
                     username: username,
+                    displayname: null,
+                    avatar: null,
+                    banner: null,
                   );
                 },
             ));

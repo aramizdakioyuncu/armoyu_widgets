@@ -1,3 +1,4 @@
+import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
@@ -30,7 +31,9 @@ class CustomText {
     required Function({
       required int userID,
       required String username,
-      User? user,
+      required String displayname,
+      required Media avatar,
+      required Media banner,
     }) profileFunction,
   }) {
     final textSpans = <InlineSpan>[];
@@ -47,8 +50,24 @@ class CustomText {
               ..onTap = () {
                 profileFunction(
                   userID: user.userID!,
-                  username: user.displayName!.value,
-                  user: user,
+                  username: user.userName!.value,
+                  displayname: user.displayName!.value,
+                  avatar: Media(
+                    mediaID: 0,
+                    mediaURL: MediaURL(
+                      bigURL: user.avatar!.mediaURL.bigURL,
+                      normalURL: user.avatar!.mediaURL.normalURL,
+                      minURL: user.avatar!.mediaURL.minURL,
+                    ),
+                  ),
+                  banner: Media(
+                    mediaID: 0,
+                    mediaURL: MediaURL(
+                      bigURL: user.banner!.mediaURL.bigURL,
+                      normalURL: user.banner!.mediaURL.normalURL,
+                      minURL: user.banner!.mediaURL.minURL,
+                    ),
+                  ),
                 );
               },
           )
@@ -74,7 +93,23 @@ class CustomText {
             profileFunction(
               userID: user.userID!,
               username: user.displayName!.value,
-              user: user,
+              displayname: user.displayName!.value,
+              avatar: Media(
+                mediaID: 0,
+                mediaURL: MediaURL(
+                  bigURL: user.avatar!.mediaURL.bigURL,
+                  normalURL: user.avatar!.mediaURL.normalURL,
+                  minURL: user.avatar!.mediaURL.minURL,
+                ),
+              ),
+              banner: Media(
+                mediaID: 0,
+                mediaURL: MediaURL(
+                  bigURL: user.banner!.mediaURL.bigURL,
+                  normalURL: user.banner!.mediaURL.normalURL,
+                  minURL: user.banner!.mediaURL.minURL,
+                ),
+              ),
             );
           },
           child: CircleAvatar(

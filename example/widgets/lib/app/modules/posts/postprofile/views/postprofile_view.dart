@@ -24,7 +24,13 @@ class PostprofileView extends StatelessWidget {
               AppService.widgets.social.posts(
                 context: context,
                 scrollController: scrollController,
-                profileFunction: ({user, required userID, required username}) {
+                profileFunction: ({
+                  required avatar,
+                  required banner,
+                  required displayname,
+                  required userID,
+                  required username,
+                }) {
                   log('$userID $username');
                 },
                 userID: 1,

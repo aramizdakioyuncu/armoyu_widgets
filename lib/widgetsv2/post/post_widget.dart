@@ -1,6 +1,6 @@
 import 'package:armoyu_services/armoyu_services.dart';
+import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
 import 'package:armoyu_widgets/data/models/Social/post.dart';
-import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/sources/card/widgets/card_widget.dart';
 import 'package:armoyu_widgets/sources/postscomment/views/postcomment_view.dart';
 import 'package:armoyu_widgets/sources/social/controllers/post_controller.dart';
@@ -21,7 +21,9 @@ class PostWidget {
     required Function({
       required int userID,
       required String username,
-      User? user,
+      required String? displayname,
+      required Media? avatar,
+      required Media? banner,
     }) profileFunction,
     bool showTPcard = false,
     bool showPOPcard = false,
@@ -82,7 +84,29 @@ class PostWidget {
                     profileFunction(
                       userID: postdetail.value.owner.userID!,
                       username: postdetail.value.owner.userName!.value,
-                      user: postdetail.value.owner,
+                      displayname: postdetail.value.owner.displayName!.value,
+                      avatar: Media(
+                        mediaID: 0,
+                        mediaURL: MediaURL(
+                          bigURL:
+                              postdetail.value.owner.avatar!.mediaURL.bigURL,
+                          normalURL:
+                              postdetail.value.owner.avatar!.mediaURL.normalURL,
+                          minURL:
+                              postdetail.value.owner.avatar!.mediaURL.minURL,
+                        ),
+                      ),
+                      banner: Media(
+                        mediaID: 0,
+                        mediaURL: MediaURL(
+                          bigURL:
+                              postdetail.value.owner.banner!.mediaURL.bigURL,
+                          normalURL:
+                              postdetail.value.owner.banner!.mediaURL.normalURL,
+                          minURL:
+                              postdetail.value.owner.banner!.mediaURL.minURL,
+                        ),
+                      ),
                     );
                   },
                   child: Row(

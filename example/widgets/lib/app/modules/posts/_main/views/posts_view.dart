@@ -23,7 +23,13 @@ class PostsView extends StatelessWidget {
               scrollController: scrollController,
               userID: 1,
               // shrinkWrap: true,
-              profileFunction: ({user, required userID, required username}) {
+              profileFunction: ({
+                required avatar,
+                required banner,
+                required displayname,
+                required userID,
+                required username,
+              }) {
                 log('$userID $username');
               },
             ),

@@ -1,6 +1,6 @@
 import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_services/core/models/ARMOYU/API/utils/player_pop_list.dart';
-import 'package:armoyu_widgets/data/models/user.dart';
+import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
 import 'package:armoyu_widgets/sources/card/controllers/card_controller.dart';
 import 'package:armoyu_widgets/widgets/Skeletons/cards_skeleton.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -22,7 +22,9 @@ class CardWidget {
     required Function({
       required int userID,
       required String username,
-      User? user,
+      required String? displayname,
+      required Media? avatar,
+      required Media? banner,
     }) profileFunction,
   }) {
     final controller = Get.put(
@@ -64,6 +66,23 @@ class CardWidget {
                       profileFunction(
                         userID: cardData.oyuncuID,
                         username: cardData.oyuncuKullaniciAdi,
+                        displayname: cardData.oyuncuAdSoyad,
+                        avatar: Media(
+                          mediaID: 0,
+                          mediaURL: MediaURL(
+                            bigURL: Rx(cardData.oyuncuAvatar),
+                            normalURL: Rx(cardData.oyuncuAvatar),
+                            minURL: Rx(cardData.oyuncuAvatar),
+                          ),
+                        ),
+                        banner: Media(
+                          mediaID: 0,
+                          mediaURL: MediaURL(
+                            bigURL: Rx(cardData.oyuncuAvatar),
+                            normalURL: Rx(cardData.oyuncuAvatar),
+                            minURL: Rx(cardData.oyuncuAvatar),
+                          ),
+                        ),
                       );
                     },
                     child: Container(

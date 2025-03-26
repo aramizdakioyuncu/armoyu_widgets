@@ -49,7 +49,13 @@ class ProfileController extends GetxController
       sliverWidget: true,
       refreshPosts: () {},
 
-      profileFunction: ({user, required userID, required username}) {},
+      profileFunction: ({
+        required avatar,
+        required banner,
+        required displayname,
+        required userID,
+        required username,
+      }) {},
     );
 
     widget2.value = AppService.widgets.gallery.mediaGallery(
@@ -62,7 +68,13 @@ class ProfileController extends GetxController
       userID: 1,
       // userID: currentUserAccounts.value.user.value.userID,
       category: "etiketlenmis",
-      profileFunction: ({user, required userID, required username}) {},
+      profileFunction: ({
+        required avatar,
+        required banner,
+        required displayname,
+        required userID,
+        required username,
+      }) {},
     );
   }
 }
