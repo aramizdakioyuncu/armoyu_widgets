@@ -120,6 +120,7 @@ class PostController extends GetxController {
           iscommentMe: element.didicommentit == 1 ? true : false,
           owner: User(
             userID: element.postOwner.ownerID,
+            userName: Rx(element.postOwner.username),
             displayName: Rx(element.postOwner.displayName),
             avatar: Media(
               mediaID: 0,

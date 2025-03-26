@@ -1,5 +1,4 @@
 import 'package:armoyu_services/armoyu_services.dart';
-import 'package:armoyu_services/core/models/ARMOYU/API/chat/chat.dart';
 import 'package:armoyu_services/core/models/ARMOYU/API/chat/chat_list.dart';
 import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
@@ -210,7 +209,7 @@ class SourceNewchatlistController extends GetxController {
             ),
             isMe: false,
           ).obs,
-          chatType: element.sohbetTuru == "grup" ? APIChat.grup : APIChat.ozel,
+          chatType: element.sohbetTuru,
           chatNotification: false.obs,
         ),
       );

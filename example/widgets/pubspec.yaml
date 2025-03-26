@@ -43,7 +43,7 @@ dependencies:
   flutter_webrtc: ^0.12.12
 
 
-  armoyu_services: ^1.0.0+49
+  armoyu_services: ^1.0.0+52
 
 
 

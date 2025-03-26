@@ -212,17 +212,18 @@ class FunctionService {
   }
 
   Future<APIMyGroupListResponse> myGroups() async {
-    APIMyGroupListResponse jsonData = await service.utilsServices.myGroups();
+    APIMyGroupListResponse jsonData = await service.profileServices.myGroups();
     return jsonData;
   }
 
   Future<APIMySchoolListResponse> mySchools() async {
-    APIMySchoolListResponse jsonData = await service.utilsServices.mySchools();
+    APIMySchoolListResponse jsonData =
+        await service.profileServices.mySchools();
     return jsonData;
   }
 
   Future<ServiceResult> myStations() async {
-    ServiceResult jsonData = await service.utilsServices.myStations();
+    ServiceResult jsonData = await service.profileServices.myStations();
     return jsonData;
   }
 

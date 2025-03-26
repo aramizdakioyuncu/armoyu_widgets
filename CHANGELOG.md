@@ -1,3 +1,3 @@
-## [1.0.0+42]
+## [1.0.0+43]
 
-- Ufak bir düzeltme.
+- Ufak bir düzeltme daha.
