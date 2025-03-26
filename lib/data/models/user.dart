@@ -172,6 +172,7 @@ class User {
       avatar: json['avatar'] == null
           ? null
           : Media(
+              mediaType: MediaType.image,
               mediaID: json['avatar']['media_ID'],
               mediaURL: MediaURL(
                 bigURL: Rx<String>(json['avatar']['media_bigURL']),
@@ -182,6 +183,7 @@ class User {
       banner: json['banner'] == null
           ? null
           : Media(
+              mediaType: MediaType.image,
               mediaID: json['banner']['media_ID'],
               mediaURL: MediaURL(
                 bigURL: Rx<String>(json['banner']['media_bigURL']),
@@ -192,6 +194,7 @@ class User {
       wallpaper: json['wallpaper'] == null
           ? null
           : Media(
+              mediaType: MediaType.image,
               mediaID: json['wallpaper']['media_ID'],
               mediaURL: MediaURL(
                 bigURL: Rx<String>(json['wallpaper']['media_bigURL']),
@@ -389,6 +392,7 @@ class User {
       avatar: response.avatar != null
           ? Media(
               mediaID: response.avatar!.mediaID,
+              mediaType: MediaType.image,
               mediaURL: MediaURL(
                 bigURL: Rx(response.avatar!.mediaURL.bigURL),
                 normalURL: Rx(response.avatar!.mediaURL.normalURL),
@@ -399,6 +403,7 @@ class User {
       banner: response.avatar != null
           ? Media(
               mediaID: response.banner!.mediaID,
+              mediaType: MediaType.image,
               mediaURL: MediaURL(
                 bigURL: Rx(response.banner!.mediaURL.bigURL),
                 normalURL: Rx(response.banner!.mediaURL.normalURL),
@@ -409,6 +414,7 @@ class User {
       wallpaper: response.wallpaper != null
           ? Media(
               mediaID: response.wallpaper!.mediaID,
+              mediaType: MediaType.image,
               mediaURL: MediaURL(
                 bigURL: Rx(response.wallpaper!.mediaURL.bigURL),
                 normalURL: Rx(response.wallpaper!.mediaURL.normalURL),
@@ -447,6 +453,7 @@ class User {
               displayName: friend.oyuncuKullaniciAdi.obs,
               avatar: Media(
                 mediaID: 0,
+                mediaType: MediaType.image,
                 mediaURL: MediaURL(
                   bigURL: Rx(friend.oyuncuMinnakAvatar.bigURL),
                   normalURL: Rx(friend.oyuncuMinnakAvatar.normalURL),
@@ -465,6 +472,7 @@ class User {
               name: e.gameName!,
               logo: Media(
                 mediaID: e.gameLogo!.mediaID,
+                mediaType: MediaType.image,
                 mediaURL: MediaURL(
                   bigURL: Rx(e.gameLogo!.mediaURL.bigURL),
                   normalURL: Rx(e.gameLogo!.mediaURL.normalURL),

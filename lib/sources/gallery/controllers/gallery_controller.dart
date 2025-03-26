@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_services/core/models/ARMOYU/API/media/media_fetch.dart';
 import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
@@ -7,7 +9,7 @@ import 'package:armoyu_widgets/data/models/useraccounts.dart';
 import 'package:armoyu_widgets/data/services/accountuser_services.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-// import 'package:photo_manager/photo_manager.dart';
+import 'package:photo_manager/photo_manager.dart';
 
 class GalleryController extends GetxController
     with GetSingleTickerProviderStateMixin {
@@ -24,7 +26,7 @@ class GalleryController extends GetxController
   var galleryscrollcontroller = ScrollController().obs;
 
   var fetchFirstDeviceGalleryStatus = false.obs;
-  // var assets = <AssetEntity>[].obs;
+  var assets = <AssetEntity>[].obs;
   var memorymedia = <Media>[].obs;
   var thumbnailmemorymedia = <Media>[].obs;
   var currentUserAccounts = Rx<UserAccounts>(
@@ -58,7 +60,6 @@ class GalleryController extends GetxController
           galleryscrollcontroller.value.position.maxScrollExtent) {
         // Sayfa sonuna geldiğinde yapılacak işlemi burada gerçekleştirin
         galleryfetch();
-        log("dsa");
       }
     });
 
@@ -131,11 +132,12 @@ class GalleryController extends GetxController
     }
 
     for (APIMediaFetch element in response.response!) {
+      List media = element.mediatype.split('/');
       mediaGallery.add(
         Media(
           mediaID: element.media.mediaID,
           ownerID: element.mediaOwner.userID,
-          mediaType: element.mediatype,
+          mediaType: media[0] == "video" ? MediaType.video : MediaType.image,
           mediaTime: element.mediaDate,
           mediaURL: MediaURL(
             bigURL: Rx<String>(element.media.mediaURL.bigURL),
@@ -150,55 +152,59 @@ class GalleryController extends GetxController
   }
 
   void _fetchAssets() async {
-    // if (fetchFirstDeviceGalleryStatus.value) {
-    //   return;
-    // }
-    // fetchFirstDeviceGalleryStatus.value = true;
-    // assets.value = await PhotoManager.getAssetListRange(
-    //   start: 0,
-    //   end: 300,
-    // );
+    if ((Platform.isAndroid || Platform.isIOS) == false) {
+      return;
+    }
+    if (fetchFirstDeviceGalleryStatus.value) {
+      return;
+    }
+    fetchFirstDeviceGalleryStatus.value = true;
+    assets.value = await PhotoManager.getAssetListRange(
+      start: 0,
+      end: 300,
+    );
 
-    // for (AssetEntity element in assets) {
-    //   // Original
-    //   final bytes = await element.thumbnailDataWithOption(
-    //     const ThumbnailOption(
-    //       size: ThumbnailSize(600, 600),
-    //       quality: 95,
-    //     ),
-    //   );
+    for (AssetEntity element in assets) {
+      // Original
+      final bytes = await element.thumbnailDataWithOption(
+        const ThumbnailOption(
+          size: ThumbnailSize(600, 600),
+          quality: 95,
+        ),
+      );
 
-    //   //Thumbnail
-    //   final thumbnailbytes = await element.thumbnailDataWithOption(
-    //     const ThumbnailOption(
-    //       size: ThumbnailSize(150, 150),
-    //       quality: 80,
-    //     ),
-    //   );
-    //   memorymedia.add(
-    //     Media(
-    //       mediaID: element.typeInt,
-    //       mediaBytes: bytes,
-    //       mediaURL: MediaURL(
-    //         bigURL: Rx<String>("bigURL"),
-    //         normalURL: Rx<String>("normalURL"),
-    //         minURL: Rx<String>("minURL"),
-    //       ),
-    //     ),
-    //   );
+      //Thumbnail
+      final thumbnailbytes = await element.thumbnailDataWithOption(
+        const ThumbnailOption(
+          size: ThumbnailSize(150, 150),
+          quality: 80,
+        ),
+      );
+      memorymedia.add(
+        Media(
+          mediaID: element.typeInt,
+          mediaType: MediaType.image,
+          mediaBytes: bytes,
+          mediaURL: MediaURL(
+            bigURL: Rx<String>("bigURL"),
+            normalURL: Rx<String>("normalURL"),
+            minURL: Rx<String>("minURL"),
+          ),
+        ),
+      );
 
-    //   thumbnailmemorymedia.add(
-    //     Media(
-    //       mediaID: element.typeInt,
-    //       mediaBytes: thumbnailbytes,
-    //       mediaURL: MediaURL(
-    //         bigURL: Rx<String>("bigURL"),
-    //         normalURL: Rx<String>("normalURL"),
-    //         minURL: Rx<String>("minURL"),
-    //       ),
-    //     ),
-    //   );
-    // }
-    // setstatefunction();
+      thumbnailmemorymedia.add(
+        Media(
+          mediaID: element.typeInt,
+          mediaType: MediaType.image,
+          mediaBytes: thumbnailbytes,
+          mediaURL: MediaURL(
+            bigURL: Rx<String>("bigURL"),
+            normalURL: Rx<String>("normalURL"),
+            minURL: Rx<String>("minURL"),
+          ),
+        ),
+      );
+    }
   }
 }

@@ -175,6 +175,7 @@ class SourceNewchatlistController extends GetxController {
             ),
             avatar: Media(
               mediaID: 0,
+              mediaType: MediaType.image,
               mediaURL: MediaURL(
                 bigURL: Rx(element.chatImage.mediaURL.bigURL),
                 normalURL: Rx(element.chatImage.mediaURL.normalURL),

@@ -25,8 +25,7 @@ class GalleryWidget {
   }) {
     final controller = Get.put(
         MediagalleryController(service: service, userID: userID),
-        tag:
-            "mediagallery-$userID-Uniq-${DateTime.now().millisecondsSinceEpoch}");
+        tag: "mediagallery-$userID");
     return Obx(
       () => controller.mediaList.value == null
           ? const Center(
@@ -136,8 +135,9 @@ class GalleryWidget {
                       for (XFile element in selectedImages) {
                         list.add(
                           Media(
-                            mediaXFile: element,
                             mediaID: element.hashCode,
+                            mediaType: MediaType.image,
+                            mediaXFile: element,
                             mediaURL: MediaURL(
                               bigURL: Rx<String>(element.path),
                               normalURL: Rx<String>(element.path),

@@ -52,6 +52,7 @@ class ChatWidget {
                           Rx(controller.friendlist.value![index].displayName),
                       avatar: Media(
                         mediaID: 0,
+                        mediaType: MediaType.image,
                         mediaURL: MediaURL(
                           bigURL: Rx(
                             controller.friendlist.value![index].avatar.bigURL,

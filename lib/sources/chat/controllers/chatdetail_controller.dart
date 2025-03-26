@@ -74,6 +74,7 @@ class SourceChatdetailController extends GetxController {
           user: User(
             avatar: Media(
               mediaID: 0,
+              mediaType: MediaType.image,
               mediaURL: MediaURL(
                 bigURL: Rx(element.avatar),
                 normalURL: Rx(element.avatar),

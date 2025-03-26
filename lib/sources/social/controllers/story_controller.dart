@@ -68,6 +68,7 @@ class StoryController extends GetxController {
               displayName: Rx(element.oyuncuAdSoyad),
               avatar: Media(
                 mediaID: 0,
+                mediaType: MediaType.image,
                 mediaURL: MediaURL(
                   bigURL: Rx(element.oyuncuAvatar.bigURL),
                   normalURL: Rx(element.oyuncuAvatar.normalURL),

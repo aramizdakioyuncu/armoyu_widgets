@@ -124,6 +124,7 @@ class PostController extends GetxController {
             displayName: Rx(element.postOwner.displayName),
             avatar: Media(
               mediaID: 0,
+              mediaType: MediaType.image,
               mediaURL: MediaURL(
                 bigURL: Rx(element.postOwner.avatar.bigURL),
                 normalURL: Rx(element.postOwner.avatar.normalURL),
@@ -137,7 +138,9 @@ class PostController extends GetxController {
                   .map(
                     (media) => Media(
                       mediaID: media.mediaID,
-                      mediaType: media.mediaType,
+                      mediaType: media.mediaType!.split("/")[0] == "video"
+                          ? MediaType.video
+                          : MediaType.image,
                       mediaDirection: media.mediaDirection,
                       mediaTime: media.mediaTime,
                       mediaURL: MediaURL(
@@ -158,6 +161,7 @@ class PostController extends GetxController {
                     displayName: Rx(comments.postcommenter.displayname),
                     avatar: Media(
                       mediaID: 0,
+                      mediaType: MediaType.image,
                       mediaURL: MediaURL(
                         bigURL: Rx(comments.postcommenter.avatar.bigURL),
                         normalURL: Rx(comments.postcommenter.avatar.normalURL),
@@ -179,8 +183,10 @@ class PostController extends GetxController {
                   user: User(
                     userID: likers.likerID,
                     displayName: Rx(likers.likerdisplayname),
+                    userName: Rx(likers.likerusername),
                     avatar: Media(
                       mediaID: 0,
+                      mediaType: MediaType.image,
                       mediaURL: MediaURL(
                         bigURL: Rx(likers.likeravatar.bigURL),
                         normalURL: Rx(likers.likeravatar.normalURL),
@@ -434,8 +440,17 @@ class PostController extends GetxController {
     fetchCommentStatus.value = false;
   }
 
-  Future<void> postcomments(Post post, TextEditingController messageController,
-      {required Function profileFunction}) async {
+  Future<void> postcomments(
+    Post post,
+    TextEditingController messageController, {
+    required Function({
+      required int userID,
+      required String username,
+      required String? displayname,
+      required Media? avatar,
+      required Media? banner,
+    }) profileFunction,
+  }) async {
     Rxn<List<APIPostComments>> comments = Rxn<List<APIPostComments>>();
 
     //Yorumları Çekmeye başla
@@ -638,6 +653,7 @@ class PostController extends GetxController {
           displayName: displayname.obs,
           avatar: Media(
             mediaID: userID,
+            mediaType: MediaType.image,
             mediaURL: MediaURL(
               bigURL: Rx<String>(avatar),
               normalURL: Rx<String>(avatar),
@@ -826,9 +842,7 @@ class PostController extends GetxController {
         continue;
       }
 
-      List media = postInfo.value.media[i].mediaType!.split('/');
-
-      if (media[0] == "video") {
+      if (postInfo.value.media[i].mediaType == MediaType.video) {
         mediarow1.clear();
         mediarow1.add(
           mediaSablon(
@@ -884,6 +898,7 @@ class PostController extends GetxController {
                       .map(
                         (e) => Media(
                           mediaID: e.mediaID,
+                          mediaType: MediaType.image,
                           mediaURL: MediaURL(
                             bigURL: Rx(e.mediaURL.bigURL.value),
                             normalURL: Rx(e.mediaURL.normalURL.value),

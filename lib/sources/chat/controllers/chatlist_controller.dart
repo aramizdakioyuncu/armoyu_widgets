@@ -83,6 +83,7 @@ class SourceChatlistController extends GetxController {
             displayName: Rx(element.adSoyad),
             avatar: Media(
               mediaID: element.kullID,
+              mediaType: MediaType.image,
               mediaURL: MediaURL(
                 bigURL: Rx(element.chatImage.mediaURL.bigURL),
                 normalURL: Rx(element.chatImage.mediaURL.bigURL),

@@ -48,6 +48,7 @@ class ARMOYUFunctions {
       // aboutme: Rx<String>(response.detailInfo!.about!),
       avatar: Media(
         mediaID: response.avatar!.mediaID,
+        mediaType: MediaType.image,
         ownerID: response.playerID,
         mediaURL: MediaURL(
           bigURL: Rx<String>(response.avatar!.mediaURL.bigURL),
@@ -58,6 +59,7 @@ class ARMOYUFunctions {
       banner: Media(
         mediaID: response.banner!.mediaID,
         ownerID: response.playerID,
+        mediaType: MediaType.image,
         mediaURL: MediaURL(
           bigURL: Rx<String>(response.banner!.mediaURL.bigURL),
           normalURL: Rx<String>(response.banner!.mediaURL.normalURL),

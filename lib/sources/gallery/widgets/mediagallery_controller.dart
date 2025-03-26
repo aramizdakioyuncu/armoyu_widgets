@@ -59,6 +59,7 @@ class MediagalleryController extends GetxController {
         Media(
           mediaID: element.media.mediaID,
           ownerID: element.media.mediaID,
+          mediaType: MediaType.image,
           mediaURL: MediaURL(
             bigURL: Rx(element.media.mediaURL.bigURL),
             normalURL: Rx(element.media.mediaURL.bigURL),

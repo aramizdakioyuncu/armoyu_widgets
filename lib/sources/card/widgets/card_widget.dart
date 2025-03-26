@@ -69,6 +69,7 @@ class CardWidget {
                         displayname: cardData.oyuncuAdSoyad,
                         avatar: Media(
                           mediaID: 0,
+                          mediaType: MediaType.image,
                           mediaURL: MediaURL(
                             bigURL: Rx(cardData.oyuncuAvatar),
                             normalURL: Rx(cardData.oyuncuAvatar),
@@ -77,6 +78,7 @@ class CardWidget {
                         ),
                         banner: Media(
                           mediaID: 0,
+                          mediaType: MediaType.image,
                           mediaURL: MediaURL(
                             bigURL: Rx(cardData.oyuncuAvatar),
                             normalURL: Rx(cardData.oyuncuAvatar),

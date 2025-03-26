@@ -56,6 +56,7 @@ class PostcommentView {
                       ),
                       avatar: Media(
                         mediaID: 0,
+                        mediaType: MediaType.image,
                         mediaURL: MediaURL(
                           bigURL: Rx(
                             controller
@@ -103,8 +104,18 @@ class PostcommentView {
   }
 
   static Widget postCommentsWidgetV2(
-      BuildContext context, ARMOYUServices service, APIPostComments comment,
-      {required Function deleteFunction, required Function profileFunction}) {
+    BuildContext context,
+    ARMOYUServices service,
+    APIPostComments comment, {
+    required Function deleteFunction,
+    required Function({
+      required int userID,
+      required String username,
+      required String? displayname,
+      required Media? avatar,
+      required Media? banner,
+    }) profileFunction,
+  }) {
     final controller = Get.put(
         PostCommentsControllerV2(comment: comment, service: service),
         tag: comment.commentID.toString());
@@ -125,8 +136,30 @@ class PostcommentView {
               InkWell(
                 onTap: () {
                   profileFunction(
-                    controller.xcomment!.value!.postcommenter.userID,
-                    controller.xcomment!.value!.postcommenter.username,
+                    userID: controller.xcomment!.value!.postcommenter.userID,
+                    username:
+                        controller.xcomment!.value!.postcommenter.username,
+                    avatar: Media(
+                      mediaID: 0,
+                      mediaType: MediaType.image,
+                      mediaURL: MediaURL(
+                        bigURL: Rx(
+                          controller
+                              .xcomment!.value!.postcommenter.avatar.bigURL,
+                        ),
+                        normalURL: Rx(
+                          controller
+                              .xcomment!.value!.postcommenter.avatar.normalURL,
+                        ),
+                        minURL: Rx(
+                          controller
+                              .xcomment!.value!.postcommenter.avatar.minURL,
+                        ),
+                      ),
+                    ),
+                    banner: null,
+                    displayname:
+                        controller.xcomment!.value!.postcommenter.displayname,
                   );
                 },
                 child: CircleAvatar(

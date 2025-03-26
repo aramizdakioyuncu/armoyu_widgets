@@ -54,6 +54,7 @@ class CustomText {
                   displayname: user.displayName!.value,
                   avatar: Media(
                     mediaID: 0,
+                    mediaType: MediaType.image,
                     mediaURL: MediaURL(
                       bigURL: user.avatar!.mediaURL.bigURL,
                       normalURL: user.avatar!.mediaURL.normalURL,
@@ -62,6 +63,7 @@ class CustomText {
                   ),
                   banner: Media(
                     mediaID: 0,
+                    mediaType: MediaType.image,
                     mediaURL: MediaURL(
                       bigURL: user.banner!.mediaURL.bigURL,
                       normalURL: user.banner!.mediaURL.normalURL,
@@ -96,6 +98,7 @@ class CustomText {
               displayname: user.displayName!.value,
               avatar: Media(
                 mediaID: 0,
+                mediaType: MediaType.image,
                 mediaURL: MediaURL(
                   bigURL: user.avatar!.mediaURL.bigURL,
                   normalURL: user.avatar!.mediaURL.normalURL,
@@ -104,6 +107,7 @@ class CustomText {
               ),
               banner: Media(
                 mediaID: 0,
+                mediaType: MediaType.image,
                 mediaURL: MediaURL(
                   bigURL: user.banner!.mediaURL.bigURL,
                   normalURL: user.banner!.mediaURL.normalURL,

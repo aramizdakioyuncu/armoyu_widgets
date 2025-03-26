@@ -82,32 +82,22 @@ class PostWidget {
                 child: InkWell(
                   onTap: () {
                     profileFunction(
-                      userID: postdetail.value.owner.userID!,
-                      username: postdetail.value.owner.userName!.value,
-                      displayname: postdetail.value.owner.displayName!.value,
-                      avatar: Media(
-                        mediaID: 0,
-                        mediaURL: MediaURL(
-                          bigURL:
-                              postdetail.value.owner.avatar!.mediaURL.bigURL,
-                          normalURL:
-                              postdetail.value.owner.avatar!.mediaURL.normalURL,
-                          minURL:
-                              postdetail.value.owner.avatar!.mediaURL.minURL,
+                        userID: postdetail.value.owner.userID!,
+                        username: postdetail.value.owner.userName!.value,
+                        displayname: postdetail.value.owner.displayName!.value,
+                        avatar: Media(
+                          mediaID: 0,
+                          mediaType: MediaType.image,
+                          mediaURL: MediaURL(
+                            bigURL:
+                                postdetail.value.owner.avatar!.mediaURL.bigURL,
+                            normalURL: postdetail
+                                .value.owner.avatar!.mediaURL.normalURL,
+                            minURL:
+                                postdetail.value.owner.avatar!.mediaURL.minURL,
+                          ),
                         ),
-                      ),
-                      banner: Media(
-                        mediaID: 0,
-                        mediaURL: MediaURL(
-                          bigURL:
-                              postdetail.value.owner.banner!.mediaURL.bigURL,
-                          normalURL:
-                              postdetail.value.owner.banner!.mediaURL.normalURL,
-                          minURL:
-                              postdetail.value.owner.banner!.mediaURL.minURL,
-                        ),
-                      ),
-                    );
+                        banner: null);
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
