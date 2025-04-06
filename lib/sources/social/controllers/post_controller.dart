@@ -262,16 +262,17 @@ class PostController extends GetxController {
     return !isLiked;
   }
 
-  Future<void> removepost(APIPostList post) async {
+  Future<void> removepost(Post post) async {
     PostRemoveResponse response =
         await service.postsServices.remove(postID: post.postID);
-
-    ARMOYUWidget.toastNotification(response.result.description.toString());
 
     if (!response.result.status) {
       return;
     }
-
+    postsList.value!.removeWhere(
+      (element) => element.postID == post.postID,
+    );
+    postsList.refresh();
     Get.back();
   }
 
@@ -383,7 +384,7 @@ class PostController extends GetxController {
                     child: InkWell(
                       onTap: () async => ARMOYUWidget.showConfirmationDialog(
                         context,
-                        accept: removepost,
+                        accept: () async => await removepost(post),
                       ),
                       child: ListTile(
                         textColor: Colors.red,

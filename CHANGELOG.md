@@ -1,3 +1,3 @@
-## [1.0.0+45]
+## [1.0.0+46]
 
-- Hikaye paylaşma sorunu geçici olarak çözüldü.
+- API kullanımı ile ilgili güncelleme.

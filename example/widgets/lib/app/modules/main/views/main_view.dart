@@ -72,7 +72,6 @@ class MainView extends StatelessWidget {
                           controller.savestaus.value = true;
                           AppService.service = ARMOYUServices(
                             apiKey: controller.apikeyController.value.text,
-                            usePreviousAPI: true,
                           );
 
                           AppService.widgets =
