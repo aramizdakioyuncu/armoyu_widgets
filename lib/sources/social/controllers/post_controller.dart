@@ -113,6 +113,7 @@ class PostController extends GetxController {
           postID: element.postID,
           content: element.content,
           postDate: element.date,
+          postDateCountdown: element.datecounting,
           sharedDevice: element.postdevice,
           likesCount: element.likeCount,
           isLikeme: element.didilikeit == 1 ? true : false,

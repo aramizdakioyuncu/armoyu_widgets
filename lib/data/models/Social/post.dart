@@ -8,6 +8,7 @@ class Post {
   int postID;
   String content;
   String postDate;
+  String postDateCountdown;
   String sharedDevice;
   int likesCount;
   int commentsCount;
@@ -26,6 +27,7 @@ class Post {
     required this.postID,
     required this.content,
     required this.postDate,
+    required this.postDateCountdown,
     required this.sharedDevice,
     required this.likesCount,
     required this.isLikeme,
@@ -46,6 +48,7 @@ class Post {
       'postID': postID,
       'content': content,
       'postDate': postDate,
+      'postDateCountdown': postDateCountdown,
       'sharedDevice': sharedDevice,
       'likesCount': likesCount,
       'commentsCount': commentsCount,
@@ -67,6 +70,7 @@ class Post {
       postID: json['postID'],
       content: json['content'],
       postDate: json['postDate'],
+      postDateCountdown: json['postDateCountdown'],
       sharedDevice: json['sharedDevice'],
       likesCount: json['likesCount'],
       commentsCount: json['commentsCount'],

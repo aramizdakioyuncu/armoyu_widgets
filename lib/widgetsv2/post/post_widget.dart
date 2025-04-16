@@ -135,7 +135,7 @@ class PostWidget {
                                 const SizedBox(width: 5),
                                 Obx(
                                   () => CustomText.costum1(
-                                    postdetail.value.postDate
+                                    postdetail.value.postDateCountdown
                                         .replaceAll(
                                             'Saniye', CommonKeys.second.tr)
                                         .replaceAll(
