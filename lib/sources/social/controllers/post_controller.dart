@@ -30,7 +30,7 @@ class PostController extends GetxController {
   int? userID;
   String? username;
   List<Post>? cachedpostsList;
-
+  bool autofetchposts = true;
   PostController(
     this.service,
     this.scrollController,
@@ -38,6 +38,7 @@ class PostController extends GetxController {
     this.userID,
     this.username,
     this.cachedpostsList,
+    this.autofetchposts,
   );
 
   final Rxn<List<Post>> postsList = Rxn<List<Post>>(null);
@@ -50,6 +51,16 @@ class PostController extends GetxController {
   User? currentUser;
 
   Rxn<ScrollController> xscrollController = Rxn<ScrollController>();
+
+  Future<void> refreshAllPosts() async {
+    log("Refresh All Posts");
+    await fetchsocailposts(refreshPost: true);
+  }
+
+  Future<void> loadMorePosts() async {
+    log("load More Posts");
+    await fetchsocailposts();
+  }
 
   @override
   void onInit() {
@@ -73,7 +84,7 @@ class PostController extends GetxController {
 
     fetchsocailposts();
 
-    if (xscrollController.value != null) {
+    if (xscrollController.value != null && autofetchposts) {
       xscrollController.value!.addListener(() {
         if (xscrollController.value!.position.pixels >=
             xscrollController.value!.position.maxScrollExtent) {
@@ -83,12 +94,15 @@ class PostController extends GetxController {
     }
   }
 
-  Future<void> fetchsocailposts() async {
+  Future<void> fetchsocailposts({bool refreshPost = false}) async {
     if (postsProccess.value) {
       return;
     }
     postsProccess.value = true;
-
+    if (refreshPost) {
+      postscount.value = 1;
+      postsList.value = null;
+    }
     PostFetchListResponse response = await service.postsServices.getPosts(
       userID: userID,
       username: username,

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/data/models/useraccounts.dart';
 import 'package:armoyu_widgets/data/services/accountuser_services.dart';
+import 'package:armoyu_widgets/sources/social/bundle/posts_bundle.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:widgets/app/services/app_service.dart';
@@ -11,9 +12,12 @@ class ProfileController extends GetxController
     with GetSingleTickerProviderStateMixin {
   late TabController tabController;
 
-  Rxn<Widget> widget1 = Rxn();
+  // Rxn<Widget> widget1 = Rxn();
+  late PostsWidgetBundle posts1;
+
   Rxn<Widget> widget2 = Rxn();
-  Rxn<Widget> widget3 = Rxn();
+  // Rxn<Widget> widget3 = Rxn();
+  late PostsWidgetBundle posts3;
 
   var currentUserAccounts = Rx<UserAccounts>(
     UserAccounts(
@@ -41,7 +45,7 @@ class ProfileController extends GetxController
       vsync: this,
     );
 
-    widget1.value = AppService.widgets.social.posts(
+    posts1 = AppService.widgets.social.posts(
       context: Get.context!,
       shrinkWrap: true,
       userID: 1,
@@ -62,7 +66,7 @@ class ProfileController extends GetxController
       context: Get.context!,
     );
 
-    widget3.value = AppService.widgets.social.posts(
+    posts3 = AppService.widgets.social.posts(
       context: Get.context!,
       shrinkWrap: true,
       userID: 1,

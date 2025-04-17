@@ -1,6 +1,6 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:widgets/app/modules/posts/postprofile/controller/postprofile_controller.dart';
 import 'package:widgets/app/services/app_service.dart';
 
 class PostprofileView extends StatelessWidget {
@@ -8,7 +8,7 @@ class PostprofileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var scrollController = ScrollController();
+    final controller = Get.put(PostprofileController());
 
     return Scaffold(
       appBar: AppBar(
@@ -21,20 +21,7 @@ class PostprofileView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AppService.widgets.social.widgetStorycircle(),
-              AppService.widgets.social.posts(
-                context: context,
-                scrollController: scrollController,
-                profileFunction: ({
-                  required avatar,
-                  required banner,
-                  required displayname,
-                  required userID,
-                  required username,
-                }) {
-                  log('$userID $username');
-                },
-                userID: 1,
-              ),
+              controller.posts.widget.value ?? const SizedBox(),
             ],
           ),
         ),

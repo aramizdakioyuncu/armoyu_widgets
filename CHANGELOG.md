@@ -1,3 +1,3 @@
-## [1.0.0+46]
+## [1.0.0+48]
 
-- API kullanımı ile ilgili güncelleme.
+- Socail Widget loadmore ve refresh paramteresi eklendi.

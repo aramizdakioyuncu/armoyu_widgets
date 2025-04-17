@@ -1,16 +1,13 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:widgets/app/services/app_service.dart';
+import 'package:widgets/app/modules/posts/postdetail/controller/postdetail_controller.dart';
 
 class PostdetailView extends StatelessWidget {
   const PostdetailView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    var scrollController = ScrollController().obs;
-
+    final controller = Get.put(PostdetailController());
     return Scaffold(
       appBar: AppBar(
         title: const Text('Post Detail'),
@@ -21,21 +18,7 @@ class PostdetailView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            child: AppService.widgets.social.posts(
-              context: context,
-              scrollController: scrollController.value,
-              profileFunction: ({
-                required avatar,
-                required banner,
-                required displayname,
-                required userID,
-                required username,
-              }) {
-                log('$userID $username');
-              },
-              // category: "etiketlenmis",
-              username: "berkaytikenoglu",
-            ),
+            child: controller.posts.widget.value ?? const SizedBox(),
           ),
         ],
       ),

@@ -5,6 +5,7 @@ import 'package:armoyu_widgets/data/models/Story/storylist.dart';
 import 'package:armoyu_widgets/data/services/accountuser_services.dart';
 import 'package:armoyu_widgets/sources/Story/story_screen_page/views/story_screen_view.dart';
 import 'package:armoyu_widgets/sources/gallery/views/gallery_view.dart';
+import 'package:armoyu_widgets/sources/social/bundle/posts_bundle.dart';
 import 'package:armoyu_widgets/sources/social/controllers/post_controller.dart';
 import 'package:armoyu_widgets/sources/social/controllers/story_controller.dart';
 import 'package:armoyu_widgets/translations/app_translation.dart';
@@ -20,28 +21,28 @@ class SocialWidget {
 
   const SocialWidget(this.service);
 
-  Widget posts({
-    Key? key,
-    required BuildContext context,
-    required Function({
-      required int userID,
-      required String username,
-      required String? displayname,
-      required Media? avatar,
-      required Media? banner,
-    }) profileFunction,
-    ScrollController? scrollController,
-    List<Post>? cachedpostsList,
-    Function? refreshPosts,
-    bool isPostdetail = false,
-    String? category,
-    int? userID,
-    String? username,
-    bool shrinkWrap = false,
-    EdgeInsetsGeometry padding = EdgeInsets.zero,
-    ScrollPhysics physics = const ClampingScrollPhysics(),
-    bool sliverWidget = false,
-  }) {
+  PostsWidgetBundle posts(
+      {Key? key,
+      required BuildContext context,
+      required Function({
+        required int userID,
+        required String username,
+        required String? displayname,
+        required Media? avatar,
+        required Media? banner,
+      }) profileFunction,
+      ScrollController? scrollController,
+      List<Post>? cachedpostsList,
+      Function? refreshPosts,
+      bool isPostdetail = false,
+      String? category,
+      int? userID,
+      String? username,
+      bool shrinkWrap = false,
+      EdgeInsetsGeometry padding = EdgeInsets.zero,
+      ScrollPhysics physics = const ClampingScrollPhysics(),
+      bool sliverWidget = false,
+      bool autofetchposts = true}) {
     final controller = Get.put(
       PostController(
         service,
@@ -50,11 +51,12 @@ class SocialWidget {
         userID,
         username,
         cachedpostsList,
+        autofetchposts,
       ),
       tag:
           "postWidget-$category$userID-Uniq-${DateTime.now().millisecondsSinceEpoch}",
     );
-    return Obx(
+    Widget widget = Obx(
       () => controller.postsList.value == null
           ? const Center(
               child: CupertinoActivityIndicator(),
@@ -124,6 +126,12 @@ class SocialWidget {
                     ),
                   ],
                 ),
+    );
+
+    return PostsWidgetBundle(
+      widget: Rxn(widget),
+      refresh: () async => controller.refreshAllPosts(),
+      loadMore: () async => controller.loadMorePosts(),
     );
   }
 

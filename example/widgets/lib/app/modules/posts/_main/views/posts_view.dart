@@ -1,14 +1,13 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:widgets/app/services/app_service.dart';
+import 'package:get/get.dart';
+import 'package:widgets/app/modules/posts/_main/controllers/posts_controller.dart';
 
 class PostsView extends StatelessWidget {
   const PostsView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    var scrollController = ScrollController();
+    var controller = Get.put(PostsController());
 
     return Scaffold(
       appBar: AppBar(
@@ -18,21 +17,7 @@ class PostsView extends StatelessWidget {
       body: Column(
         children: [
           Expanded(
-            child: AppService.widgets.social.posts(
-              context: context,
-              scrollController: scrollController,
-              userID: 1,
-              // shrinkWrap: true,
-              profileFunction: ({
-                required avatar,
-                required banner,
-                required displayname,
-                required userID,
-                required username,
-              }) {
-                log('$userID $username');
-              },
-            ),
+            child: controller.posts.widget.value ?? const SizedBox(),
           ),
         ],
       ),
