@@ -11,9 +11,9 @@ class ProfileView extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(),
-      body: Column(
+      body: const Column(
         children: [
-          Text("asda"),
+          Text("Profile Page"),
         ],
       ),
     );

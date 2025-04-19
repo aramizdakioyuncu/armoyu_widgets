@@ -3,6 +3,7 @@ import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
 import 'package:armoyu_widgets/data/models/Chat/chat.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/data/services/socketio.dart';
+import 'package:armoyu_widgets/sources/chat/bundle/chat_bundle.dart';
 import 'package:armoyu_widgets/sources/chat/controllers/chatcall_controller.dart';
 import 'package:armoyu_widgets/sources/chat/controllers/chatdetail_controller.dart';
 import 'package:armoyu_widgets/sources/chat/controllers/chatfriendnote_controller.dart';
@@ -77,83 +78,89 @@ class ChatWidget {
     );
   }
 
-  Widget chatListWidget(
+  ChatWidgetBundle chatListWidget(
     BuildContext context, {
-    required ScrollController scrollController,
     required Function(Chat chat) onPressed,
   }) {
     final controller = Get.put(SourceChatlistController(service));
-    return Obx(
-      () => controller.filteredItems.value == null
+    Widget widget = Obx(
+      () => controller.filteredchatList.value == null
           ? const Center(
               child: CupertinoActivityIndicator(),
             )
-          : SingleChildScrollView(
-              controller: scrollController,
-              child: Column(
-                children: List.generate(
-                  controller.filteredItems.value!.length,
-                  (index) {
-                    return Obx(
-                      () => ChatWidgetv2.listtilechat(
-                        context,
-                        chat: controller.filteredItems.value![index],
-                        onPressed: onPressed,
-                        onDelete: () {
-                          controller.filteredItems.value!.removeWhere(
-                            (element) =>
-                                element.user.userID ==
-                                controller
-                                    .filteredItems.value![index].user.userID,
-                          );
-                          controller.filteredItems.refresh();
-                        },
-                      ),
-                    );
-                  },
-                ),
+          : Column(
+              children: List.generate(
+                controller.filteredchatList.value!.length,
+                (index) {
+                  return Obx(
+                    () => ChatWidgetv2.listtilechat(
+                      context,
+                      chat: controller.filteredchatList.value![index],
+                      onPressed: onPressed,
+                      onDelete: () {
+                        controller.filteredchatList.value!.removeWhere(
+                          (element) =>
+                              element.user.userID ==
+                              controller
+                                  .filteredchatList.value![index].user.userID,
+                        );
+                        controller.filteredchatList.refresh();
+                      },
+                    ),
+                  );
+                },
               ),
             ),
     );
+
+    return ChatWidgetBundle(
+      widget: Rxn(widget),
+      refresh: () async => await controller.refreshAllChatList(),
+      loadMore: () async => await controller.loadMoreChatList(),
+      filterList: (String text) => controller.filterList(text),
+    );
   }
 
-  Widget newchatListWidget(
+  ChatWidgetBundle newchatListWidget(
     BuildContext context, {
-    required ScrollController scrollController,
     required Function(Chat chat) onPressed,
   }) {
-    final controller =
-        Get.put(SourceNewchatlistController(service, scrollController));
-    return Obx(
-      () => controller.chatList.value == null
+    final controller = Get.put(SourceNewchatlistController(service));
+    Widget widget = Obx(
+      () => controller.filteredchatList.value == null
           ? const Center(
               child: CupertinoActivityIndicator(),
             )
-          : SingleChildScrollView(
-              controller: scrollController,
-              child: Column(
-                children: List.generate(
-                  controller.chatList.value!.length,
-                  (index) {
-                    return Obx(
-                      () => ChatWidgetv2.listtilechat(
-                        context,
-                        chat: controller.chatList.value![index],
-                        onPressed: onPressed,
-                        onDelete: () {
-                          controller.chatList.value!.removeWhere(
-                            (element) =>
-                                element.user.userID ==
-                                controller.chatList.value![index].user.userID,
-                          );
-                          controller.chatList.refresh();
-                        },
-                      ),
-                    );
-                  },
-                ),
+          : Column(
+              children: List.generate(
+                controller.filteredchatList.value!.length,
+                (index) {
+                  return Obx(
+                    () => ChatWidgetv2.listtilechat(
+                      context,
+                      chat: controller.filteredchatList.value![index],
+                      onPressed: onPressed,
+                      onDelete: () {
+                        controller.filteredchatList.value!.removeWhere(
+                          (element) =>
+                              element.user.userID ==
+                              controller
+                                  .filteredchatList.value![index].user.userID,
+                        );
+                        controller.filteredchatList.refresh();
+                      },
+                    ),
+                  );
+                },
               ),
             ),
+    );
+
+    return ChatWidgetBundle(
+      widget: Rxn(widget),
+      refresh: () async => await controller.refreshAllChatList(),
+      loadMore: () async => await controller.loadMoreChatList(),
+      filterList: (String text) => controller.filterList(text),
     );
   }
 

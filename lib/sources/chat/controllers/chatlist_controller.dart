@@ -15,8 +15,9 @@ class SourceChatlistController extends GetxController {
 
   var chatPage = 1.obs;
   var chatsearchprocess = false.obs;
+  var chatsearchEndprocess = false.obs;
   var isFirstFetch = true.obs;
-  var filteredItems = Rxn<List<Chat>>();
+  var filteredchatList = Rxn<List<Chat>>();
 
   var currentUserAccounts = Rx<UserAccounts>(
     UserAccounts(
@@ -39,15 +40,37 @@ class SourceChatlistController extends GetxController {
     getchat(fetchRestart: true);
   }
 
+  Future<void> refreshAllChatList() async {
+    await getchat(fetchRestart: true);
+  }
+
+  Future<void> loadMoreChatList() async {
+    return await getchat();
+  }
+
+  Future<void> filterList(String text) async {
+    if (currentUserAccounts.value.chatList == null) {
+      return;
+    }
+    log("message");
+
+    filteredchatList.value =
+        currentUserAccounts.value.chatList!.where((element) {
+      return element.user.displayName!.value.toLowerCase().contains(text);
+    }).toList();
+    log("Filtered List Length: ${filteredchatList.value!.length}");
+    filteredchatList.refresh();
+  }
+
   Future<void> getchat({bool fetchRestart = false}) async {
-    if (chatsearchprocess.value) {
+    if (chatsearchprocess.value || chatsearchEndprocess.value) {
       return;
     }
 
     if (fetchRestart) {
       chatPage.value = 1;
       currentUserAccounts.value.chatList = <Chat>[].obs;
-      filteredItems.value = null;
+      filteredchatList.value = null;
     }
 
     chatsearchprocess.value = true;
@@ -124,10 +147,15 @@ class SourceChatlistController extends GetxController {
       );
     }
 
-    filteredItems.value = currentUserAccounts.value.chatList;
+    if (response.response!.length < 30) {
+      // 10'dan azsa daha fazla yok demektir
+      log("Daha fazla veri yok (ChatList)");
+      chatsearchEndprocess.value = true;
+    }
+    filteredchatList.value = currentUserAccounts.value.chatList;
 
     currentUserAccounts.refresh();
-    filteredItems.refresh();
+    filteredchatList.refresh();
 
     chatsearchprocess.value = false;
     isFirstFetch.value = false;

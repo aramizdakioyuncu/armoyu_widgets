@@ -6,6 +6,7 @@ import 'package:armoyu_widgets/data/models/useraccounts.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:widgets/app/constants/constants.dart';
 import 'package:widgets/app/modules/main/controllers/main_controller.dart';
 import 'package:widgets/app/routes/app_route.dart';
 import 'package:widgets/app/services/app_service.dart';
@@ -77,9 +78,11 @@ class MainView extends StatelessWidget {
                           AppService.widgets =
                               ARMOYUWidgets(service: AppService.service);
 
-                          LoginResponse response = await AppService
-                              .service.authServices
-                              .login(username: "deneme", password: "deneme");
+                          LoginResponse response =
+                              await AppService.service.authServices.login(
+                            username: Constants.username,
+                            password: Constants.password,
+                          );
 
                           if (!response.result.status) {
                             return;

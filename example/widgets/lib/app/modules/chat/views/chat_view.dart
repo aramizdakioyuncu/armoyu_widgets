@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:widgets/app/modules/chat/controllers/chat_controller.dart';
-import 'package:widgets/app/routes/app_route.dart';
 import 'package:widgets/app/services/app_service.dart';
 
 class ChatView extends StatelessWidget {
@@ -29,31 +28,52 @@ class ChatView extends StatelessWidget {
             child: TabBarView(
               controller: controller.tabController.value,
               children: [
-                Column(
+                ListView(
+                  controller: controller.scrollControllerchatList.value,
                   children: [
                     AppService.widgets.chat.chatmyfriendsNotes(context),
-                    Expanded(
-                      child: AppService.widgets.chat.chatListWidget(
-                        context,
-                        onPressed: (chat) {
-                          log(chat.chatID.toString());
-                          Get.toNamed(
-                            Routes.CHATDETAIL,
-                            arguments: {'chat': chat},
-                          );
-                        },
-                        scrollController: controller.scrollController.value,
+                    SizedBox(
+                      height: 60,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextField(
+                          onChanged: (value) {
+                            controller.widgetChatList.filterList(value);
+                            log("Chat List Filtered: $value");
+                            controller.widgetChatList.widget.refresh();
+                          },
+                          controller: TextEditingController(),
+                          decoration: const InputDecoration(
+                            hintText: "Sohbet Ara",
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
                       ),
                     ),
+                    controller.widgetChatList.widget.value!,
                   ],
                 ),
-                AppService.widgets.chat.newchatListWidget(
-                  context,
-                  onPressed: (chat) {
-                    log(chat.chatID.toString());
-                    Get.toNamed(Routes.CHATDETAIL, arguments: {'chat': chat});
-                  },
-                  scrollController: controller.scrollController.value,
+                ListView(
+                  controller: controller.scrollControllernewChatList.value,
+                  children: [
+                    SizedBox(
+                      height: 60,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextField(
+                          onChanged: (value) {
+                            controller.widgetNewChatList.filterList(value);
+                          },
+                          controller: TextEditingController(),
+                          decoration: const InputDecoration(
+                            hintText: "Sohbet Ara",
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                      ),
+                    ),
+                    controller.widgetNewChatList.widget.value!,
+                  ],
                 ),
               ],
             ),
