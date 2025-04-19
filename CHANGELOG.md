@@ -1,3 +1,3 @@
-## [1.0.0+48]
+## [1.0.0+50]
 
-- TPcard ile Xpcard bir controllera bağlandı.
+- TPcard ile Xpcard iyileştirilme yapıldı.

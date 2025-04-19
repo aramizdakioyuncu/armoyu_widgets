@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 class CardsControllerV2 extends GetxController {
   final ARMOYUServices service;
   final CustomCardType title;
-  final List<APIPlayerPop> content;
+  Rxn<List<APIPlayerPop>>? content;
 
   final bool firstFetch;
 
@@ -20,10 +20,10 @@ class CardsControllerV2 extends GetxController {
   });
 
   var morefetchProcces = false.obs;
+  var morefetchProccesEnd = false.obs;
   var firstFetchProcces = false.obs;
 
   var xtitle = Rxn<CustomCardType>(null);
-  var xcontent = Rxn<List<APIPlayerPop>>(null);
   var xicon = Rxn<Icon>(null);
   var xeffectcolor = Rxn<Color>(null);
   var xscrollController = Rxn<ScrollController>(null);
@@ -34,8 +34,17 @@ class CardsControllerV2 extends GetxController {
     super.onInit();
 
     xtitle.value = title;
-    xcontent.value = content;
+    content ??= Rxn<List<APIPlayerPop>>(null);
 
+    if (xtitle.value == CustomCardType.playerXP) {
+      xicon.value = const Icon(
+        Icons.auto_graph_outlined,
+        size: 15,
+        color: Colors.white,
+      );
+      xeffectcolor.value =
+          const Color.fromARGB(255, 10, 84, 175).withValues(alpha: 0.7);
+    }
     if (xtitle.value == CustomCardType.playerPOP) {
       xicon.value = const Icon(
         Icons.remove_red_eye_outlined,
@@ -58,30 +67,32 @@ class CardsControllerV2 extends GetxController {
     xfirstFetch.value = firstFetch;
 
     if (!firstFetchProcces.value && xfirstFetch.value!) {
-      morefetchinfo();
-      firstFetchProcces.value = true;
+      if (content!.value == null) {
+        morefetchinfo();
+        firstFetchProcces.value = true;
+      }
     }
     xscrollController.value!.addListener(() {
       if (xscrollController.value!.position.pixels >=
-          xscrollController.value!.position.maxScrollExtent * 0.8) {
+          xscrollController.value!.position.maxScrollExtent * 0.9) {
         morefetchinfo();
       }
     });
   }
 
   Future<void> morefetchinfo() async {
-    if (morefetchProcces.value) {
+    if (morefetchProcces.value || morefetchProccesEnd.value) {
       return;
     }
     morefetchProcces.value = true;
 
-    log("${xtitle.value}  ${xtitle.value}  ");
-
+    log("${xtitle.value}");
+    content!.value ??= [];
     // Sayfa başına gösterilecek içerik sayısı
     int itemsPerPage = 10;
 
     // Şu anki içerik sayısını alıyoruz
-    int currentContentCount = xcontent.value!.length;
+    int currentContentCount = content!.value!.length;
 
     // Sayfa numarasını içerik sayısına göre hesaplıyoruz
     int currentPage = (currentContentCount / itemsPerPage).ceil() + 1;
@@ -93,7 +104,7 @@ class CardsControllerV2 extends GetxController {
       );
     } else {
       response = await service.utilsServices.getplayerxp(
-        page: int.parse(((xcontent.value!.length ~/ 10) + 1).toString()),
+        page: currentPage,
       );
     }
 
@@ -103,15 +114,17 @@ class CardsControllerV2 extends GetxController {
       return;
     }
 
-    if (response.response!.isNotEmpty) {
-      currentPage++;
-    }
-
-    xcontent.value ??= <APIPlayerPop>[];
     for (APIPlayerPop element in response.response!) {
-      xcontent.value!.add(element);
+      content!.value!.add(element);
     }
+    content!.refresh();
 
     morefetchProcces.value = false;
+
+    if (response.response!.length < 10) {
+      //Eğer veri 10 dan azsa daha fazla veri yok demektir.
+      morefetchProccesEnd.value = true;
+      return;
+    }
   }
 }

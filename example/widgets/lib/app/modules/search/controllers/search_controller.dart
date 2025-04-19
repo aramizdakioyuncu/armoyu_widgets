@@ -20,7 +20,6 @@ class SearchViewController extends GetxController {
     widget.value = AppService.widgets.cards.cardWidget(
       context: Get.context!,
       title: CustomCardType.playerPOP,
-      content: [],
       firstFetch: true,
       profileFunction: ({
         required avatar,
@@ -34,7 +33,6 @@ class SearchViewController extends GetxController {
     widget2.value = AppService.widgets.cards.cardWidget(
       context: Get.context!,
       title: CustomCardType.playerXP,
-      content: [],
       firstFetch: true,
       profileFunction: ({
         required avatar,

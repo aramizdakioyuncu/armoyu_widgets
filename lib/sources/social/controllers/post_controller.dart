@@ -1,5 +1,6 @@
 import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_services/core/models/ARMOYU/API/post/post_detail.dart';
+import 'package:armoyu_services/core/models/ARMOYU/API/utils/player_pop_list.dart';
 import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
 import 'package:armoyu_widgets/core/armoyu.dart';
 import 'package:armoyu_widgets/core/widgets.dart';
@@ -48,6 +49,8 @@ class PostController extends GetxController {
   var fetchCommentStatus = false.obs;
   var fetchlikersStatus = false.obs;
 
+  Rxn<List<APIPlayerPop>> tpcardList = Rxn(null);
+  Rxn<List<APIPlayerPop>> popcardList = Rxn(null);
   User? currentUser;
 
   Rxn<ScrollController> xscrollController = Rxn<ScrollController>();

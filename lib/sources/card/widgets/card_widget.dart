@@ -17,7 +17,7 @@ class CardWidget {
   Widget cardWidget({
     required BuildContext context,
     required CustomCardType title,
-    required List<APIPlayerPop> content,
+    Rxn<List<APIPlayerPop>>? content,
     required bool firstFetch,
     required Function({
       required int userID,
@@ -34,11 +34,11 @@ class CardWidget {
         firstFetch: firstFetch,
         title: title,
       ),
-      tag: title.name,
+      tag: DateTime.now().microsecondsSinceEpoch.toString() + title.name,
     );
 
     return Obx(
-      () => controller.xcontent.value == null
+      () => controller.content!.value == null
           ? SkeletonCustomCards(count: 5, icon: controller.xicon.value!)
           : SizedBox(
               height: 220,
@@ -48,18 +48,18 @@ class CardWidget {
                 padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                 scrollDirection: Axis.horizontal,
                 itemCount: controller.morefetchProcces.value
-                    ? controller.xcontent.value!.length + 1
-                    : controller.xcontent.value!.length,
+                    ? controller.content!.value!.length + 1
+                    : controller.content!.value!.length,
                 physics: const BouncingScrollPhysics(),
                 itemBuilder: (context, index) {
-                  if (controller.xcontent.value!.length == index) {
+                  if (controller.content!.value!.length == index) {
                     return const SizedBox(
                       width: 150,
                       child: CupertinoActivityIndicator(),
                     );
                   }
 
-                  APIPlayerPop cardData = controller.xcontent.value![index];
+                  APIPlayerPop cardData = controller.content!.value![index];
                   return InkWell(
                     borderRadius: BorderRadius.circular(15),
                     onTap: () {

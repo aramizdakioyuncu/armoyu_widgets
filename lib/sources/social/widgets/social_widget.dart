@@ -56,6 +56,7 @@ class SocialWidget {
       tag:
           "postWidget-$category$userID-Uniq-${DateTime.now().millisecondsSinceEpoch}",
     );
+
     Widget widget = Obx(
       () => controller.postsList.value == null
           ? const Center(
