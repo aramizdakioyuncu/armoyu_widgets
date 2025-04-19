@@ -68,7 +68,7 @@ class WidgetUtility {
                   log('Tapped on username: $username');
                   profileFunction(
                     userID: 0,
-                    username: username,
+                    username: username.substring(1),
                     displayname: null,
                     avatar: null,
                     banner: null,

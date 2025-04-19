@@ -62,7 +62,7 @@ class PostController extends GetxController {
 
   Future<void> loadMorePosts() async {
     log("load More Posts");
-    await fetchsocailposts();
+    return await fetchsocailposts();
   }
 
   @override
@@ -176,6 +176,7 @@ class PostController extends GetxController {
                   postID: comments.postID,
                   user: User(
                     userID: comments.postcommenter.userID,
+                    userName: Rx(comments.postcommenter.username),
                     displayName: Rx(comments.postcommenter.displayname),
                     avatar: Media(
                       mediaID: 0,
@@ -200,8 +201,8 @@ class PostController extends GetxController {
                   likeID: likers.likerID,
                   user: User(
                     userID: likers.likerID,
-                    displayName: Rx(likers.likerdisplayname),
                     userName: Rx(likers.likerusername),
+                    displayName: Rx(likers.likerdisplayname),
                     avatar: Media(
                       mediaID: 0,
                       mediaType: MediaType.image,
@@ -226,6 +227,7 @@ class PostController extends GetxController {
     cachedpostsList = postsList.value;
     postscount.value++;
     postsProccess.value = false;
+    return;
   }
 
   //// This function is used to add new post to the list

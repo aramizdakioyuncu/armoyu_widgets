@@ -131,8 +131,8 @@ class SocialWidget {
 
     return PostsWidgetBundle(
       widget: Rxn(widget),
-      refresh: () async => controller.refreshAllPosts(),
-      loadMore: () async => controller.loadMorePosts(),
+      refresh: () async => await controller.refreshAllPosts(),
+      loadMore: () async => await controller.loadMorePosts(),
     );
   }
 

@@ -23,9 +23,9 @@ class PostcommentView {
     required Function({
       required int userID,
       required String username,
-      required String displayname,
-      required Media avatar,
-      required Media banner,
+      required String? displayname,
+      required Media? avatar,
+      required Media? banner,
     }) profileFunction,
   }) {
     String uniqueTag = DateTime.now().millisecondsSinceEpoch.toString();
@@ -51,6 +51,7 @@ class PostcommentView {
                     text: controller.comment.content,
                     user: User(
                       userID: controller.comment.user.userID,
+                      userName: controller.comment.user.userName,
                       displayName: Rx(
                         controller.comment.user.displayName!.value,
                       ),
@@ -229,9 +230,9 @@ class PostcommentView {
     required Function({
       required int userID,
       required String username,
-      required String displayname,
-      required Media avatar,
-      required Media banner,
+      required String? displayname,
+      required Media? avatar,
+      required Media? banner,
     }) profileFunction,
   }) {
     final controller = Get.put(

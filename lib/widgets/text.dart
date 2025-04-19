@@ -33,7 +33,7 @@ class CustomText {
       required String username,
       required String displayname,
       required Media avatar,
-      required Media banner,
+      required Media? banner,
     }) profileFunction,
   }) {
     final textSpans = <InlineSpan>[];
@@ -61,15 +61,7 @@ class CustomText {
                       minURL: user.avatar!.mediaURL.minURL,
                     ),
                   ),
-                  banner: Media(
-                    mediaID: 0,
-                    mediaType: MediaType.image,
-                    mediaURL: MediaURL(
-                      bigURL: user.banner!.mediaURL.bigURL,
-                      normalURL: user.banner!.mediaURL.normalURL,
-                      minURL: user.banner!.mediaURL.minURL,
-                    ),
-                  ),
+                  banner: null,
                 );
               },
           )
@@ -105,15 +97,7 @@ class CustomText {
                   minURL: user.avatar!.mediaURL.minURL,
                 ),
               ),
-              banner: Media(
-                mediaID: 0,
-                mediaType: MediaType.image,
-                mediaURL: MediaURL(
-                  bigURL: user.banner!.mediaURL.bigURL,
-                  normalURL: user.banner!.mediaURL.normalURL,
-                  minURL: user.banner!.mediaURL.minURL,
-                ),
-              ),
+              banner: null,
             );
           },
           child: CircleAvatar(

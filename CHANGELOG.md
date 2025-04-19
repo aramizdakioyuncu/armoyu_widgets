@@ -1,3 +1,3 @@
-## [1.0.0+50]
+## [1.0.0+51]
 
-- TPcard ile Xpcard iyileştirilme yapıldı.
+- Sosyal paylaşımlardan Profile gitme sorunları düzeltildi.
