@@ -34,7 +34,7 @@ class CardWidget {
         firstFetch: firstFetch,
         title: title,
       ),
-      tag: DateTime.now().microsecondsSinceEpoch.toString() + title.name,
+      tag: title.name,
     );
 
     return Obx(

@@ -24,8 +24,14 @@ class SearchView extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Obx(
-            () => controller.widget3.value!,
+          Center(
+            child: SizedBox(
+              height: 200,
+              width: 400,
+              child: Obx(
+                () => controller.widget3.value!,
+              ),
+            ),
           ),
           Obx(
             () => controller.widget.value!,

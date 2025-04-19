@@ -1,4 +1,5 @@
 import 'package:armoyu_services/armoyu_services.dart';
+import 'package:armoyu_services/core/models/ARMOYU/API/utils/player_pop_list.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
 import 'package:armoyu_widgets/data/models/Social/post.dart';
 import 'package:armoyu_widgets/sources/card/widgets/card_widget.dart';
@@ -28,6 +29,9 @@ class PostWidget {
     bool showTPcard = false,
     bool showPOPcard = false,
   }) {
+    List<APIPlayerPop> tpcardList = [];
+    List<APIPlayerPop> popcardList = [];
+
     var likeButtonKey = GlobalKey<LikeButtonState>().obs;
     var likebutton = LikeButton(
       key: likeButtonKey.value,
@@ -391,7 +395,7 @@ class PostWidget {
                   ? CardWidget(service).cardWidget(
                       context: Get.context!,
                       title: CustomCardType.playerPOP,
-                      content: [],
+                      content: popcardList,
                       firstFetch: true,
                       profileFunction: profileFunction,
                     )
@@ -400,7 +404,7 @@ class PostWidget {
                   ? CardWidget(service).cardWidget(
                       context: Get.context!,
                       title: CustomCardType.playerXP,
-                      content: [],
+                      content: tpcardList,
                       firstFetch: true,
                       profileFunction: profileFunction,
                     )
