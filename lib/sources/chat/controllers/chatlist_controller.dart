@@ -11,12 +11,22 @@ import 'package:get/get.dart';
 
 class SourceChatlistController extends GetxController {
   final ARMOYUServices service;
-  SourceChatlistController(this.service);
+
+  List<Chat>? cachedChatList;
+  Function(List<Chat> updatedChat)? onChatUpdated;
+
+  SourceChatlistController({
+    required this.service,
+    this.cachedChatList,
+    this.onChatUpdated,
+  });
 
   var chatPage = 1.obs;
   var chatsearchprocess = false.obs;
   var chatsearchEndprocess = false.obs;
   var isFirstFetch = true.obs;
+
+  var chatList = Rxn<List<Chat>>();
   var filteredchatList = Rxn<List<Chat>>();
 
   var currentUserAccounts = Rx<UserAccounts>(
@@ -26,6 +36,20 @@ class SourceChatlistController extends GetxController {
       language: Rxn(),
     ),
   );
+
+  Future<void> refreshAllChatList() async {
+    await getchat(fetchRestart: true);
+  }
+
+  Future<void> loadMoreChatList() async {
+    return await getchat();
+  }
+
+  void updateChatList() {
+    chatList.refresh();
+    filteredchatList.refresh();
+    onChatUpdated?.call(chatList.value!);
+  }
 
   @override
   void onInit() {
@@ -37,15 +61,13 @@ class SourceChatlistController extends GetxController {
     //* *//
     currentUserAccounts = findCurrentAccountController.currentUserAccounts;
 
+    //Bellekteki paylaşımları yükle
+    if (cachedChatList != null) {
+      chatList.value ??= [];
+      chatList.value = cachedChatList;
+    }
+
     getchat(fetchRestart: true);
-  }
-
-  Future<void> refreshAllChatList() async {
-    await getchat(fetchRestart: true);
-  }
-
-  Future<void> loadMoreChatList() async {
-    return await getchat();
   }
 
   Future<void> filterList(String text) async {
@@ -94,10 +116,10 @@ class SourceChatlistController extends GetxController {
       return;
     }
 
-    currentUserAccounts.value.chatList ??= <Chat>[].obs;
+    chatList.value ??= [];
 
     for (APIChatList element in response.response!) {
-      currentUserAccounts.value.chatList!.add(
+      chatList.value!.add(
         Chat(
           chatID: element.kullID, //sonradan chat id olarak değişecek
           user: User(
@@ -152,10 +174,9 @@ class SourceChatlistController extends GetxController {
       log("Daha fazla veri yok (ChatList)");
       chatsearchEndprocess.value = true;
     }
-    filteredchatList.value = currentUserAccounts.value.chatList;
 
-    currentUserAccounts.refresh();
-    filteredchatList.refresh();
+    filteredchatList.value = currentUserAccounts.value.chatList;
+    updateChatList();
 
     chatsearchprocess.value = false;
     isFirstFetch.value = false;

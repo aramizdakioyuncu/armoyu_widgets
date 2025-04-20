@@ -24,10 +24,11 @@ class MediagalleryController extends GetxController {
     this.onMediaUpdated,
   });
 
-  Rxn<List<Media>> mediaList = Rxn();
   var mediapagecount = 1.obs;
   var mediafetchProccess = false.obs;
   var mediafetchEndProccess = false.obs;
+  Rxn<List<Media>> mediaList = Rxn();
+
   var currentUserAccounts = Rx<UserAccounts>(
     UserAccounts(
       user: User().obs,
@@ -36,17 +37,17 @@ class MediagalleryController extends GetxController {
     ),
   );
 
-  Future<void> refreshAllPosts() async {
+  Future<void> refreshAllMedia() async {
     log("Refresh All Posts");
     await fetchgallery(refreshmedia: true);
   }
 
-  Future<void> loadMorePosts() async {
+  Future<void> loadMoreMedia() async {
     log("load More Media");
     return await fetchgallery();
   }
 
-  void updatePostsList() {
+  void updateMediaList() {
     onMediaUpdated?.call(mediaList.value!);
   }
 
@@ -64,6 +65,11 @@ class MediagalleryController extends GetxController {
       mediaList.value = cachedmediaList;
     }
 
+    //Bellekteki paylaşımları yükle
+    if (cachedmediaList != null) {
+      mediaList.value ??= [];
+      mediaList.value = cachedmediaList;
+    }
     fetchgallery();
   }
 
@@ -111,6 +117,7 @@ class MediagalleryController extends GetxController {
     mediafetchProccess.value = false;
     mediapagecount++;
     mediaList.refresh();
+    updateMediaList();
   }
 
   onlongPress(context, List<Media> medialist, index) {

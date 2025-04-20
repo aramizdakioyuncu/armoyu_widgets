@@ -5,6 +5,7 @@ import 'package:armoyu_widgets/core/appcore.dart';
 import 'package:armoyu_widgets/core/armoyu.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
 import 'package:armoyu_widgets/sources/Story/publish_story_page/views/storypublish_view.dart';
+import 'package:armoyu_widgets/sources/gallery/bundle/gallery_bundle.dart';
 import 'package:armoyu_widgets/sources/gallery/widgets/mediagallery_controller.dart';
 import 'package:armoyu_widgets/sources/photoviewer/views/photoviewer_view.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -18,10 +19,10 @@ class GalleryWidget {
 
   const GalleryWidget(this.service);
 
-  Widget mediaGallery({
+  GalleryWidgetBundle mediaGallery({
     required context,
     List<Media>? cachedmediaList,
-    Function(List<Media> updatedPosts)? onmediaUpdated,
+    Function(List<Media> updatedMedia)? onmediaUpdated,
     int? userID,
     bool storyShare = false,
   }) {
@@ -33,7 +34,7 @@ class GalleryWidget {
           onMediaUpdated: onmediaUpdated,
         ),
         tag: "mediagallery-$userID");
-    return Obx(
+    Widget widget = Obx(
       () => controller.mediaList.value == null
           ? const Center(
               child: CupertinoActivityIndicator(),
@@ -101,6 +102,12 @@ class GalleryWidget {
                 },
               ),
             ),
+    );
+
+    return GalleryWidgetBundle(
+      widget: Rxn(widget),
+      refresh: () async => await controller.refreshAllMedia(),
+      loadMore: () async => await controller.loadMoreMedia(),
     );
   }
 

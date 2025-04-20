@@ -1,3 +1,3 @@
-## [1.0.0+53]
+## [1.0.0+55]
 
-- Cache işlemleri adımları (Post).
+- Cache işlemleri adımları (Chat).
