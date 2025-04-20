@@ -20,11 +20,18 @@ class GalleryWidget {
 
   Widget mediaGallery({
     required context,
+    List<Media>? cachedmediaList,
+    Function(List<Media> updatedPosts)? onmediaUpdated,
     int? userID,
     bool storyShare = false,
   }) {
     final controller = Get.put(
-        MediagalleryController(service: service, userID: userID),
+        MediagalleryController(
+          service: service,
+          userID: userID,
+          cachedmediaList: cachedmediaList,
+          onMediaUpdated: onmediaUpdated,
+        ),
         tag: "mediagallery-$userID");
     return Obx(
       () => controller.mediaList.value == null

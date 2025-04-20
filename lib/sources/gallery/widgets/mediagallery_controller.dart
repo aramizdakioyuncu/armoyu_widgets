@@ -13,10 +13,21 @@ import 'package:get/get.dart';
 class MediagalleryController extends GetxController {
   final ARMOYUServices service;
   final int? userID;
-  MediagalleryController({required this.service, this.userID});
+
+  List<Media>? cachedmediaList;
+  Function(List<Media> updatedPosts)? onMediaUpdated;
+
+  MediagalleryController({
+    required this.service,
+    this.userID,
+    this.cachedmediaList,
+    this.onMediaUpdated,
+  });
 
   Rxn<List<Media>> mediaList = Rxn();
+  var mediapagecount = 1.obs;
   var mediafetchProccess = false.obs;
+  var mediafetchEndProccess = false.obs;
   var currentUserAccounts = Rx<UserAccounts>(
     UserAccounts(
       user: User().obs,
@@ -24,6 +35,20 @@ class MediagalleryController extends GetxController {
       language: Rxn(),
     ),
   );
+
+  Future<void> refreshAllPosts() async {
+    log("Refresh All Posts");
+    await fetchgallery(refreshmedia: true);
+  }
+
+  Future<void> loadMorePosts() async {
+    log("load More Media");
+    return await fetchgallery();
+  }
+
+  void updatePostsList() {
+    onMediaUpdated?.call(mediaList.value!);
+  }
 
   @override
   void onInit() {
@@ -33,18 +58,29 @@ class MediagalleryController extends GetxController {
     currentUserAccounts.value =
         findCurrentAccountController.currentUserAccounts.value;
 
+    //Bellekteki medyayı yükle
+    if (cachedmediaList != null) {
+      mediaList.value ??= [];
+      mediaList.value = cachedmediaList;
+    }
+
     fetchgallery();
   }
 
-  fetchgallery() async {
+  fetchgallery({bool refreshmedia = false}) async {
     if (mediafetchProccess.value) {
       return;
     }
     mediafetchProccess.value = true;
+
+    if (refreshmedia) {
+      mediapagecount.value = 1;
+      mediaList.value = [];
+    }
     MediaFetchResponse response = await service.mediaServices.fetch(
       uyeID: userID ?? currentUserAccounts.value.user.value.userID!,
       category: "-1",
-      page: 1,
+      page: mediapagecount.value,
     );
 
     if (!response.result.status) {
@@ -68,8 +104,13 @@ class MediagalleryController extends GetxController {
         ),
       );
     }
+    if (response.response!.length < 30) {
+      mediafetchEndProccess.value = true;
+    }
 
     mediafetchProccess.value = false;
+    mediapagecount++;
+    mediaList.refresh();
   }
 
   onlongPress(context, List<Media> medialist, index) {

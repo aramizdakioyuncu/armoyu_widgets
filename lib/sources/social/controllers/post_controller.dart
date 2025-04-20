@@ -32,17 +32,17 @@ class PostController extends GetxController {
   String? username;
   List<Post>? cachedpostsList;
   Function(List<Post> updatedPosts)? onPostsUpdated;
-  bool autofetchposts = true;
-  PostController(
-    this.service,
-    this.scrollController,
-    this.category,
-    this.userID,
-    this.username,
-    this.cachedpostsList,
-    this.onPostsUpdated,
-    this.autofetchposts,
-  );
+  bool autofetchposts;
+  PostController({
+    required this.service,
+    required this.scrollController,
+    required this.category,
+    required this.userID,
+    required this.username,
+    required this.cachedpostsList,
+    required this.onPostsUpdated,
+    required this.autofetchposts,
+  });
 
   final Rxn<List<Post>> postsList = Rxn<List<Post>>(null);
   var postscount = 1.obs;

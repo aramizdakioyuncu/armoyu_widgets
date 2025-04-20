@@ -15,8 +15,8 @@ import 'package:get/get.dart';
 class UserAccounts {
   Rx<User> user;
   Rx<String> sessionTOKEN;
-
   Rxn<String> language;
+
   //Sosyal KISIM
   List<Post>? widgetPosts;
   List<StoryList>? widgetStoriescard;

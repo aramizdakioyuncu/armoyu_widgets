@@ -8,7 +8,6 @@ import 'package:armoyu_widgets/data/models/ARMOYU/school.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/station.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/team.dart';
 import 'package:armoyu_widgets/data/models/Social/post.dart';
-import 'package:armoyu_widgets/data/models/Story/storylist.dart';
 import 'package:armoyu_widgets/data/models/socailaccounts.dart';
 import 'package:armoyu_widgets/widgets/text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -27,21 +26,11 @@ class User {
   Media? avatar;
   Media? banner;
   Media? wallpaper;
-
-  // Rx<String>? userMail = "".obs;
-
-  // Rx<Country>? country;
-  // Rx<Province>? province;
   String? registerDate = "";
   widgetjob.Job? job;
   Role? role;
 
-  // Rx<String>? aboutme = "".obs;
   Rx<String>? burc = "".obs;
-  // Rx<String>? invitecode = "".obs;
-  // Rx<String>? lastlogin = "".obs;
-  // Rx<String>? lastloginv2 = "".obs;
-  // Rx<String>? lastfaillogin = "".obs;
 
   Rxn<UserDetailInfo>? detailInfo;
 
@@ -49,34 +38,25 @@ class User {
   Rx<String>? levelColor;
   Rx<String>? xp;
 
-  // int? friendsCount = 0;
-
-  // int? postsCount = 0;
-  // int? awardsCount = 0;
-
-  // Rxn<String>? phoneNumber;
-  // Rxn<String>? birthdayDate;
   Team? favTeam;
 
   bool? status;
   Rx<bool>? ismyFriend;
 
   // //Arkadaşlarım
-
   RxList<User>? myFriends;
   RxList<User>? mycloseFriends;
-
-  // //ARAÇ GEREÇ
-  // RxList<Chat>? chatlist;
 
   // //Gruplarım & Okullarım & İşyerlerim
   List<Group>? myGroups = [];
   List<School>? mySchools = [];
   List<Station>? myStations = [];
 
-  //Sosyal KISIM
-  RxList<Post>? widgetPosts;
-  RxList<StoryList>? widgetStoriescard;
+  //Profil Widgetleri
+  List<Post>? widgetPosts;
+  List<Media>? widgetGallery;
+  List<Post>? widgettaggedPosts;
+
   Rx<Socialaccounts>? socialaccounts;
   RxList<Game>? popularGames;
 
@@ -89,38 +69,25 @@ class User {
     this.avatar,
     this.banner,
     this.wallpaper,
-    // this.userMail,
-    // this.country,
-    // this.province,
     this.registerDate,
     this.job,
     this.role,
-    // this.aboutme,
     this.burc,
-    // this.invitecode,
-    // this.lastlogin,
-    // this.lastloginv2,
-    // this.lastfaillogin,
     this.level,
     this.levelColor,
     this.xp,
-    // this.friendsCount,
-    // this.postsCount,
-    // this.awardsCount,
     this.favTeam,
     this.status,
     this.ismyFriend,
-    // this.phoneNumber,
     this.detailInfo,
-    // this.birthdayDate,
     this.myFriends,
-    // this.chatlist,
     this.mycloseFriends,
     this.myGroups,
     this.mySchools,
     this.myStations,
     this.widgetPosts,
-    this.widgetStoriescard,
+    this.widgetGallery,
+    this.widgettaggedPosts,
     this.socialaccounts,
     this.popularGames,
   });
@@ -138,27 +105,16 @@ class User {
       displayName: json['displayname'] == null
           ? null
           : (json['displayname'] as String).obs,
-      // aboutme: json['aboutme'] == null ? null : (json['aboutme'] as String).obs,
       level: json['level'] == null ? null : (json['level'] as int).obs,
       levelColor: json['levelcolor'] == null
           ? null
           : (json['levelcolor'] as String).obs,
       xp: json['xp'] == null ? null : (json['xp'] as String).obs,
-      // phoneNumber: Rxn<String>(json['phoneNumber']),
       detailInfo: json['detailInfo'] == null
           ? null
           : Rxn(
               UserDetailInfo.fromJson(json['detailInfo']),
             ),
-      // birthdayDate: Rxn<String>(json['birthdayDate']),
-      // userMail:
-      //     json['usermail'] == null ? null : (json['usermail'] as String).obs,
-      // country: json['country'] == null
-      //     ? null
-      //     : Country.fromJson(json['country']).obs,
-      // province: json['province'] == null
-      //     ? null
-      //     : Province.fromJson(json['province']).obs,
       role: json['role'] == null
           ? null
           : Role(
@@ -166,9 +122,6 @@ class User {
               color: json['role']['color'],
               name: json['role']['name'],
             ),
-      // friendsCount: json['friendscount'],
-      // postsCount: json['postscount'],
-      // awardsCount: json['awardscount'],
       avatar: json['avatar'] == null
           ? null
           : Media(
@@ -214,23 +167,21 @@ class User {
               ?.map((myGroups) => Group.fromJson(myGroups))
               .toList()
               .obs,
-      // lastlogin:
-      //     json['lastlogin'] == null ? null : (json['lastlogin'] as String).obs,
-      // lastloginv2: json['lastloginv2'] == null
-      //     ? null
-      //     : (json['lastloginv2'] as String).obs,
       widgetPosts: json['widgetposts'] == null
           ? null
           : (json['widgetposts'] as List<dynamic>?)
               ?.map((widgetpost) => Post.fromJson(widgetpost))
-              .toList()
-              .obs,
-      widgetStoriescard: json['widgetstoriescard'] == null
+              .toList(),
+      widgetGallery: json['widgetGallery'] == null
           ? null
           : (json['widgetstoriescard'] as List<dynamic>?)
-              ?.map((storylistJson) => StoryList.fromJson(storylistJson))
-              .toList()
-              .obs,
+              ?.map((widgetGallery) => Media.fromJson(widgetGallery))
+              .toList(),
+      widgettaggedPosts: json['widgettaggedPosts'] == null
+          ? null
+          : (json['widgettaggedPosts'] as List<dynamic>?)
+              ?.map((widgettaggedPosts) => Post.fromJson(widgettaggedPosts))
+              .toList(),
       socialaccounts: json['socialaccounts'] == null
           ? null
           : (Socialaccounts.fromJson(json['socialaccounts'])).obs,
@@ -253,17 +204,11 @@ class User {
       'firstname': firstName?.value,
       'lastname': lastName?.value,
       'displayname': displayName?.value,
-      // 'aboutme': aboutme?.value,
       'level': level?.value,
       'xp': xp?.value,
-      // 'phoneNumber': phoneNumber?.value,
       'detailInfo':
           detailInfo?.value == null ? null : detailInfo!.value!.toJson(),
-      // 'birthdayDate': birthdayDate?.value,
       'levelcolor': levelColor?.value,
-      // 'usermail': userMail?.value,
-      // 'country': country?.value.toJson(),
-      // 'province': province?.value.toJson(),
       'role': role != null
           ? {
               'roleID': role!.roleID,
@@ -271,9 +216,6 @@ class User {
               'name': role!.name,
             }
           : null,
-      // 'friendscount': friendsCount,
-      // 'postscount': postsCount,
-      // 'awardscount': awardsCount,
       'avatar': avatar != null
           ? {
               'media_ID': avatar!.mediaID,
@@ -300,11 +242,11 @@ class User {
           : null,
       'myfriends': myFriends?.map((friend) => friend.toJson()).toList(),
       'myGroups': myGroups?.map((myGroups) => myGroups.toJson()).toList(),
-      // 'lastlogin': lastlogin?.value,
-      // 'lastloginv2': lastloginv2?.value,
       'widgetposts': widgetPosts?.map((posts) => posts.toJson()).toList(),
-      'widgetstoriescard':
-          widgetStoriescard?.map((stories) => stories.toJson()).toList(),
+      'widgetGallery':
+          widgetGallery?.map((gallery) => gallery.toJson()).toList(),
+      'widgettaggedPosts':
+          widgettaggedPosts?.map((posts) => posts.toJson()).toList(),
       'socialaccounts': socialaccounts?.value.toJson(),
       'popularGames': popularGames?.map((game) => game.toJson()).toList(),
       'ismyFriend': ismyFriend?.value
@@ -315,20 +257,10 @@ class User {
 
   factory User.apilogintoUser(APILogin response) {
     return User(
-      // ismyFriend: "",
-      // myGroups: "",
-      // mySchools: "",
-      // myStations: "",
-      // mycloseFriends: "",
-      // status: "",
-      // widgetPosts: "",
-      // widgetStoriescard: "",
-
       userID: response.playerID,
       userName: response.username?.obs,
       firstName: response.firstName?.obs,
       lastName: response.lastName?.obs,
-      // userMail: response.detailInfo?.email!.obs,
 
       //ÖNEMLİ
       detailInfo: response.detailInfo == null
@@ -372,23 +304,12 @@ class User {
       //ÖNemli
 
       registerDate: response.registeredDate,
-      // postsCount: response.detailInfo!.posts!,
-      // phoneNumber: Rxn(response.detailInfo?.phoneNumber),
 
-      // birthdayDate: Rxn(response.detailInfo?.birthdayDate),
       burc: response.burc != null ? Rx(response.burc!) : null,
 
-      // lastfaillogin: response.detailInfo?.lastfailedDate?.obs,
-      // lastlogin: response.detailInfo?.lastloginDate?.obs,
-      // lastloginv2: response.detailInfo?.lastloginDateV2?.obs,
       level: response.level?.obs,
       levelColor: response.levelColor?.obs,
       xp: response.levelXP?.obs,
-      // friendsCount: response.detailInfo!.friends!,
-      // invitecode: Rx(response.detailInfo!.inviteCode!),
-
-      // aboutme:
-      //     response.detailInfo != null ? Rx(response.detailInfo!.about!) : null,
       avatar: response.avatar != null
           ? Media(
               mediaID: response.avatar!.mediaID,
@@ -422,14 +343,7 @@ class User {
               ),
             )
           : null,
-      // awardsCount: response.detailInfo?.awards,
 
-      // country: Country(
-      //   countryID: response.detailInfo!.country!.countryID,
-      //   name: response.detailInfo!.country!.name,
-      //   countryCode: response.detailInfo!.country!.code,
-      //   phoneCode: response.detailInfo!.country!.phonecode,
-      // ).obs,
       displayName: response.displayName?.obs,
       favTeam: response.favTeam != null
           ? Team(
@@ -488,13 +402,6 @@ class User {
           .toList()
           .obs,
 
-      // province: Province(
-      //   provinceID: response.detailInfo!.province!.provinceID,
-      //   name: response.detailInfo!.province!.name,
-      //   plateCode: response.detailInfo!.province!.platecode,
-      //   phoneCode: response.detailInfo!.province!.phonecode,
-      // ).obs,
-
       role: response.userRole != null
           ? Role(
               roleID: response.userRole!.roleID,
@@ -517,8 +424,8 @@ class User {
           : null,
     );
   }
-  //kRİTİK ÖNEME SAHİPTİR
 
+  //Kritik ÖNEME SAHİPTİR
   void updateUser({required User targetUser}) {
     if (userID != null) targetUser.userID = userID;
     if (userName != null) targetUser.userName = userName;
@@ -533,28 +440,12 @@ class User {
     if (banner != null) targetUser.banner = banner;
     if (wallpaper != null) targetUser.wallpaper = wallpaper;
 
-    // if (userMail != null) targetUser.userMail = userMail;
-    // if (country != null) targetUser.country = country;
-    // if (province != null) targetUser.province = province;
     if (registerDate != null) {
       targetUser.registerDate = registerDate;
     }
     if (job != null) targetUser.job = job;
     if (role != null) targetUser.role = role;
-    // if (aboutme != null) targetUser.aboutme = aboutme;
     if (burc != null) targetUser.burc = burc;
-    // if (invitecode != null) {
-    //   targetUser.invitecode = invitecode;
-    // }
-    // if (lastlogin != null) {
-    //   targetUser.lastlogin = lastlogin;
-    // }
-    // if (lastloginv2 != null) {
-    //   targetUser.lastloginv2 = lastloginv2;
-    // }
-    // if (lastfaillogin != null) {
-    //   targetUser.lastfaillogin = lastfaillogin;
-    // }
 
     if (detailInfo != null) {
       targetUser.detailInfo!.value = detailInfo!.value;
@@ -564,21 +455,7 @@ class User {
       targetUser.levelColor = levelColor;
     }
     if (xp != null) targetUser.xp = xp;
-    // if (friendsCount != null) {
-    //   targetUser.friendsCount = friendsCount;
-    // }
-    // if (postsCount != null) {
-    //   targetUser.postsCount = postsCount;
-    // }
-    // if (awardsCount != null) {
-    //   targetUser.awardsCount = awardsCount;
-    // }
-    // if (phoneNumber != null) {
-    //   targetUser.phoneNumber = phoneNumber;
-    // }
-    // if (birthdayDate != null) {
-    //   targetUser.birthdayDate = birthdayDate;
-    // }
+
     if (favTeam != null) targetUser.favTeam = favTeam;
     if (status != null) targetUser.status = status;
     if (ismyFriend != null) {
@@ -603,12 +480,12 @@ class User {
       targetUser.widgetPosts = widgetPosts;
     }
 
-    if (widgetPosts != null) {
-      targetUser.widgetPosts = widgetPosts;
+    if (widgetGallery != null) {
+      targetUser.widgetGallery = widgetGallery;
     }
 
-    if (widgetStoriescard != null) {
-      targetUser.widgetStoriescard = widgetStoriescard;
+    if (widgettaggedPosts != null) {
+      targetUser.widgettaggedPosts = widgettaggedPosts;
     }
   }
 

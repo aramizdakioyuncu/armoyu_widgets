@@ -46,14 +46,14 @@ class SocialWidget {
       bool autofetchposts = true}) {
     final controller = Get.put(
       PostController(
-        service,
-        scrollController,
-        category,
-        userID,
-        username,
-        cachedpostsList,
-        onPostsUpdated,
-        autofetchposts,
+        service: service,
+        scrollController: scrollController,
+        category: category,
+        userID: userID,
+        username: username,
+        cachedpostsList: cachedpostsList,
+        onPostsUpdated: onPostsUpdated,
+        autofetchposts: autofetchposts,
       ),
       tag:
           "postWidget-$category$userID-Uniq-${DateTime.now().millisecondsSinceEpoch}",
