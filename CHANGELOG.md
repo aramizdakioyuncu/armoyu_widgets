@@ -1,3 +1,3 @@
-## [1.0.0+51]
+## [1.0.0+53]
 
-- Sosyal paylaşımlardan Profile gitme sorunları düzeltildi.
+- Cache işlemleri adımları (Post).

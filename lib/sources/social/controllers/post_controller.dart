@@ -31,6 +31,7 @@ class PostController extends GetxController {
   int? userID;
   String? username;
   List<Post>? cachedpostsList;
+  Function(List<Post> updatedPosts)? onPostsUpdated;
   bool autofetchposts = true;
   PostController(
     this.service,
@@ -39,6 +40,7 @@ class PostController extends GetxController {
     this.userID,
     this.username,
     this.cachedpostsList,
+    this.onPostsUpdated,
     this.autofetchposts,
   );
 
@@ -63,6 +65,10 @@ class PostController extends GetxController {
   Future<void> loadMorePosts() async {
     log("load More Posts");
     return await fetchsocailposts();
+  }
+
+  void updatePostsList() {
+    onPostsUpdated?.call(postsList.value!);
   }
 
   @override
@@ -225,6 +231,7 @@ class PostController extends GetxController {
 
     //Verileri Belleğe Aktar
     cachedpostsList = postsList.value;
+    updatePostsList();
     postscount.value++;
     postsProccess.value = false;
     return;

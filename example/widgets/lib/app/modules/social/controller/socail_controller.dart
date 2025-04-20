@@ -11,13 +11,15 @@ class SocailController extends GetxController {
 
   late PostsWidgetBundle posts;
   @override
-  // ignore: unnecessary_overrides
   void onInit() {
     super.onInit();
 
     posts = AppService.widgets.social.posts(
       context: Get.context!,
       scrollController: scrollController,
+      onPostsUpdated: (updatedPosts) {
+        log('Posts updated: ${updatedPosts.length}');
+      },
       shrinkWrap: true,
       autofetchposts: false,
       profileFunction: ({

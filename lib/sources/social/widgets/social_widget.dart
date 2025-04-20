@@ -33,6 +33,7 @@ class SocialWidget {
       }) profileFunction,
       ScrollController? scrollController,
       List<Post>? cachedpostsList,
+      Function(List<Post> updatedPosts)? onPostsUpdated,
       Function? refreshPosts,
       bool isPostdetail = false,
       String? category,
@@ -51,6 +52,7 @@ class SocialWidget {
         userID,
         username,
         cachedpostsList,
+        onPostsUpdated,
         autofetchposts,
       ),
       tag:
