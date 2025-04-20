@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/data/models/useraccounts.dart';
 import 'package:armoyu_widgets/data/services/accountuser_services.dart';
+import 'package:armoyu_widgets/sources/gallery/bundle/gallery_bundle.dart';
 import 'package:armoyu_widgets/sources/social/bundle/posts_bundle.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,7 +16,7 @@ class ProfileController extends GetxController
   // Rxn<Widget> widget1 = Rxn();
   late PostsWidgetBundle posts1;
 
-  Rxn<Widget> widget2 = Rxn();
+  Rxn<GalleryWidgetBundle> widget2 = Rxn();
   // Rxn<Widget> widget3 = Rxn();
   late PostsWidgetBundle posts3;
 
