@@ -21,15 +21,17 @@ class GalleryWidget {
 
   GalleryWidgetBundle mediaGallery({
     required context,
+    int? userID,
+    String? username,
     List<Media>? cachedmediaList,
     Function(List<Media> updatedMedia)? onmediaUpdated,
-    int? userID,
     bool storyShare = false,
   }) {
     final controller = Get.put(
         MediagalleryController(
           service: service,
           userID: userID,
+          username: username,
           cachedmediaList: cachedmediaList,
           onMediaUpdated: onmediaUpdated,
         ),

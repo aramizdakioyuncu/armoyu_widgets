@@ -116,7 +116,7 @@ class GalleryController extends GetxController
     ismediaProcces.value = true;
 
     MediaFetchResponse response = await service.mediaServices.fetch(
-      uyeID: currentUserAccounts.value.user.value.userID!,
+      userID: currentUserAccounts.value.user.value.userID!,
       category: "",
       page: gallerycounter.value + 1,
     );

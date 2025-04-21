@@ -13,6 +13,7 @@ import 'package:get/get.dart';
 class MediagalleryController extends GetxController {
   final ARMOYUServices service;
   final int? userID;
+  final String? username;
 
   List<Media>? cachedmediaList;
   Function(List<Media> updatedPosts)? onMediaUpdated;
@@ -20,6 +21,7 @@ class MediagalleryController extends GetxController {
   MediagalleryController({
     required this.service,
     this.userID,
+    this.username,
     this.cachedmediaList,
     this.onMediaUpdated,
   });
@@ -84,7 +86,9 @@ class MediagalleryController extends GetxController {
       mediaList.value = [];
     }
     MediaFetchResponse response = await service.mediaServices.fetch(
-      uyeID: userID ?? currentUserAccounts.value.user.value.userID!,
+      userID: userID ?? currentUserAccounts.value.user.value.userID!,
+      username:
+          username ?? currentUserAccounts.value.user.value.userName?.value,
       category: "-1",
       page: mediapagecount.value,
     );

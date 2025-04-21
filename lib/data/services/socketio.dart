@@ -133,7 +133,7 @@ class SocketioController extends GetxController {
     updateuseraccount();
 
     // Socket.IO'ya bağlanma
-    socket = IO.io('http://mc.armoyu.com:2020', <String, dynamic>{
+    socket = IO.io('http://socket.armoyu.com:2020', <String, dynamic>{
       // socket = IO.io('http://10.0.2.2:2020', <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': true,

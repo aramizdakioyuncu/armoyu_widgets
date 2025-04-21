@@ -1,3 +1,3 @@
 ## [1.0.0+55]
 
-- Cache işlemleri adımları (Chat).
+- galleride ve socket de bir kaç değişiklik
