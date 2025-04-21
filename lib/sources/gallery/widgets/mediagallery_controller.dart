@@ -86,9 +86,8 @@ class MediagalleryController extends GetxController {
       mediaList.value = [];
     }
     MediaFetchResponse response = await service.mediaServices.fetch(
-      userID: userID ?? currentUserAccounts.value.user.value.userID!,
-      username:
-          username ?? currentUserAccounts.value.user.value.userName?.value,
+     userID: userID,
+      username: username,
       category: "-1",
       page: mediapagecount.value,
     );
