@@ -164,6 +164,8 @@ class SourceChatlistController extends GetxController {
       log("Daha fazla veri yok (ChatList)");
       chatsearchEndprocess.value = true;
     }
+    log("ChatList :: Page => $chatPage , Count => ${cachedChatList?.length}");
+
     chatsearchprocess.value = false;
     isFirstFetch.value = false;
     chatPage++;

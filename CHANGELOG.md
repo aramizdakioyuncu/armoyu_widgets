@@ -1,3 +1,3 @@
-## [1.0.0+55]
+## [1.0.0+59]
 
-- ggallery düzeltmesi
+- chat düzeltme vol3

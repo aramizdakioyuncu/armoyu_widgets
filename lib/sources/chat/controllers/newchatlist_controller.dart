@@ -28,6 +28,20 @@ class SourceNewchatlistController extends GetxController {
   var chatList = Rxn<List<Chat>>();
   var filteredchatList = Rxn<List<Chat>>();
 
+  Future<void> refreshAllChatList() async {
+    await getnewchat(fetchRestart: true);
+  }
+
+  Future<void> loadMoreChatList() async {
+    return await getnewchat();
+  }
+
+  void updateChatList() {
+    chatList.refresh();
+    filteredchatList.refresh();
+    onChatUpdated?.call(chatList.value!);
+  }
+
   @override
   void onInit() {
     super.onInit();
@@ -43,14 +57,6 @@ class SourceNewchatlistController extends GetxController {
     }
 
     getnewchat();
-  }
-
-  Future<void> refreshAllChatList() async {
-    await getnewchat(fetchRestart: true);
-  }
-
-  Future<void> loadMoreChatList() async {
-    return await getnewchat();
   }
 
   Future<void> filterList(String text) async {
@@ -159,18 +165,20 @@ class SourceNewchatlistController extends GetxController {
         ),
       );
     }
+
+    updateChatList();
+
     if (response.response!.length < 30) {
       // 10'dan azsa daha fazla yok demektir
       log("Daha fazla veri yok (newChatList)");
       chatsearchEndprocess.value = true;
     }
-    log("ChatList :: Page => $chatPage , Count => ${cachedChatList?.length}");
+    log("New ChatList :: Page => $chatPage , Count => ${cachedChatList?.length}");
 
     chatsearchprocess.value = false;
     isFirstFetch.value = false;
     chatPage++;
 
     filteredchatList.value = chatList.value;
-    filteredchatList.refresh();
   }
 }
