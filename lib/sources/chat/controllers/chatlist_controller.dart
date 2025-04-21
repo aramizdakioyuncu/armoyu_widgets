@@ -5,7 +5,6 @@ import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
 import 'package:armoyu_widgets/data/models/Chat/chat.dart';
 import 'package:armoyu_widgets/data/models/Chat/chat_message.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
-import 'package:armoyu_widgets/data/models/useraccounts.dart';
 import 'package:armoyu_widgets/data/services/accountuser_services.dart';
 import 'package:get/get.dart';
 
@@ -29,14 +28,6 @@ class SourceChatlistController extends GetxController {
   var chatList = Rxn<List<Chat>>();
   var filteredchatList = Rxn<List<Chat>>();
 
-  var currentUserAccounts = Rx<UserAccounts>(
-    UserAccounts(
-      user: User().obs,
-      sessionTOKEN: Rx(""),
-      language: Rxn(),
-    ),
-  );
-
   Future<void> refreshAllChatList() async {
     await getchat(fetchRestart: true);
   }
@@ -59,7 +50,6 @@ class SourceChatlistController extends GetxController {
     final findCurrentAccountController = Get.find<AccountUserController>();
     log("Current AccountUser :: ${findCurrentAccountController.currentUserAccounts.value.user.value.displayName}");
     //* *//
-    currentUserAccounts = findCurrentAccountController.currentUserAccounts;
 
     //Bellekteki paylaşımları yükle
     if (cachedChatList != null) {
@@ -71,13 +61,11 @@ class SourceChatlistController extends GetxController {
   }
 
   Future<void> filterList(String text) async {
-    if (currentUserAccounts.value.chatList == null) {
+    if (chatList.value == null) {
       return;
     }
-    log("message");
 
-    filteredchatList.value =
-        currentUserAccounts.value.chatList!.where((element) {
+    filteredchatList.value = chatList.value!.where((element) {
       return element.user.displayName!.value.toLowerCase().contains(text);
     }).toList();
     log("Filtered List Length: ${filteredchatList.value!.length}");
@@ -91,7 +79,6 @@ class SourceChatlistController extends GetxController {
 
     if (fetchRestart) {
       chatPage.value = 1;
-      currentUserAccounts.value.chatList = <Chat>[].obs;
       filteredchatList.value = null;
     }
 
@@ -169,15 +156,14 @@ class SourceChatlistController extends GetxController {
       );
     }
 
+    filteredchatList.value = chatList.value!;
+    updateChatList();
+
     if (response.response!.length < 30) {
       // 10'dan azsa daha fazla yok demektir
       log("Daha fazla veri yok (ChatList)");
       chatsearchEndprocess.value = true;
     }
-
-    filteredchatList.value = currentUserAccounts.value.chatList;
-    updateChatList();
-
     chatsearchprocess.value = false;
     isFirstFetch.value = false;
     chatPage++;

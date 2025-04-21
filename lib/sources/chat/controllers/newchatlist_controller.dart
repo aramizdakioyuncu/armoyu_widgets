@@ -5,28 +5,28 @@ import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
 import 'package:armoyu_widgets/data/models/Chat/chat.dart';
 import 'package:armoyu_widgets/data/models/Chat/chat_message.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
-import 'package:armoyu_widgets/data/models/useraccounts.dart';
 import 'package:armoyu_widgets/data/services/accountuser_services.dart';
 import 'package:get/get.dart';
 
 class SourceNewchatlistController extends GetxController {
   final ARMOYUServices service;
-  SourceNewchatlistController(this.service);
+
+  List<Chat>? cachedChatList;
+  Function(List<Chat> updatedChat)? onChatUpdated;
+
+  SourceNewchatlistController(
+    this.service,
+    this.cachedChatList,
+    this.onChatUpdated,
+  );
 
   var chatPage = 1.obs;
   var chatsearchprocess = false.obs;
   var chatsearchEndprocess = false.obs;
   var isFirstFetch = true.obs;
-  var chatListCache = Rxn<List<Chat>>();
-  var filteredchatList = Rxn<List<Chat>>();
 
-  var currentUserAccounts = Rx<UserAccounts>(
-    UserAccounts(
-      user: User().obs,
-      sessionTOKEN: Rx(""),
-      language: Rxn(),
-    ),
-  );
+  var chatList = Rxn<List<Chat>>();
+  var filteredchatList = Rxn<List<Chat>>();
 
   @override
   void onInit() {
@@ -36,7 +36,11 @@ class SourceNewchatlistController extends GetxController {
     final findCurrentAccountController = Get.find<AccountUserController>();
     log("Current AccountUser :: ${findCurrentAccountController.currentUserAccounts.value.user.value.displayName}");
     //* *//
-    currentUserAccounts = findCurrentAccountController.currentUserAccounts;
+
+    if (cachedChatList != null) {
+      chatList.value ??= [];
+      chatList.value = cachedChatList;
+    }
 
     getnewchat();
   }
@@ -50,10 +54,10 @@ class SourceNewchatlistController extends GetxController {
   }
 
   Future<void> filterList(String text) async {
-    if (chatListCache.value == null) {
+    if (chatList.value == null) {
       return;
     }
-    filteredchatList.value = chatListCache.value!.where((element) {
+    filteredchatList.value = chatList.value!.where((element) {
       return element.user.displayName!.value.toLowerCase().contains(text);
     }).toList();
     filteredchatList.refresh();
@@ -82,7 +86,7 @@ class SourceNewchatlistController extends GetxController {
       return;
     }
 
-    chatListCache.value ??= [];
+    chatList.value ??= [];
 
     if (response.response!.isEmpty) {
       chatsearchprocess.value = true;
@@ -90,7 +94,7 @@ class SourceNewchatlistController extends GetxController {
       return;
     }
     for (APIChatList element in response.response!) {
-      chatListCache.value!.add(
+      chatList.value!.add(
         Chat(
           user: User(
             userID: element.kullID,
@@ -158,17 +162,15 @@ class SourceNewchatlistController extends GetxController {
     if (response.response!.length < 30) {
       // 10'dan azsa daha fazla yok demektir
       log("Daha fazla veri yok (newChatList)");
-
       chatsearchEndprocess.value = true;
     }
-    log("ChatList :: Page => $chatPage , Count => ${chatListCache.value!.length}");
+    log("ChatList :: Page => $chatPage , Count => ${cachedChatList?.length}");
 
     chatsearchprocess.value = false;
     isFirstFetch.value = false;
     chatPage++;
 
-    filteredchatList.value = chatListCache.value;
-    chatListCache.refresh();
+    filteredchatList.value = chatList.value;
     filteredchatList.refresh();
   }
 }

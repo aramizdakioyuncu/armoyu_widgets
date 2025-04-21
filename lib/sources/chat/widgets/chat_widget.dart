@@ -132,8 +132,16 @@ class ChatWidget {
   ChatWidgetBundle newchatListWidget(
     BuildContext context, {
     required Function(Chat chat) onPressed,
+    List<Chat>? cachedChatList,
+    Function(List<Chat> updatedChat)? onChatUpdated,
   }) {
-    final controller = Get.put(SourceNewchatlistController(service));
+    final controller = Get.put(
+      SourceNewchatlistController(
+        service,
+        cachedChatList,
+        onChatUpdated,
+      ),
+    );
     Widget widget = Obx(
       () => controller.filteredchatList.value == null
           ? const Center(
