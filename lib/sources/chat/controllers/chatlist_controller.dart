@@ -6,6 +6,7 @@ import 'package:armoyu_widgets/data/models/Chat/chat.dart';
 import 'package:armoyu_widgets/data/models/Chat/chat_message.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/data/services/accountuser_services.dart';
+import 'package:armoyu_widgets/data/services/socketio.dart';
 import 'package:get/get.dart';
 
 class SourceChatlistController extends GetxController {
@@ -58,6 +59,29 @@ class SourceChatlistController extends GetxController {
     }
 
     getchat(fetchRestart: true);
+
+    final socketController = Get.find<SocketioController>();
+
+    socketController.onChatUpdated = (chat) {
+      // Chat güncellemesi burada işlenir
+      log("Chat verisi geldi: ${chat.toJson().toString()}");
+
+      bool chatisthere = chatList.value!.any(
+        (chatList) => chatList.user.userID == chat.user.userID,
+      );
+
+      if (!chatisthere) {
+        chatList.value!.add(chat);
+      } else {
+        Chat currentChat = chatList.value!.firstWhere(
+          (chatList) => chatList.user.userID == chat.user.userID,
+        );
+        currentChat.messages ??= <ChatMessage>[chat.lastmessage!.value].obs;
+        currentChat.lastmessage ??= Rx<ChatMessage>(chat.lastmessage!.value);
+        currentChat.chatNotification.value = chat.chatNotification.value;
+      }
+      updateChatList();
+    };
   }
 
   Future<void> filterList(String text) async {

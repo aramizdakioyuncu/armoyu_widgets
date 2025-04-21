@@ -20,6 +20,7 @@ class ChatController extends GetxController
 
     widgetChatList = AppService.widgets.chat.chatListWidget(
       Get.context!,
+      onChatUpdated: (updatedChat) {},
       onPressed: (chat) {
         log(chat.chatID.toString());
         Get.toNamed(

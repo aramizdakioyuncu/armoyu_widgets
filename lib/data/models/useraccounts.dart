@@ -20,11 +20,11 @@ class UserAccounts {
   //Sosyal KISIM
   List<Post>? widgetPosts;
   List<StoryList>? widgetStoriescard;
-  List<Post>? widgettaggedPosts;
 
   List<Post>? lastsharingpost;
 
-  RxList<Chat>? chatList;
+  List<Chat>? chatList;
+  List<Chat>? newchatList;
 
   List<News>? newsList = [];
 
@@ -55,9 +55,9 @@ class UserAccounts {
     required this.language,
     this.widgetPosts,
     this.widgetStoriescard,
-    this.widgettaggedPosts,
     this.lastsharingpost,
     this.chatList,
+    this.newchatList,
     this.newsList,
     this.searchList,
     this.notificationList,
@@ -107,10 +107,9 @@ class UserAccounts {
       'widgetPosts': widgetPosts?.map((post) => post.toJson()).toList(),
       'widgetStoriescard':
           widgetStoriescard?.map((story) => story.toJson()).toList(),
-      'widgettaggedPosts':
-          widgettaggedPosts?.map((post) => post.toJson()).toList(),
       'lastsharingpost': lastsharingpost?.map((post) => post.toJson()).toList(),
       'chatList': chatList?.map((chat) => chat.toJson()).toList(),
+      'newchatList': newchatList?.map((chat) => chat.toJson()).toList(),
       'newsList': newsList?.map((news) => news.toJson()).toList(),
       'searchList': searchList?.map((user) => user.toJson()).toList(),
       'notificationList':
@@ -147,9 +146,6 @@ class UserAccounts {
       widgetStoriescard: (json['widgetStoriescard'] as List<dynamic>?)
           ?.map((story) => StoryList.fromJson(story))
           .toList(),
-      widgettaggedPosts: (json['widgettaggedPosts'] as List<dynamic>?)
-          ?.map((post) => Post.fromJson(post))
-          .toList(),
       lastsharingpost: (json['lastsharingpost'] as List<dynamic>?)
           ?.map((post) => Post.fromJson(post))
           .toList(),
@@ -157,8 +153,12 @@ class UserAccounts {
           ? null
           : (json['chatList'] as List<dynamic>?)
               ?.map((chatList) => Chat.fromJson(chatList))
-              .toList()
-              .obs,
+              .toList(),
+      newchatList: json['newchatList'] == null
+          ? null
+          : (json['newchatList'] as List<dynamic>?)
+              ?.map((newchatList) => Chat.fromJson(newchatList))
+              .toList(),
       newsList: (json['newsList'] as List<dynamic>?)
           ?.map((news) => News.fromJson(news))
           .toList(),

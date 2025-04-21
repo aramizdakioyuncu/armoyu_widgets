@@ -445,7 +445,8 @@ class ChatWidget {
     );
     var position = const Offset(20, 20).obs; // Başlangıç konumu
 
-    final socketio = Get.put(SocketioController());
+    final socketio = Get.find<SocketioController>();
+
     if (createanswer) {
       socketio.createOffer();
     }

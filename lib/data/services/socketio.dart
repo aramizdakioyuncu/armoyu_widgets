@@ -12,10 +12,17 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart' as webrtc;
 import 'package:get/get.dart';
-// ignore: library_prefixes
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class SocketioController extends GetxController {
+  void Function(Chat updatedChat)? onChatUpdated;
+
+  void triggerChatUpdated(Chat chat) {
+    if (onChatUpdated != null) {
+      onChatUpdated!(chat); // dışarıdan atanan fonksiyonu çağırır
+    }
+  }
+
   late IO.Socket socket;
   var socketChatStatus = false.obs;
 
@@ -319,12 +326,6 @@ class SocketioController extends GetxController {
 
       log("$socketPREFIX${chatData.user.displayName} - ${chatData.messageContext}");
 
-      currentUserAccounts.value.chatList ??= <Chat>[].obs;
-
-      bool chatisthere = currentUserAccounts.value.chatList!.any(
-        (chat) => chat.user.userID == chatData.user.userID,
-      );
-
       ChatMessage chat = ChatMessage(
         messageID: 0,
         messageContext: chatData.messageContext,
@@ -334,31 +335,16 @@ class SocketioController extends GetxController {
         ),
         isMe: false,
       );
-      if (!chatisthere) {
-        currentUserAccounts.value.chatList!.add(
-          Chat(
-            user: chatData.user,
-            chatNotification: false.obs,
-            lastmessage: chat.obs,
-            messages: <ChatMessage>[].obs,
-            chatType: APIChat.ozel,
-          ),
-        );
-      }
 
-      Chat a = currentUserAccounts.value.chatList!.firstWhere(
-        (chat) => chat.user.userID == chatData.user.userID,
+      Chat chatINFO = Chat(
+        user: chatData.user,
+        chatNotification: false.obs,
+        lastmessage: chat.obs,
+        messages: <ChatMessage>[chat].obs,
+        chatType: APIChat.ozel,
       );
 
-      a.messages ??= <ChatMessage>[].obs;
-      a.messages!.add(chat);
-      //Son mesajı görünümü güncelle
-      a.lastmessage ??= Rx<ChatMessage>(chat);
-      if (a.lastmessage != null) {
-        a.lastmessage!.value = chat;
-      }
-      a.chatNotification = true.obs;
-      currentUserAccounts.value.chatList!.refresh();
+      triggerChatUpdated(chatINFO); // Güncellenmiş sohbeti tetikle
     });
 
     // Otomatik olarak bağlanma

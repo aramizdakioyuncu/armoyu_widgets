@@ -1,3 +1,3 @@
-## [1.0.0+59]
+## [1.0.0+60]
 
-- chat düzeltme vol3
+- canlı sohbet denemesi vol1
