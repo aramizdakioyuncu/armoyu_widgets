@@ -32,7 +32,7 @@ class Chat {
       'user': user.toJson(),
       'lastmessage': lastmessage?.value.toJson(),
       'messages': messages?.map((message) => message.toJson()).toList(),
-      'chatType': chatType,
+      'chatType': chatType.name,
       'chatNotification': chatNotification.value,
       'calling': calling?.value ?? false,
     };
@@ -52,7 +52,10 @@ class Chat {
               ?.map((member) => ChatMessage.fromJson(member))
               .toList()
               .obs,
-      chatType: json['chatType'],
+      chatType: APIChat.values.firstWhere(
+        (e) => e.name == json['chatType'],
+        orElse: () => APIChat.ozel, // veya varsayılan olarak ne istiyorsan
+      ),
       chatNotification: (json['chatNotification'] as bool).obs,
       calling: (json['calling'] as bool?)?.obs ?? false.obs,
     );

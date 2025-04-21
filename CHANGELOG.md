@@ -1,3 +1,3 @@
 ## [1.0.0+60]
 
-- canlı sohbet denemesi vol1
+- Bellek sorunu çözümü.

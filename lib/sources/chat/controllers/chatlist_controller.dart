@@ -64,17 +64,21 @@ class SourceChatlistController extends GetxController {
 
     socketController.onChatUpdated = (chat) {
       // Chat güncellemesi burada işlenir
-      log("Chat verisi geldi: ${chat.toJson().toString()}");
+      log("<<>>Chat verisi geldi: ${chat.toJson().toString()}");
 
       bool chatisthere = chatList.value!.any(
-        (chatList) => chatList.user.userID == chat.user.userID,
+        (chatList) =>
+            chatList.user.userID == chat.user.userID &&
+            chatList.chatType == chat.chatType,
       );
 
       if (!chatisthere) {
         chatList.value!.add(chat);
       } else {
         Chat currentChat = chatList.value!.firstWhere(
-          (chatList) => chatList.user.userID == chat.user.userID,
+          (chatList) =>
+              chatList.user.userID == chat.user.userID &&
+              chatList.chatType == chat.chatType,
         );
         currentChat.messages ??= <ChatMessage>[chat.lastmessage!.value].obs;
         currentChat.lastmessage ??= Rx<ChatMessage>(chat.lastmessage!.value);
