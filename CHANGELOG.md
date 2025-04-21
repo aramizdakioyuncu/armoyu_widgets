@@ -1,3 +1,3 @@
-## [1.0.0+60]
+## [1.0.0+62]
 
-- Bellek sorunu çözümü.
+- User class hatası giderildi .

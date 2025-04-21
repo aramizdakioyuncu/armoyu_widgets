@@ -554,8 +554,12 @@ class UserDetailInfo {
       lastloginDate: Rxn(json['lastloginDate']),
       lastloginDateV2: Rxn(json['lastloginDateV2']),
       lastfailedDate: Rxn(json['lastfailedDate']),
-      country: Rxn(Country.fromJson(json['country'])),
-      province: Rxn(Province.fromJson(json['province'])),
+      country: json['country'] != null
+          ? Rxn(Country.fromJson(json['country']))
+          : Rxn<Country>(),
+      province: json['province'] != null
+          ? Rxn(Province.fromJson(json['province']))
+          : Rxn<Province>(),
     );
   }
 
@@ -573,7 +577,7 @@ class UserDetailInfo {
       'lastloginDate': lastloginDate.value,
       'lastloginDateV2': lastloginDateV2.value,
       'lastfailedDate': lastfailedDate.value,
-      'country': country.toJson(),
+      'country': country.value?.toJson(),
       'province': province.toJson(),
     };
   }

@@ -80,10 +80,15 @@ class SourceChatlistController extends GetxController {
               chatList.user.userID == chat.user.userID &&
               chatList.chatType == chat.chatType,
         );
-        currentChat.messages ??= <ChatMessage>[chat.lastmessage!.value].obs;
-        currentChat.lastmessage ??= Rx<ChatMessage>(chat.lastmessage!.value);
+
+        currentChat.messages ??= <ChatMessage>[].obs;
+        currentChat.messages!.add(chat.lastmessage!.value);
+
+        currentChat.lastmessage = Rx<ChatMessage>(chat.lastmessage!.value);
         currentChat.chatNotification.value = chat.chatNotification.value;
       }
+
+      filteredchatList.value = chatList.value;
       updateChatList();
     };
   }
