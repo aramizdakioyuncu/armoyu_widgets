@@ -54,9 +54,9 @@ class SourceNewchatlistController extends GetxController {
     if (cachedChatList != null) {
       chatList.value ??= [];
       chatList.value = cachedChatList;
+      filteredchatList.value = cachedChatList;
     }
-
-    getnewchat();
+    getnewchat(fetchRestart: true);
   }
 
   Future<void> filterList(String text) async {
@@ -78,6 +78,9 @@ class SourceNewchatlistController extends GetxController {
       chatPage.value = 1;
     }
 
+    filteredchatList.value ??= [];
+    chatList.value ??= [];
+
     chatsearchprocess.value = true;
     ChatNewListResponse response = await service.chatServices.newChatlist(
       page: chatPage.value,
@@ -92,13 +95,11 @@ class SourceNewchatlistController extends GetxController {
       return;
     }
 
-    chatList.value ??= [];
-
-    if (response.response!.isEmpty) {
-      chatsearchprocess.value = true;
-      isFirstFetch.value = false;
-      return;
+    if (fetchRestart) {
+      filteredchatList.value = [];
+      chatList.value = [];
     }
+
     for (APIChatList element in response.response!) {
       chatList.value!.add(
         Chat(
@@ -166,19 +167,17 @@ class SourceNewchatlistController extends GetxController {
       );
     }
 
+    filteredchatList.value = chatList.value!;
     updateChatList();
 
     if (response.response!.length < 30) {
       // 10'dan azsa daha fazla yok demektir
       log("Daha fazla veri yok (newChatList)");
-      chatsearchEndprocess.value = true;
     }
     log("New ChatList :: Page => $chatPage , Count => ${cachedChatList?.length}");
 
     chatsearchprocess.value = false;
     isFirstFetch.value = false;
     chatPage++;
-
-    filteredchatList.value = chatList.value;
   }
 }

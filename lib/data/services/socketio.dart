@@ -186,8 +186,8 @@ class SocketioController extends GetxController {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         // Burada arama popup'ı açılabilir
         CallingWidget.showIncomingCallDialog(
-          callerName: "Birisi Arıyor",
-          callerAvatarUrl: "",
+          callerName: data['calling']['name'],
+          callerAvatarUrl: data['calling']['image'],
           onAccept: () {
             //
             // Get.toNamed(Routes.CHATCALL,
@@ -203,8 +203,8 @@ class SocketioController extends GetxController {
 
       if (data is Map<String, dynamic>) {
         var offer = webrtc.RTCSessionDescription(
-          data['sdp'], // SDP verisini al
-          data['type'], // Offer veya Answer tipi
+          data['offer']['sdp'], // SDP verisini al
+          data['offer']['type'], // Offer veya Answer tipi
         );
 
         //teklif geliyor ve kabul ediyoruz peerConnection oluşturuyoruz
@@ -354,12 +354,19 @@ class SocketioController extends GetxController {
   }
 
 // WEBRTC
-  Future<void> createOffer() async {
+  Future<void> createOffer({
+    required int id,
+    required APIChat type,
+    required String image,
+    required String name,
+    required int wanteduser,
+  }) async {
     await webRTCinit();
 
     webrtc.RTCSessionDescription offer = await peerConnection!.createOffer();
     await peerConnection!.setLocalDescription(offer);
-    sendOffer(offer.toMap());
+    sendOffer(offer.toMap(),
+        id: id, type: type, image: image, name: name, wanteduser: wanteduser);
   }
 // WEBRTC
 
@@ -397,8 +404,26 @@ class SocketioController extends GetxController {
   }
 
   //WEBRTC
-  void sendOffer(dynamic offer) {
-    socket.emit("offer", offer);
+  void sendOffer(
+    dynamic offer, {
+    required int id,
+    required APIChat type,
+    required String image,
+    required String name,
+    required int wanteduser,
+  }) {
+    final data = {
+      'offer': offer,
+      'calling': {
+        'id': id,
+        'type': type.name,
+        'image': image,
+        'name': name,
+      },
+      'wanteduser': wanteduser,
+    };
+
+    socket.emit("offer", data);
   }
 
   void sendAnswer(dynamic answer) {

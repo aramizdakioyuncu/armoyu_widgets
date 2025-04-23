@@ -433,7 +433,7 @@ class ChatWidget {
 
   Widget chatcallWidget(
     BuildContext context, {
-    required User user,
+    required Chat chat,
     required Function() onClose,
     required Function(bool value) speaker,
     required Function(bool value) videocall,
@@ -441,15 +441,24 @@ class ChatWidget {
   }) {
     final controller = Get.put(
       SourceChatcallController(),
-      tag: "chatcall${user.userID}",
+      tag: "chatcall${chat.user.userID}",
     );
     var position = const Offset(20, 20).obs; // Başlangıç konumu
 
     final socketio = Get.find<SocketioController>();
 
     if (createanswer) {
-      socketio.createOffer();
+      socketio.createOffer(
+        id: controller.currentUserAccounts.value!.user.value.userID!,
+        name:
+            controller.currentUserAccounts.value!.user.value.displayName!.value,
+        image: controller.currentUserAccounts.value!.user.value.avatar!.mediaURL
+            .minURL.value,
+        type: chat.chatType,
+        wanteduser: chat.user.userID!,
+      );
     }
+
     return LayoutBuilder(
       builder: (context, constraints) {
         double availableWidth = constraints.maxWidth;
@@ -463,7 +472,7 @@ class ChatWidget {
                     BlendMode.darken,
                   ),
                   image: CachedNetworkImageProvider(
-                    user.avatar!.mediaURL.normalURL.value,
+                    chat.user.avatar!.mediaURL.normalURL.value,
                   ),
                   fit: BoxFit.cover,
                 ),
@@ -482,7 +491,7 @@ class ChatWidget {
                               vertical: availableWidth * 0.2 / 10),
                           child: ClipOval(
                             child: CachedNetworkImage(
-                              imageUrl: user.avatar!.mediaURL.minURL.value,
+                              imageUrl: chat.user.avatar!.mediaURL.minURL.value,
                               width: availableWidth / 5 > 200
                                   ? 200
                                   : availableWidth / 5,
@@ -499,7 +508,7 @@ class ChatWidget {
                             () => Column(
                               children: [
                                 Text(
-                                  user.displayName!.value,
+                                  chat.user.displayName!.value,
                                   style: const TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
