@@ -16,10 +16,17 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class SocketioController extends GetxController {
   void Function(Chat updatedChat)? onChatUpdated;
+  void Function()? onCallingAccept;
 
   void triggerChatUpdated(Chat chat) {
     if (onChatUpdated != null) {
       onChatUpdated!(chat); // dışarıdan atanan fonksiyonu çağırır
+    }
+  }
+
+  void triggerCallingAccept() {
+    if (onCallingAccept != null) {
+      onCallingAccept!();
     }
   }
 
@@ -189,9 +196,7 @@ class SocketioController extends GetxController {
           callerName: data['calling']['name'],
           callerAvatarUrl: data['calling']['image'],
           onAccept: () {
-            //
-            // Get.toNamed(Routes.CHATCALL,
-            //     arguments: {'chat': controller.chat.value});
+            triggerCallingAccept();
           },
           onDecline: () {
             if (kDebugMode) {
