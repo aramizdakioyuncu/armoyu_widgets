@@ -567,7 +567,7 @@ class ChatWidget {
                                     try {
                                       await controller.player.value.play(
                                         UrlSource(
-                                          'https://aramizdakioyuncu.com/muzikler/tantasci-yalan.mp3',
+                                          'https://api.aramizdakioyuncu.com/muzikler/tantasci-yalan.mp3',
                                         ),
                                       );
                                     } catch (e) {
@@ -598,7 +598,7 @@ class ChatWidget {
                                     try {
                                       await controller.player.value.play(
                                         UrlSource(
-                                          'https://aramizdakioyuncu.com/galeri/muzikler/11324orijinal1689174596.m4a',
+                                          'https://api.aramizdakioyuncu.com/galeri/muzikler/11324orijinal1689174596.m4a',
                                         ),
                                       );
                                     } catch (e) {
@@ -664,7 +664,7 @@ class ChatWidget {
                                     try {
                                       await controller.player.value.play(
                                         UrlSource(
-                                          'https://aramizdakioyuncu.com/muzikler/kalbenhaydisoyle.mp3',
+                                          'https://api.aramizdakioyuncu.com/muzikler/kalbenhaydisoyle.mp3',
                                         ),
                                       );
                                     } catch (e) {
@@ -809,7 +809,7 @@ class ChatWidget {
                                                 await controller.player.value
                                                     .play(
                                                   UrlSource(
-                                                    'https://aramizdakioyuncu.com/muzikler/tantasci-yalan.mp3',
+                                                    'https://api.aramizdakioyuncu.com/muzikler/tantasci-yalan.mp3',
                                                   ),
                                                 );
                                               } catch (e) {

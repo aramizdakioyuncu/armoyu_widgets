@@ -1,3 +1,3 @@
-## [1.0.0+62]
+## [1.0.0+65]
 
-- sesli konuşma isteklerine adım atıldı.
+- sesli konuşma bildirime cevap verme adımları.
