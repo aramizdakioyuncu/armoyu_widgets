@@ -199,12 +199,32 @@ class SocketioController extends GetxController {
         CallingWidget.showIncomingCallDialog(
           callerName: data['calling']['name'],
           callerAvatarUrl: data['calling']['image'],
-          onAccept: () {
+          onAccept: () async {
             triggerCallingAccept(
               data['calling']['id'],
               data['calling']['name'],
               data['calling']['image'],
             );
+
+            if (data is Map<String, dynamic>) {
+              var offer = webrtc.RTCSessionDescription(
+                data['offer']['sdp'], // SDP verisini al
+                data['offer']['type'], // Offer veya Answer tipi
+              );
+
+              //teklif geliyor ve kabul ediyoruz peerConnection oluşturuyoruz
+              await webRTCinit(restoresystem: true);
+              // Peer connection'ı remote description olarak ayarlıyoruz
+              peerConnection!.setRemoteDescription(offer).then((_) {
+                // Remote description ayarlandıktan sonra cevabı oluştur
+
+                createAnswer(offer);
+              }).catchError((e) {
+                if (kDebugMode) {
+                  print("Error setting remote description: $e");
+                }
+              });
+            }
           },
           onDecline: () {
             if (kDebugMode) {
@@ -213,26 +233,6 @@ class SocketioController extends GetxController {
           },
         );
       });
-
-      if (data is Map<String, dynamic>) {
-        var offer = webrtc.RTCSessionDescription(
-          data['offer']['sdp'], // SDP verisini al
-          data['offer']['type'], // Offer veya Answer tipi
-        );
-
-        //teklif geliyor ve kabul ediyoruz peerConnection oluşturuyoruz
-        await webRTCinit(restoresystem: true);
-        // Peer connection'ı remote description olarak ayarlıyoruz
-        peerConnection!.setRemoteDescription(offer).then((_) {
-          // Remote description ayarlandıktan sonra cevabı oluştur
-
-          createAnswer(offer);
-        }).catchError((e) {
-          if (kDebugMode) {
-            print("Error setting remote description: $e");
-          }
-        });
-      }
     });
 
     // 'answer' olayını dinle
