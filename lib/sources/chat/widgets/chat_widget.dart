@@ -717,7 +717,7 @@ class ChatWidget {
                                       controller.player.value.play(
                                         AssetSource("sounds/calling_end.mp3"),
                                       );
-
+                                      socketio.closecall("${chat.user.userID}");
                                       onClose();
                                     } catch (e) {
                                       log(e.toString());
@@ -864,6 +864,10 @@ class ChatWidget {
                                                   AssetSource(
                                                       "sounds/calling_end.mp3"),
                                                 );
+                                                socketio.peerConnection
+                                                    ?.close();
+                                                await socketio.localStream
+                                                    ?.dispose();
 
                                                 onClose();
                                               } catch (e) {

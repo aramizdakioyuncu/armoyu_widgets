@@ -106,6 +106,7 @@ class SourceChatdetailController extends GetxController {
             ),
             displayName: Rx(element.adSoyad),
           ),
+          isRead: element.durum == 1 ? true : false,
         ),
       );
 

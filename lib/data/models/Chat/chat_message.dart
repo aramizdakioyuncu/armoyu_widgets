@@ -5,12 +5,14 @@ class ChatMessage {
   String? messageContext;
   User user;
   bool isMe;
+  bool? isRead;
 
   ChatMessage({
     required this.messageID,
     required this.messageContext,
     required this.user,
     required this.isMe,
+    this.isRead = false,
   });
 
 // ChatMessage nesnesinden JSON'a dönüşüm
@@ -20,6 +22,7 @@ class ChatMessage {
       'messageContext': messageContext,
       'user': user.toJson(),
       'isMe': isMe,
+      'isRead': isRead,
     };
   }
 
@@ -30,6 +33,7 @@ class ChatMessage {
       messageContext: json['messageContext'],
       user: User.fromJson(json['user']),
       isMe: json['isMe'],
+      isRead: json['isRead'] ?? false,
     );
   }
 }
