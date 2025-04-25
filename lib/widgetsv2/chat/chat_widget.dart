@@ -112,8 +112,11 @@ class ChatWidgetv2 {
     );
   }
 
-  static Widget messageBumble(BuildContext context,
-      {required ChatMessage message}) {
+  static Widget messageBumble(
+    BuildContext context, {
+    required ChatMessage message,
+    bool isviewed = false,
+  }) {
     return Container(
       padding: const EdgeInsets.all(10),
       child: Row(
@@ -166,12 +169,14 @@ class ChatWidgetv2 {
                     ),
                     Visibility(
                       visible: message.isMe,
-                      child: const Positioned(
+                      child: Positioned(
                         bottom: -3,
                         right: 0,
                         child: Icon(
-                          Icons.done_all,
-                          color: Color.fromRGBO(116, 243, 20, 1),
+                          isviewed ? Icons.done_all : Icons.done,
+                          color: isviewed
+                              ? const Color.fromRGBO(116, 243, 20, 1)
+                              : const Color.fromARGB(255, 222, 224, 220),
                           size: 14,
                         ), // Okundu işareti
                       ),

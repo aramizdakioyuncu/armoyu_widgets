@@ -10,7 +10,7 @@ class Chat {
   int? chatID;
   User user;
   Rx<ChatMessage>? lastmessage;
-  RxList<ChatMessage>? messages;
+  Rxn<List<ChatMessage>> messages;
   APIChat chatType;
   Rx<bool> chatNotification;
   Rx<bool>? calling = false.obs;
@@ -19,11 +19,11 @@ class Chat {
     this.chatID,
     required this.user,
     this.lastmessage,
-    this.messages,
+    Rxn<List<ChatMessage>>? messages,
     required this.chatType,
     required this.chatNotification,
     this.calling,
-  });
+  }) : messages = messages ?? Rxn<List<ChatMessage>>();
 
   // Chat nesnesinden JSON'a dönüşüm
   Map<String, dynamic> toJson() {
@@ -31,7 +31,7 @@ class Chat {
       'chatID': chatID,
       'user': user.toJson(),
       'lastmessage': lastmessage?.value.toJson(),
-      'messages': messages?.map((message) => message.toJson()).toList(),
+      'messages': messages.value?.map((message) => message.toJson()).toList(),
       'chatType': chatType.name,
       'chatNotification': chatNotification.value,
       'calling': calling?.value ?? false,
@@ -47,11 +47,12 @@ class Chat {
           ? null
           : ChatMessage.fromJson(json['lastmessage']).obs,
       messages: json['messages'] == null
-          ? null
-          : (json['messages'] as List<dynamic>?)
-              ?.map((member) => ChatMessage.fromJson(member))
-              .toList()
-              .obs,
+          ? Rxn<List<ChatMessage>>()
+          : Rxn<List<ChatMessage>>(
+              (json['messages'] as List<dynamic>?)
+                  ?.map((member) => ChatMessage.fromJson(member))
+                  .toList(),
+            ),
       chatType: APIChat.values.firstWhere(
         (e) => e.name == json['chatType'],
         orElse: () => APIChat.ozel, // veya varsayılan olarak ne istiyorsan

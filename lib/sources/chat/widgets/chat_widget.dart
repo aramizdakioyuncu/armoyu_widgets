@@ -182,7 +182,8 @@ class ChatWidget {
 
   Widget chatdetailWidget(
     BuildContext context, {
-    required Chat chat,
+    required Chat? cachedChat,
+    Function(Chat updatedChat)? onChatUpdated,
     String chatImage =
         "https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg",
     required Function(Chat chat) chatcall,
@@ -190,8 +191,8 @@ class ChatWidget {
     required Function(int userID, String username) onPressedtoProfile,
   }) {
     final controller = Get.put(
-      SourceChatdetailController(service, chat),
-      tag: chat.user.userID.toString(),
+      SourceChatdetailController(service, cachedChat, onChatUpdated),
+      tag: cachedChat!.user.userID.toString(),
     );
 
     return Container(
@@ -208,80 +209,100 @@ class ChatWidget {
             backgroundColor: Colors.black45,
             automaticallyImplyLeading: false,
             title: Obx(
-              () => controller.xchat.value == null
+              () => controller.filteredchat.value == null
                   ? Container()
                   : Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         CustomText.costum1(
-                          controller.xchat.value!.user.displayName!.value,
+                          controller
+                              .filteredchat.value!.user.displayName!.value,
                           size: 17,
                           weight: FontWeight.bold,
                         ),
                         Row(
                           children: [
-                            controller.xchat.value!.user.detailInfo!.value!
-                                        .lastloginDateV2.value ==
+                            controller.filteredchat.value!.user.detailInfo ==
                                     null
                                 ? Shimmer.fromColors(
                                     baseColor: Colors.grey[300]!,
                                     highlightColor: Colors.grey[100]!,
                                     child: Container(width: 20),
                                   )
-                                : Text(
-                                    controller.xchat.value!.user.detailInfo!
-                                                .value!.lastloginDateV2.value ==
-                                            null
-                                        ? ""
-                                        : controller
-                                            .xchat
+                                : controller
+                                            .filteredchat
                                             .value!
                                             .user
                                             .detailInfo!
                                             .value!
                                             .lastloginDateV2
-                                            .value
-                                            .toString()
-                                            .toString()
-                                            .replaceAll(
-                                                'Saniye', CommonKeys.second.tr)
-                                            .replaceAll(
-                                                'Dakika', CommonKeys.minute.tr)
-                                            .replaceAll(
-                                                'Saat', CommonKeys.hour.tr)
-                                            .replaceAll(
-                                                'Gün', CommonKeys.day.tr)
-                                            .replaceAll(
-                                                'Ay', CommonKeys.month.tr)
-                                            .replaceAll(
-                                                'Yıl', CommonKeys.year.tr)
-                                            .replaceAll('Çevrimiçi',
-                                                CommonKeys.online.tr)
-                                            .replaceAll('Çevrimdışı',
-                                                CommonKeys.offline.tr),
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      color: controller
-                                                  .xchat
-                                                  .value!
-                                                  .user
-                                                  .detailInfo!
-                                                  .value!
-                                                  .lastloginDateV2
-                                                  .toString() ==
-                                              "Çevrimiçi"
-                                          ? Colors.green
-                                          : Colors.red,
-                                    ),
-                                  ),
+                                            .value ==
+                                        null
+                                    ? Shimmer.fromColors(
+                                        baseColor: Colors.grey[300]!,
+                                        highlightColor: Colors.grey[100]!,
+                                        child: Container(width: 20),
+                                      )
+                                    : Text(
+                                        controller
+                                                    .filteredchat
+                                                    .value!
+                                                    .user
+                                                    .detailInfo!
+                                                    .value!
+                                                    .lastloginDateV2
+                                                    .value ==
+                                                null
+                                            ? ""
+                                            : controller
+                                                .filteredchat
+                                                .value!
+                                                .user
+                                                .detailInfo!
+                                                .value!
+                                                .lastloginDateV2
+                                                .value
+                                                .toString()
+                                                .toString()
+                                                .replaceAll('Saniye',
+                                                    CommonKeys.second.tr)
+                                                .replaceAll('Dakika',
+                                                    CommonKeys.minute.tr)
+                                                .replaceAll(
+                                                    'Saat', CommonKeys.hour.tr)
+                                                .replaceAll(
+                                                    'Gün', CommonKeys.day.tr)
+                                                .replaceAll(
+                                                    'Ay', CommonKeys.month.tr)
+                                                .replaceAll(
+                                                    'Yıl', CommonKeys.year.tr)
+                                                .replaceAll('Çevrimiçi',
+                                                    CommonKeys.online.tr)
+                                                .replaceAll('Çevrimdışı',
+                                                    CommonKeys.offline.tr),
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          color: controller
+                                                      .filteredchat
+                                                      .value!
+                                                      .user
+                                                      .detailInfo!
+                                                      .value!
+                                                      .lastloginDateV2
+                                                      .toString() ==
+                                                  "Çevrimiçi"
+                                              ? Colors.green
+                                              : Colors.red,
+                                        ),
+                                      ),
                           ],
                         ),
                       ],
                     ),
             ),
             leading: Obx(
-              () => controller.xchat.value == null
+              () => controller.filteredchat.value == null
                   ? Container()
                   : Builder(
                       builder: (BuildContext context) {
@@ -292,13 +313,14 @@ class ChatWidget {
                             child: GestureDetector(
                               onTap: () {
                                 onPressedtoProfile(
-                                  controller.xchat.value!.user.userID!,
-                                  controller.xchat.value!.user.userName!.value,
+                                  controller.filteredchat.value!.user.userID!,
+                                  controller
+                                      .filteredchat.value!.user.userName!.value,
                                 );
                               },
                               child: CachedNetworkImage(
-                                imageUrl: controller.xchat.value!.user.avatar!
-                                    .mediaURL.minURL.value,
+                                imageUrl: controller.filteredchat.value!.user
+                                    .avatar!.mediaURL.minURL.value,
                                 width: 30,
                                 height: 30,
                                 fit: BoxFit.cover,
@@ -313,7 +335,7 @@ class ChatWidget {
               IconButton(
                 icon: const Icon(Icons.call),
                 onPressed: () {
-                  chatcall(chat);
+                  chatcall(controller.filteredchat.value!);
                 },
               ),
               IconButton(
@@ -331,22 +353,26 @@ class ChatWidget {
             ],
           ),
           Obx(
-            () => controller.xchat.value == null
+            () => controller.filteredchat.value == null
                 ? const Center(
                     child: CupertinoActivityIndicator(),
                   )
                 : Expanded(
-                    child: controller.xchat.value!.messages == null
+                    child: controller.filteredchat.value!.messages.value == null
                         ? Container()
                         : ListView.builder(
                             reverse: true,
                             controller: controller.scrollController.value,
-                            itemCount: controller.xchat.value!.messages!.length,
+                            itemCount: controller
+                                .filteredchat.value!.messages.value!.length,
                             itemBuilder: (context, index) {
                               return ChatWidgetv2.messageBumble(
                                 context,
-                                message: controller.xchat.value!.messages![
-                                    chat.messages!.length - 1 - index],
+                                message: controller.filteredchat.value!.messages
+                                    .value![controller.filteredchat.value!
+                                        .messages.value!.length -
+                                    1 -
+                                    index],
                               );
                             },
                           ),

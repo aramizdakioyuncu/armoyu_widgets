@@ -353,7 +353,7 @@ class SocketioController extends GetxController {
         user: chatData.user,
         chatNotification: true.obs,
         lastmessage: chat.obs,
-        messages: <ChatMessage>[chat].obs,
+        messages: Rxn([chat]),
         chatType: APIChat.ozel,
       );
 

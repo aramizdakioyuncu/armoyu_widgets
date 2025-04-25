@@ -65,7 +65,6 @@ class SourceChatlistController extends GetxController {
 
     socketController.onChatUpdated = (chat) {
       // Chat güncellemesi burada işlenir
-      log("<<>>Chat verisi geldi: ${chat.toJson().toString()}");
 
       bool chatisthere = chatList.value!.any(
         (chatList) =>
@@ -82,11 +81,13 @@ class SourceChatlistController extends GetxController {
               chatList.chatType == chat.chatType,
         );
 
-        currentChat.messages ??= <ChatMessage>[].obs;
-        currentChat.messages!.add(chat.lastmessage!.value);
+        currentChat.messages.value ??= [];
+        currentChat.messages.value!.add(chat.lastmessage!.value);
 
         currentChat.lastmessage = Rx<ChatMessage>(chat.lastmessage!.value);
         currentChat.chatNotification.value = chat.chatNotification.value;
+
+        currentChat.messages.refresh();
       }
 
       filteredchatList.value = chatList.value;

@@ -14,16 +14,31 @@ import 'package:get/get.dart';
 
 class SourceChatdetailController extends GetxController {
   final ARMOYUServices service;
-  final Chat chat;
-  SourceChatdetailController(this.service, this.chat);
+  Chat? cachedChatList;
+  Function(Chat updatedChat)? onChatUpdated;
+
+  SourceChatdetailController(
+    this.service,
+    this.cachedChatList,
+    this.onChatUpdated,
+  );
 
   var messageController = TextEditingController().obs;
   var scrollController = ScrollController().obs;
 
   var socketio = Get.find<SocketioController>();
 
-  late Rxn<Chat> xchat = Rxn<Chat>();
   late Rxn<UserAccounts> currentUserAccounts = Rxn<UserAccounts>();
+
+  var chat = Rxn<Chat>();
+  var filteredchat = Rxn<Chat>();
+
+  void updateChat() {
+    chat.refresh();
+    filteredchat.refresh();
+    onChatUpdated?.call(chat.value!);
+  }
+
   @override
   void onInit() {
     super.onInit();
@@ -35,14 +50,21 @@ class SourceChatdetailController extends GetxController {
     currentUserAccounts.value =
         findCurrentAccountController.currentUserAccounts.value;
     /////
-    xchat.value = chat;
+
+    if (cachedChatList != null) {
+      chat.value = cachedChatList;
+      filteredchat.value = cachedChatList;
+    }
+
     getlivechat();
   }
 
   Future<void> getlivechat({bool restartFetch = false}) async {
-    ChatFetchDetailResponse response = await service.chatServices
-        .fetchdetailChat(
-            chatID: chat.user.userID!, chatCategory: chat.chatType);
+    ChatFetchDetailResponse response =
+        await service.chatServices.fetchdetailChat(
+      chatID: chat.value!.user.userID!,
+      chatCategory: chat.value!.chatType,
+    );
     if (!response.result.status) {
       log(response.result.description);
       return;
@@ -52,24 +74,25 @@ class SourceChatdetailController extends GetxController {
       return;
     }
 
-    var ismee = true.obs;
-
-    xchat.value!.messages ??= <ChatMessage>[].obs;
+    filteredchat.value!.messages.value ??= [];
+    chat.value!.messages.value ??= [];
 
     if (restartFetch) {
-      xchat.value!.messages = <ChatMessage>[].obs;
+      chat.value!.messages.value = [];
     }
+
     for (APIChatDetailList element in response.response!) {
+      bool? ismee;
       if (element.sohbetKim == "ben") {
-        ismee.value = true;
+        ismee = true;
       } else {
-        ismee.value = false;
+        ismee = false;
       }
 
-      xchat.value!.messages!.add(
+      chat.value!.messages.value!.add(
         ChatMessage(
           messageID: 0,
-          isMe: ismee.value,
+          isMe: ismee,
           messageContext: element.mesajIcerik,
           user: User(
             avatar: Media(
@@ -85,18 +108,20 @@ class SourceChatdetailController extends GetxController {
           ),
         ),
       );
-      xchat.refresh();
+
       //SonMesajı güncelle
-      xchat.value!.lastmessage!.value = ChatMessage(
+      chat.value!.lastmessage!.value = ChatMessage(
         messageID: 0,
-        isMe: ismee.value,
+        isMe: ismee,
         messageContext: element.mesajIcerik,
         user: User(
-          userID: xchat.value!.user.userID,
-          avatar: xchat.value!.user.avatar,
-          displayName: xchat.value!.user.displayName,
+          userID: chat.value!.user.userID,
+          avatar: chat.value!.user.avatar,
+          displayName: chat.value!.user.displayName,
         ),
       );
+
+      updateChat();
     }
   }
 
@@ -108,8 +133,8 @@ class SourceChatdetailController extends GetxController {
     }
 
     messageController.value.text = "";
-    chat.messages ??= <ChatMessage>[].obs;
-    chat.messages!.add(
+    chat.value!.messages.value ??= [];
+    chat.value!.messages.value!.add(
       ChatMessage(
         messageID: 0,
         isMe: true,
@@ -123,7 +148,7 @@ class SourceChatdetailController extends GetxController {
     );
 
     // // //Son Mesajı güncelle
-    chat.lastmessage = ChatMessage(
+    chat.value!.lastmessage = ChatMessage(
       messageID: 0,
       isMe: true,
       messageContext: message,
@@ -144,11 +169,12 @@ class SourceChatdetailController extends GetxController {
           displayName: currentUserAccounts.value!.user.value.displayName,
         ),
       ),
-      chat.user.userID,
+      chat.value!.user.userID,
     );
+    updateChat();
 
     ServiceResult response = await service.chatServices.sendchatmessage(
-      userID: chat.user.userID!,
+      userID: chat.value!.user.userID!,
       message: message,
       type: "ozel",
     );

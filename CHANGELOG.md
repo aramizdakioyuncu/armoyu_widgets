@@ -1,3 +1,3 @@
 ## [1.0.0+65]
 
-- sesli konuşma bildirime cevap verme adımları.
+- Refactor chat handling to use Rxn for messages and update chat detail controller to manage cached chats.
