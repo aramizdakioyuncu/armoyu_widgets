@@ -141,7 +141,7 @@ class SocialWidget {
 
   StoryWidgetBundle widgetStorycircle({
     List<StoryList>? cachedStoryList,
-    Function(List<StoryList> updatedPosts)? onPostsUpdated,
+    Function(List<StoryList> updatedStories)? onStoryUpdated,
   }) {
     final findCurrentAccountController = Get.find<AccountUserController>();
     String uniqueTag = DateTime.now().millisecondsSinceEpoch.toString();
@@ -150,7 +150,7 @@ class SocialWidget {
         StoryController(
           service: service,
           cachedStoryList: cachedStoryList,
-          onStoryUpdated: onPostsUpdated,
+          onStoryUpdated: onStoryUpdated,
         ),
         tag:
             "${findCurrentAccountController.currentUserAccounts.value.user.value.userID}storyWidgetUniq-$uniqueTag");

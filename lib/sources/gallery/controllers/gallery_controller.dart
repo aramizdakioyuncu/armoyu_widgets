@@ -49,6 +49,13 @@ class GalleryController extends GetxController
       context: Get.context!,
       storyShare: true,
       userID: currentUserAccounts.value.user.value.userID!,
+      cachedmediaList: currentUserAccounts.value.gallery,
+      onmediaUpdated: (updatedMedia) {
+        currentUserAccounts.value.gallery = updatedMedia;
+        log(
+          "Gallery Media Count : ${currentUserAccounts.value.gallery!.length}  --> updatedMedia : ${updatedMedia.length}",
+        );
+      },
     );
 
     //Cihaz Galerisini çek

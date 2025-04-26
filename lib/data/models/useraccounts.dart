@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:armoyu_services/core/models/ARMOYU/API/utils/player_pop_list.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/group.dart';
+import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/news.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/school.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/station.dart';
@@ -22,6 +24,11 @@ class UserAccounts {
   List<StoryList>? widgetStoriescard;
 
   List<Post>? lastsharingpost;
+  List<Media>? gallery;
+
+  //Kartlar
+  List<APIPlayerPop>? xpcard;
+  List<APIPlayerPop>? popcard;
 
   List<Chat>? chatList;
   List<Chat>? newchatList;
@@ -56,6 +63,9 @@ class UserAccounts {
     this.widgetPosts,
     this.widgetStoriescard,
     this.lastsharingpost,
+    this.gallery,
+    this.xpcard,
+    this.popcard,
     this.chatList,
     this.newchatList,
     this.newsList,
@@ -108,6 +118,9 @@ class UserAccounts {
       'widgetStoriescard':
           widgetStoriescard?.map((story) => story.toJson()).toList(),
       'lastsharingpost': lastsharingpost?.map((post) => post.toJson()).toList(),
+      'gallery': gallery?.map((media) => media.toJson()).toList(),
+      'xpcard': xpcard?.map((card) => card.toJson()).toList(),
+      'popcard': popcard?.map((card) => card.toJson()).toList(),
       'chatList': chatList?.map((chat) => chat.toJson()).toList(),
       'newchatList': newchatList?.map((chat) => chat.toJson()).toList(),
       'newsList': newsList?.map((news) => news.toJson()).toList(),
@@ -148,6 +161,15 @@ class UserAccounts {
           .toList(),
       lastsharingpost: (json['lastsharingpost'] as List<dynamic>?)
           ?.map((post) => Post.fromJson(post))
+          .toList(),
+      gallery: (json['gallery'] as List<dynamic>?)
+          ?.map((post) => Media.fromJson(post))
+          .toList(),
+      xpcard: (json['xpcard'] as List<dynamic>?)
+          ?.map((post) => APIPlayerPop.fromJson(post))
+          .toList(),
+      popcard: (json['popcard'] as List<dynamic>?)
+          ?.map((post) => APIPlayerPop.fromJson(post))
           .toList(),
       chatList: json['chatList'] == null
           ? null

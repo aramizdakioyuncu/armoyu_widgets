@@ -57,11 +57,6 @@ class GalleryView extends StatelessWidget {
                       controller: controller.galleryscrollcontroller.value,
                       child: Column(
                         children: [
-                          // Media.mediaList(
-                          //   controller.mediaList,
-                          //   big: false,
-                          //   currentUser: currentUser,
-                          // ),
                           GalleryWidget(service).mediaList(
                             controller.mediaList,
                             big: false,
@@ -84,7 +79,6 @@ class GalleryView extends StatelessWidget {
                               ],
                             ),
                           ),
-
                           controller.galleryWidget.widget.value ??
                               const SizedBox(),
                         ],

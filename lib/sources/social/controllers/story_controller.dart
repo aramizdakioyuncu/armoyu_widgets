@@ -82,7 +82,11 @@ class StoryController extends GetxController {
     storyList.value ??= [];
     filteredStoryList.value ??= [];
 
-    if (response.response!.isEmpty) {
+    if (refreshStroy) {
+      storyList.value = [];
+    }
+
+    if (response.response!.isEmpty && storyList.value!.isEmpty) {
       storyList.value!.add(
         StoryList(
           owner: User(
