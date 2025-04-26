@@ -41,7 +41,7 @@ class MediagalleryController extends GetxController {
   );
 
   Future<void> refreshAllMedia() async {
-    log("Refresh All Posts");
+    log("Refresh All Media");
     await fetchgallery(refreshmedia: true);
   }
 
@@ -68,7 +68,9 @@ class MediagalleryController extends GetxController {
     //Bellekteki paylaşımları yükle
     if (cachedmediaList != null) {
       mediaList.value ??= [];
+      filteredMediaList.value ??= [];
       mediaList.value = cachedmediaList;
+      filteredMediaList.value = cachedmediaList;
     }
     fetchgallery();
   }

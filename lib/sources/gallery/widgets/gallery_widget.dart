@@ -37,7 +37,7 @@ class GalleryWidget {
         ),
         tag: "mediagallery-$userID");
     Widget widget = Obx(
-      () => controller.mediaList.value == null
+      () => controller.filteredMediaList.value == null
           ? const Center(
               child: CupertinoActivityIndicator(),
             )
@@ -51,7 +51,7 @@ class GalleryWidget {
               padding: EdgeInsets.zero,
               physics: const ClampingScrollPhysics(),
               children: List.generate(
-                controller.mediaList.value!.length,
+                controller.filteredMediaList.value!.length,
                 (index) {
                   return GestureDetector(
                     onTap: () {
