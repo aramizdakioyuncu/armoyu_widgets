@@ -30,6 +30,7 @@ class MediagalleryController extends GetxController {
   var mediafetchProccess = false.obs;
   var mediafetchEndProccess = false.obs;
   Rxn<List<Media>> mediaList = Rxn();
+  Rxn<List<Media>> filteredMediaList = Rxn();
 
   var currentUserAccounts = Rx<UserAccounts>(
     UserAccounts(
@@ -50,6 +51,9 @@ class MediagalleryController extends GetxController {
   }
 
   void updateMediaList() {
+    filteredMediaList.value = mediaList.value;
+    mediaList.refresh();
+    filteredMediaList.refresh();
     onMediaUpdated?.call(mediaList.value!);
   }
 
@@ -61,12 +65,6 @@ class MediagalleryController extends GetxController {
     currentUserAccounts.value =
         findCurrentAccountController.currentUserAccounts.value;
 
-    //Bellekteki medyayı yükle
-    if (cachedmediaList != null) {
-      mediaList.value ??= [];
-      mediaList.value = cachedmediaList;
-    }
-
     //Bellekteki paylaşımları yükle
     if (cachedmediaList != null) {
       mediaList.value ??= [];
@@ -76,17 +74,16 @@ class MediagalleryController extends GetxController {
   }
 
   fetchgallery({bool refreshmedia = false}) async {
-    if (mediafetchProccess.value) {
+    if (mediafetchProccess.value || mediafetchEndProccess.value) {
       return;
     }
     mediafetchProccess.value = true;
 
     if (refreshmedia) {
       mediapagecount.value = 1;
-      mediaList.value = [];
     }
     MediaFetchResponse response = await service.mediaServices.fetch(
-     userID: userID,
+      userID: userID,
       username: username,
       category: "-1",
       page: mediapagecount.value,
@@ -99,11 +96,15 @@ class MediagalleryController extends GetxController {
     }
 
     mediaList.value ??= [];
+    if (refreshmedia) {
+      mediaList.value = [];
+    }
+
     for (APIMediaFetch element in response.response!) {
       mediaList.value!.add(
         Media(
           mediaID: element.media.mediaID,
-          ownerID: element.media.mediaID,
+          ownerID: element.mediaOwner.userID,
           mediaType: MediaType.image,
           mediaURL: MediaURL(
             bigURL: Rx(element.media.mediaURL.bigURL),
@@ -115,12 +116,12 @@ class MediagalleryController extends GetxController {
     }
     if (response.response!.length < 30) {
       mediafetchEndProccess.value = true;
+      log("Media Fetch End Proccess");
     }
 
-    mediafetchProccess.value = false;
-    mediapagecount++;
-    mediaList.refresh();
     updateMediaList();
+    mediapagecount++;
+    mediafetchProccess.value = false;
   }
 
   onlongPress(context, List<Media> medialist, index) {

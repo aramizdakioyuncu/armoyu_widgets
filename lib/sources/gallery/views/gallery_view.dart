@@ -52,8 +52,7 @@ class GalleryView extends StatelessWidget {
                 controller: controller.tabController.value,
                 children: [
                   RefreshIndicator(
-                    onRefresh: () async =>
-                        controller.galleryfetch(reloadpage: true),
+                    onRefresh: () async => controller.galleryWidget.refresh(),
                     child: SingleChildScrollView(
                       controller: controller.galleryscrollcontroller.value,
                       child: Column(
@@ -86,13 +85,8 @@ class GalleryView extends StatelessWidget {
                             ),
                           ),
 
-                          GalleryWidget(service)
-                              .mediaGallery(
-                                context: context,
-                                storyShare: true,
-                              )
-                              .widget
-                              .value!,
+                          controller.galleryWidget.widget.value ??
+                              const SizedBox(),
                         ],
                       ),
                     ),

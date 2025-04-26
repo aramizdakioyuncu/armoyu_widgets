@@ -11,7 +11,7 @@ class StoryView extends StatelessWidget {
         title: const Text('Story'),
       ),
       body: Center(
-        child: AppService.widgets.social.widgetStorycircle(),
+        child: AppService.widgets.social.widgetStorycircle().widget.value!,
       ),
     );
   }

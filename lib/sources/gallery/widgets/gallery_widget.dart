@@ -62,8 +62,8 @@ class GalleryWidget {
                             builder: (context) => StorypublishView(
                               service: service,
                               imageID: 1,
-                              imageURL: controller.mediaList.value![index]
-                                  .mediaURL.bigURL.value,
+                              imageURL: controller.filteredMediaList
+                                  .value![index].mediaURL.bigURL.value,
                             ),
                           ),
                         );
@@ -74,9 +74,9 @@ class GalleryWidget {
                         MaterialPageRoute(
                           builder: (context) => PhotoviewerView(
                             service: service,
-                            currentUserID:
-                                controller.mediaList.value![index].ownerID!,
-                            media: controller.mediaList.value!,
+                            currentUserID: controller
+                                .filteredMediaList.value![index].ownerID!,
+                            media: controller.filteredMediaList.value!,
                             initialIndex: index,
                           ),
                         ),
@@ -85,15 +85,15 @@ class GalleryWidget {
                     onLongPress: () {
                       if (controller
                               .currentUserAccounts.value.user.value.userID !=
-                          controller.mediaList.value![index].ownerID!) {
+                          controller.filteredMediaList.value![index].ownerID!) {
                         return;
                       }
                       controller.onlongPress(
-                          context, controller.mediaList.value!, index);
+                          context, controller.filteredMediaList.value!, index);
                     },
                     child: CachedNetworkImage(
-                      imageUrl: controller
-                          .mediaList.value![index].mediaURL.minURL.value,
+                      imageUrl: controller.filteredMediaList.value![index]
+                          .mediaURL.minURL.value,
                       fit: BoxFit.cover,
                       placeholder: (context, url) =>
                           const CupertinoActivityIndicator(),

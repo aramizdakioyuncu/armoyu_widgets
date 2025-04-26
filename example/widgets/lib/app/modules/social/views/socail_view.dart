@@ -22,7 +22,7 @@ class SocailView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AppService.widgets.social.widgetStorycircle(),
+            controller.storyies.widget.value ?? const SizedBox(),
             AppService.widgets.elevatedButton.costum1(
               loadingStatus: false,
               onPressed: () {

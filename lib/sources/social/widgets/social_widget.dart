@@ -6,6 +6,7 @@ import 'package:armoyu_widgets/data/services/accountuser_services.dart';
 import 'package:armoyu_widgets/sources/Story/story_screen_page/views/story_screen_view.dart';
 import 'package:armoyu_widgets/sources/gallery/views/gallery_view.dart';
 import 'package:armoyu_widgets/sources/social/bundle/posts_bundle.dart';
+import 'package:armoyu_widgets/sources/social/bundle/story_bundle.dart';
 import 'package:armoyu_widgets/sources/social/controllers/post_controller.dart';
 import 'package:armoyu_widgets/sources/social/controllers/story_controller.dart';
 import 'package:armoyu_widgets/translations/app_translation.dart';
@@ -138,16 +139,24 @@ class SocialWidget {
     );
   }
 
-  Widget widgetStorycircle() {
+  StoryWidgetBundle widgetStorycircle({
+    List<StoryList>? cachedStoryList,
+    Function(List<StoryList> updatedPosts)? onPostsUpdated,
+  }) {
     final findCurrentAccountController = Get.find<AccountUserController>();
     String uniqueTag = DateTime.now().millisecondsSinceEpoch.toString();
 
-    final controller = Get.put(StoryController(service),
+    final controller = Get.put(
+        StoryController(
+          service: service,
+          cachedStoryList: cachedStoryList,
+          onStoryUpdated: onPostsUpdated,
+        ),
         tag:
             "${findCurrentAccountController.currentUserAccounts.value.user.value.userID}storyWidgetUniq-$uniqueTag");
 
-    return Obx(
-      () => controller.content.value == null
+    Widget widget = Obx(
+      () => controller.filteredStoryList.value == null
           ? const CupertinoActivityIndicator()
           : Padding(
               padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 5),
@@ -156,10 +165,11 @@ class SocialWidget {
                 child: ListView.separated(
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
-                  itemCount: controller.content.value!.length,
+                  itemCount: controller.filteredStoryList.value!.length,
                   physics: const BouncingScrollPhysics(),
                   itemBuilder: (context, index) {
-                    final StoryList cardData = controller.content.value![index];
+                    final StoryList cardData =
+                        controller.filteredStoryList.value![index];
                     Color storycolor = Colors.transparent;
                     Color otherstorycolor = Colors.red;
 
@@ -191,7 +201,7 @@ class SocialWidget {
                             Get.to(
                               StoryScreenView(service: service),
                               arguments: {
-                                "storyList": controller.content.value,
+                                "storyList": controller.filteredStoryList.value,
                                 "storyIndex": index,
                               },
                             );
@@ -208,13 +218,14 @@ class SocialWidget {
                           Get.to(
                             StoryScreenView(service: service),
                             arguments: {
-                              "storyList": controller.content.value,
+                              "storyList": controller.filteredStoryList.value,
                               "storyIndex": index,
                             },
                           );
 
                           //Basılınca görüntülendi efekti ver
-                          controller.content.value![index].isView = true;
+                          controller.filteredStoryList.value![index].isView =
+                              true;
                         }
                       },
                       child: Column(
@@ -275,6 +286,12 @@ class SocialWidget {
                 ),
               ),
             ),
+    );
+
+    return StoryWidgetBundle(
+      widget: Rxn(widget),
+      refresh: () async => await controller.refreshAllStory(),
+      loadMore: () async => await controller.loadMoreStory(),
     );
   }
 }

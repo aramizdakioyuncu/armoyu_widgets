@@ -1,12 +1,13 @@
 import 'dart:io';
 
 import 'package:armoyu_services/armoyu_services.dart';
-import 'package:armoyu_services/core/models/ARMOYU/API/media/media_fetch.dart';
 import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/data/models/useraccounts.dart';
 import 'package:armoyu_widgets/data/services/accountuser_services.dart';
+import 'package:armoyu_widgets/sources/gallery/bundle/gallery_bundle.dart';
+import 'package:armoyu_widgets/sources/gallery/widgets/gallery_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:photo_manager/photo_manager.dart';
@@ -15,15 +16,14 @@ class GalleryController extends GetxController
     with GetSingleTickerProviderStateMixin {
   final ARMOYUServices service;
   GalleryController({required this.service});
-  var mediaGallery = <Media>[].obs;
-  var gallerycounter = 0.obs;
-  var ismediaProcces = false.obs;
   var mediaUploadProcess = false.obs;
 
   var pageisactive = false.obs;
   late var tabController = Rx<TabController?>(null);
   var mediaList = <Media>[].obs;
   var galleryscrollcontroller = ScrollController().obs;
+
+  late GalleryWidgetBundle galleryWidget;
 
   var fetchFirstDeviceGalleryStatus = false.obs;
   var assets = <AssetEntity>[].obs;
@@ -45,13 +45,18 @@ class GalleryController extends GetxController
     currentUserAccounts.value =
         findCurrentAccountController.currentUserAccounts.value;
 
+    galleryWidget = GalleryWidget(service).mediaGallery(
+      context: Get.context!,
+      storyShare: true,
+      userID: currentUserAccounts.value.user.value.userID!,
+    );
+
     //Cihaz Galerisini çek
     if (!fetchFirstDeviceGalleryStatus.value) {
       _fetchAssets();
     }
 
     if (!pageisactive.value) {
-      startingfunction();
       pageisactive.value = true;
     }
 
@@ -59,7 +64,7 @@ class GalleryController extends GetxController
       if (galleryscrollcontroller.value.position.pixels ==
           galleryscrollcontroller.value.position.maxScrollExtent) {
         // Sayfa sonuna geldiğinde yapılacak işlemi burada gerçekleştirin
-        galleryfetch();
+        galleryWidget.loadMore();
       }
     });
 
@@ -98,57 +103,8 @@ class GalleryController extends GetxController
     mediaUploadProcess.value = false;
 
     mediaList.clear();
-    galleryfetch(reloadpage: true);
-  }
 
-  Future<void> startingfunction() async {
-    await galleryfetch();
-  }
-
-  Future<void> galleryfetch({bool reloadpage = false}) async {
-    if (ismediaProcces.value) {
-      return;
-    }
-
-    if (reloadpage) {
-      gallerycounter.value = 0;
-    }
-    ismediaProcces.value = true;
-
-    MediaFetchResponse response = await service.mediaServices.fetch(
-      userID: currentUserAccounts.value.user.value.userID!,
-      category: "",
-      page: gallerycounter.value + 1,
-    );
-
-    if (!response.result.status) {
-      log(response.result.description);
-      ismediaProcces.value = false;
-      return;
-    }
-
-    if (reloadpage) {
-      mediaGallery.clear();
-    }
-
-    for (APIMediaFetch element in response.response!) {
-      List media = element.mediatype.split('/');
-      mediaGallery.add(
-        Media(
-          mediaID: element.media.mediaID,
-          ownerID: element.mediaOwner.userID,
-          mediaType: media[0] == "video" ? MediaType.video : MediaType.image,
-          mediaTime: element.mediaDate,
-          mediaURL: MediaURL(
-            bigURL: Rx<String>(element.media.mediaURL.bigURL),
-            normalURL: Rx<String>(element.media.mediaURL.normalURL),
-            minURL: Rx<String>(element.media.mediaURL.minURL),
-          ),
-        ),
-      );
-    }
-    gallerycounter.value++;
-    ismediaProcces.value = false;
+    galleryWidget.refresh();
   }
 
   void _fetchAssets() async {

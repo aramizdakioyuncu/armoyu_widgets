@@ -38,6 +38,7 @@ class SourceChatlistController extends GetxController {
   }
 
   void updateChatList() {
+    filteredchatList.value = chatList.value;
     chatList.refresh();
     filteredchatList.refresh();
     onChatUpdated?.call(chatList.value!);
@@ -90,7 +91,6 @@ class SourceChatlistController extends GetxController {
         currentChat.messages.refresh();
       }
 
-      filteredchatList.value = chatList.value;
       updateChatList();
     };
   }
@@ -188,7 +188,6 @@ class SourceChatlistController extends GetxController {
       );
     }
 
-    filteredchatList.value = chatList.value!;
     updateChatList();
 
     if (response.response!.length < 30) {

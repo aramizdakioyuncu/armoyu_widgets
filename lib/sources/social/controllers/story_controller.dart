@@ -11,12 +11,38 @@ import 'package:get/get.dart';
 
 class StoryController extends GetxController {
   final ARMOYUServices service;
-  StoryController(this.service);
+  List<StoryList>? cachedStoryList;
+  Function(List<StoryList> updatedStories)? onStoryUpdated;
 
-  Rxn<List<StoryList>> content = Rxn<List<StoryList>>(null);
-  var proccess = false.obs;
+  StoryController({
+    required this.service,
+    this.cachedStoryList,
+    this.onStoryUpdated,
+  });
+
+  Rxn<List<StoryList>> storyList = Rxn(null);
+  Rxn<List<StoryList>> filteredStoryList = Rxn(null);
+  var storyproccess = false.obs;
+  var storyEndproccess = false.obs;
 
   User? currentUser;
+
+  Future<void> refreshAllStory() async {
+    log("Refresh All Story");
+    await fetchstory(refreshStroy: true);
+  }
+
+  Future<void> loadMoreStory() async {
+    log("load More Stories");
+    return await fetchstory();
+  }
+
+  void updateStoryList() {
+    filteredStoryList.value = storyList.value;
+    storyList.refresh();
+    filteredStoryList.refresh();
+    onStoryUpdated?.call(storyList.value!);
+  }
 
   @override
   void onInit() {
@@ -28,26 +54,36 @@ class StoryController extends GetxController {
 
     log(currentUser!.userID.toString());
 
+    //Bellekteki paylaşımları yükle
+    if (cachedStoryList != null) {
+      storyList.value ??= [];
+      storyList.value = cachedStoryList;
+    }
+
     fetchstory();
   }
 
-  fetchstory() async {
-    if (proccess.value) {
+  fetchstory({bool refreshStroy = false}) async {
+    if (storyproccess.value) {
       return;
     }
 
-    proccess.value = true;
+    storyproccess.value = true;
     StoryFetchListResponse response =
         await service.storyServices.stories(page: 1);
     if (!response.result.status) {
-      proccess.value = false;
+      Future.delayed(const Duration(seconds: 1), () {
+        storyproccess.value = false;
+        fetchstory();
+      });
       return;
     }
 
-    content.value ??= [];
+    storyList.value ??= [];
+    filteredStoryList.value ??= [];
 
     if (response.response!.isEmpty) {
-      content.value!.add(
+      storyList.value!.add(
         StoryList(
           owner: User(
             userID: currentUser!.userID,
@@ -60,7 +96,7 @@ class StoryController extends GetxController {
       );
     }
     for (APIStoryList element in response.response!) {
-      content.value!.add(
+      storyList.value!.add(
         StoryList(
           owner: User(
               userID: element.oyuncuId,
@@ -96,9 +132,13 @@ class StoryController extends GetxController {
       );
     }
 
-    content.refresh();
-    proccess.value = false;
+    storyproccess.value = false;
+    updateStoryList();
 
-    log(content.value!.length.toString());
+    if (response.response!.length < 30) {
+      // 10'dan azsa daha fazla yok demektir
+      storyEndproccess.value = true;
+      log("Daha fazla veri yok (StoryList)");
+    }
   }
 }

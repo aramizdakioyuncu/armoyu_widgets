@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:armoyu_widgets/sources/social/bundle/posts_bundle.dart';
+import 'package:armoyu_widgets/sources/social/bundle/story_bundle.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:widgets/app/services/app_service.dart';
@@ -8,9 +9,9 @@ import 'package:widgets/app/services/app_service.dart';
 class PostprofileController extends GetxController {
   var scrollController = ScrollController().obs;
   late PostsWidgetBundle posts;
+  late StoryWidgetBundle stories;
 
   @override
-  // ignore: unnecessary_overrides
   void onInit() {
     super.onInit();
 
@@ -28,5 +29,7 @@ class PostprofileController extends GetxController {
       },
       userID: 1,
     );
+
+    stories = AppService.widgets.social.widgetStorycircle();
   }
 }

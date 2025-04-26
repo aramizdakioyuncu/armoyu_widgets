@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:widgets/app/modules/posts/postprofile/controller/postprofile_controller.dart';
-import 'package:widgets/app/services/app_service.dart';
 
 class PostprofileView extends StatelessWidget {
   const PostprofileView({super.key});
@@ -20,7 +19,7 @@ class PostprofileView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              AppService.widgets.social.widgetStorycircle(),
+              controller.stories.widget.value ?? const SizedBox(),
               controller.posts.widget.value ?? const SizedBox(),
             ],
           ),

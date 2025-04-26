@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:armoyu_widgets/sources/social/bundle/posts_bundle.dart';
+import 'package:armoyu_widgets/sources/social/bundle/story_bundle.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,6 +11,7 @@ class SocailController extends GetxController {
   var scrollController = ScrollController();
 
   late PostsWidgetBundle posts;
+  late StoryWidgetBundle storyies;
   @override
   void onInit() {
     super.onInit();
@@ -32,5 +34,7 @@ class SocailController extends GetxController {
         log('$userID $username');
       },
     );
+
+    storyies = AppService.widgets.social.widgetStorycircle();
   }
 }
