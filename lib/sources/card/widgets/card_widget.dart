@@ -1,6 +1,7 @@
 import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_services/core/models/ARMOYU/API/utils/player_pop_list.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
+import 'package:armoyu_widgets/sources/card/bundle/card_bundle.dart';
 import 'package:armoyu_widgets/sources/card/controllers/card_controller.dart';
 import 'package:armoyu_widgets/widgets/Skeletons/cards_skeleton.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -14,10 +15,11 @@ class CardWidget {
   final ARMOYUServices service;
   const CardWidget(this.service);
 
-  Widget cardWidget({
+  CardWidgetBundle cardWidget({
     required BuildContext context,
     required CustomCardType title,
-    Rxn<List<APIPlayerPop>>? content,
+    List<APIPlayerPop>? cachedCardList,
+    Function(List<APIPlayerPop> updatedCard)? onCardUpdated,
     required bool firstFetch,
     required Function({
       required int userID,
@@ -30,15 +32,16 @@ class CardWidget {
     final controller = Get.put(
       CardsControllerV2(
         service: service,
-        content: content,
+        cachedCardList: cachedCardList,
+        onCardUpdated: onCardUpdated,
         firstFetch: firstFetch,
         title: title,
       ),
       tag: DateTime.now().microsecondsSinceEpoch.toString() + title.name,
     );
 
-    return Obx(
-      () => controller.content!.value == null
+    Widget widget = Obx(
+      () => controller.cardList.value == null
           ? SkeletonCustomCards(count: 5, icon: controller.xicon.value!)
           : SizedBox(
               height: 220,
@@ -48,18 +51,18 @@ class CardWidget {
                 padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                 scrollDirection: Axis.horizontal,
                 itemCount: controller.morefetchProcces.value
-                    ? controller.content!.value!.length + 1
-                    : controller.content!.value!.length,
+                    ? controller.cardList.value!.length + 1
+                    : controller.cardList.value!.length,
                 physics: const BouncingScrollPhysics(),
                 itemBuilder: (context, index) {
-                  if (controller.content!.value!.length == index) {
+                  if (controller.cardList.value!.length == index) {
                     return const SizedBox(
                       width: 150,
                       child: CupertinoActivityIndicator(),
                     );
                   }
 
-                  APIPlayerPop cardData = controller.content!.value![index];
+                  APIPlayerPop cardData = controller.cardList.value![index];
                   return InkWell(
                     borderRadius: BorderRadius.circular(15),
                     onTap: () {
@@ -181,6 +184,12 @@ class CardWidget {
                 separatorBuilder: (context, index) => const SizedBox(width: 20),
               ),
             ),
+    );
+
+    return CardWidgetBundle(
+      widget: Rxn(widget),
+      refresh: () async => await controller.refreshAllCards(),
+      loadMore: () async => await controller.loadMoreCards(),
     );
   }
 }

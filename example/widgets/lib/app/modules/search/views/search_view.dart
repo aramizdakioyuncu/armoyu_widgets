@@ -33,12 +33,8 @@ class SearchView extends StatelessWidget {
               ),
             ),
           ),
-          Obx(
-            () => controller.widget.value!,
-          ),
-          Obx(
-            () => controller.widget2.value!,
-          ),
+          controller.cardWidget.widget.value!,
+          controller.cardWidget2.widget.value!,
           AppService.widgets.searchBar.custom1(
             allItems: allItemsv2,
             filteredItems: filteredItemsv2,
@@ -49,11 +45,6 @@ class SearchView extends StatelessWidget {
               log(val.toString());
               log(username.toString());
               log(type.toString());
-              // Get.toNamed("/home"),
-              // Functions.gotoPage(
-              //   "/oyuncular/$username",
-              //   getnavgiate: true,
-              // );
             },
           ),
         ],

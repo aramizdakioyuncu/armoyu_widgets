@@ -1,13 +1,14 @@
 import 'dart:developer';
 
+import 'package:armoyu_widgets/sources/card/bundle/card_bundle.dart';
 import 'package:armoyu_widgets/sources/card/widgets/card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:widgets/app/services/app_service.dart';
 
 class SearchViewController extends GetxController {
-  Rxn<Widget> widget = Rxn();
-  Rxn<Widget> widget2 = Rxn();
+  late CardWidgetBundle cardWidget;
+  late CardWidgetBundle cardWidget2;
   Rxn<Widget> widget3 = Rxn();
 
   @override
@@ -17,7 +18,7 @@ class SearchViewController extends GetxController {
   }
 
   initfunction() async {
-    widget.value = AppService.widgets.cards.cardWidget(
+    cardWidget = AppService.widgets.cards.cardWidget(
       context: Get.context!,
       title: CustomCardType.playerPOP,
       firstFetch: true,
@@ -30,7 +31,7 @@ class SearchViewController extends GetxController {
       }) {},
     );
 
-    widget2.value = AppService.widgets.cards.cardWidget(
+    cardWidget2 = AppService.widgets.cards.cardWidget(
       context: Get.context!,
       title: CustomCardType.playerXP,
       firstFetch: true,

@@ -51,8 +51,8 @@ class PostController extends GetxController {
   var fetchCommentStatus = false.obs;
   var fetchlikersStatus = false.obs;
 
-  Rxn<List<APIPlayerPop>> tpcardList = Rxn(null);
-  Rxn<List<APIPlayerPop>> popcardList = Rxn(null);
+  List<APIPlayerPop>? tpcardList;
+  List<APIPlayerPop>? popcardList;
   User? currentUser;
 
   Rxn<ScrollController> xscrollController = Rxn<ScrollController>();

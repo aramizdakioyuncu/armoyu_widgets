@@ -388,22 +388,34 @@ class PostWidget {
                 ),
               ),
               showPOPcard
-                  ? CardWidget(service).cardWidget(
-                      context: Get.context!,
-                      title: CustomCardType.playerPOP,
-                      content: controller.popcardList,
-                      firstFetch: true,
-                      profileFunction: profileFunction,
-                    )
+                  ? CardWidget(service)
+                      .cardWidget(
+                        context: Get.context!,
+                        title: CustomCardType.playerPOP,
+                        cachedCardList: controller.popcardList,
+                        onCardUpdated: (updatedCard) {
+                          controller.popcardList = updatedCard;
+                        },
+                        firstFetch: controller.popcardList == null,
+                        profileFunction: profileFunction,
+                      )
+                      .widget
+                      .value!
                   : const SizedBox.shrink(),
               showTPcard
-                  ? CardWidget(service).cardWidget(
-                      context: Get.context!,
-                      title: CustomCardType.playerXP,
-                      content: controller.tpcardList,
-                      firstFetch: true,
-                      profileFunction: profileFunction,
-                    )
+                  ? CardWidget(service)
+                      .cardWidget(
+                        context: Get.context!,
+                        title: CustomCardType.playerXP,
+                        cachedCardList: controller.tpcardList,
+                        onCardUpdated: (updatedCard) {
+                          controller.tpcardList = updatedCard;
+                        },
+                        firstFetch: controller.tpcardList == null,
+                        profileFunction: profileFunction,
+                      )
+                      .widget
+                      .value!
                   : const SizedBox.shrink(),
             ],
           ),

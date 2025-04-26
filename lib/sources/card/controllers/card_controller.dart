@@ -8,14 +8,15 @@ import 'package:get/get.dart';
 class CardsControllerV2 extends GetxController {
   final ARMOYUServices service;
   final CustomCardType title;
-  Rxn<List<APIPlayerPop>>? content;
-
+  List<APIPlayerPop>? cachedCardList;
+  Function(List<APIPlayerPop> updatedCard)? onCardUpdated;
   final bool firstFetch;
 
   CardsControllerV2({
     required this.service,
     required this.title,
-    required this.content,
+    required this.cachedCardList,
+    this.onCardUpdated,
     required this.firstFetch,
   });
 
@@ -29,12 +30,52 @@ class CardsControllerV2 extends GetxController {
   var xscrollController = Rxn<ScrollController>(null);
   var xfirstFetch = Rxn<bool>(null);
 
+  var cardList = Rxn<List<APIPlayerPop>>();
+
+  Future<void> refreshAllCards() async {
+    log("Refresh All Posts");
+    await fetchcards(refreshcard: true);
+  }
+
+  Future<void> loadMoreCards() async {
+    log("load More Posts");
+    return await fetchcards();
+  }
+
+  void updateCards() {
+    log("Update Cards");
+    cardList.refresh();
+    onCardUpdated?.call(cardList.value!);
+  }
+
   @override
   void onInit() {
     super.onInit();
 
+    cardinit();
+    //Bellekteki paylaşımları yükle
+    if (cachedCardList != null) {
+      cardList.value ??= [];
+      cardList.value = cachedCardList;
+      firstFetchProcces.value = true;
+    }
+
+    if (!firstFetchProcces.value && xfirstFetch.value!) {
+      if (cardList.value == null) {
+        fetchcards();
+        firstFetchProcces.value = true;
+      }
+    }
+    xscrollController.value!.addListener(() {
+      if (xscrollController.value!.position.pixels >=
+          xscrollController.value!.position.maxScrollExtent * 0.9) {
+        fetchcards();
+      }
+    });
+  }
+
+  cardinit() {
     xtitle.value = title;
-    content ??= Rxn<List<APIPlayerPop>>(null);
 
     if (xtitle.value == CustomCardType.playerXP) {
       xicon.value = const Icon(
@@ -65,34 +106,21 @@ class CardsControllerV2 extends GetxController {
 
     xscrollController.value = ScrollController();
     xfirstFetch.value = firstFetch;
-
-    if (!firstFetchProcces.value && xfirstFetch.value!) {
-      if (content!.value == null) {
-        morefetchinfo();
-        firstFetchProcces.value = true;
-      }
-    }
-    xscrollController.value!.addListener(() {
-      if (xscrollController.value!.position.pixels >=
-          xscrollController.value!.position.maxScrollExtent * 0.9) {
-        morefetchinfo();
-      }
-    });
   }
 
-  Future<void> morefetchinfo() async {
+  Future<void> fetchcards({bool refreshcard = false}) async {
     if (morefetchProcces.value || morefetchProccesEnd.value) {
       return;
     }
     morefetchProcces.value = true;
 
     log("${xtitle.value}");
-    content!.value ??= [];
+    cardList.value ??= [];
     // Sayfa başına gösterilecek içerik sayısı
     int itemsPerPage = 10;
 
     // Şu anki içerik sayısını alıyoruz
-    int currentContentCount = content!.value!.length;
+    int currentContentCount = cardList.value!.length;
 
     // Sayfa numarasını içerik sayısına göre hesaplıyoruz
     int currentPage = (currentContentCount / itemsPerPage).ceil() + 1;
@@ -114,11 +142,13 @@ class CardsControllerV2 extends GetxController {
       return;
     }
 
-    for (APIPlayerPop element in response.response!) {
-      content!.value!.add(element);
+    if (refreshcard) {
+      cardList.value = [];
     }
-    content!.refresh();
-
+    for (APIPlayerPop element in response.response!) {
+      cardList.value!.add(element);
+    }
+    updateCards();
     morefetchProcces.value = false;
 
     if (response.response!.length < 10) {
