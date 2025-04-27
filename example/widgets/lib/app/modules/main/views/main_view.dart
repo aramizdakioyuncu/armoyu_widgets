@@ -28,23 +28,24 @@ class MainView extends StatelessWidget {
             Row(
               children: [
                 Obx(
-                  () => controller.statusController.value == null
-                      ? Container()
-                      : controller.statusController.value!
-                          ? const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Icon(
-                                Icons.check,
-                                color: Colors.green,
-                              ),
-                            )
-                          : const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Icon(
-                                Icons.close,
-                                color: Colors.red,
-                              ),
-                            ),
+                  () =>
+                      !controller.firstfetch.value || controller.savestaus.value
+                          ? Container()
+                          : controller.statusController.value
+                              ? const Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Icon(
+                                    Icons.check,
+                                    color: Colors.green,
+                                  ),
+                                )
+                              : const Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Icon(
+                                    Icons.close,
+                                    color: Colors.red,
+                                  ),
+                                ),
                 ),
                 Expanded(
                   child: Obx(
@@ -57,20 +58,20 @@ class MainView extends StatelessWidget {
                       onChanged: (val) {
                         //Important for state
                         controller.apikeyController.refresh();
-                        controller.statusController.value = null;
+                        controller.statusController.value = false;
                       },
                     ),
                   ),
                 ),
                 Obx(
                   () => Visibility(
-                    visible: controller.statusController.value == null,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: AppService.widgets.elevatedButton.costum1(
                         text: "KAYDET",
                         onPressed: () async {
                           controller.savestaus.value = true;
+                          controller.firstfetch.value = true;
                           AppService.service = ARMOYUServices(
                             apiKey: controller.apikeyController.value.text,
                           );
@@ -85,6 +86,9 @@ class MainView extends StatelessWidget {
                           );
 
                           if (!response.result.status) {
+                            controller.savestaus.value = false;
+                            controller.statusController.value = false;
+
                             return;
                           }
 
@@ -108,78 +112,130 @@ class MainView extends StatelessWidget {
             ),
             Wrap(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: AppService.widgets.elevatedButton.costum1(
-                    text: "PostDetail",
-                    onPressed: () {
-                      Get.toNamed("/posts/detail");
-                    },
-                    loadingStatus: false,
+                Obx(
+                  () => Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: AppService.widgets.elevatedButton.costum1(
+                      enabled: controller.statusController.value,
+                      text: "PostDetail",
+                      onPressed: () {
+                        Get.toNamed("/posts/detail");
+                      },
+                      loadingStatus: false,
+                    ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: AppService.widgets.elevatedButton.costum1(
-                    text: "Posts",
-                    onPressed: () {
-                      Get.toNamed("/posts");
-                    },
-                    loadingStatus: false,
+                Obx(
+                  () => Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: AppService.widgets.elevatedButton.costum1(
+                      enabled: controller.statusController.value,
+                      text: "Posts",
+                      onPressed: () {
+                        Get.toNamed("/posts");
+                      },
+                      loadingStatus: false,
+                    ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: AppService.widgets.elevatedButton.costum1(
-                    text: "Story",
-                    onPressed: () {
-                      Get.toNamed("/story");
-                    },
-                    loadingStatus: false,
+                Obx(
+                  () => Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: AppService.widgets.elevatedButton.costum1(
+                      enabled: controller.statusController.value,
+                      text: "Story",
+                      onPressed: () {
+                        Get.toNamed("/story");
+                      },
+                      loadingStatus: false,
+                    ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: AppService.widgets.elevatedButton.costum1(
-                    text: "Social",
-                    onPressed: () {
-                      Get.toNamed("/social");
-                    },
-                    loadingStatus: false,
+                Obx(
+                  () => Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: AppService.widgets.elevatedButton.costum1(
+                      enabled: controller.statusController.value,
+                      text: "Social",
+                      onPressed: () {
+                        Get.toNamed("/social");
+                      },
+                      loadingStatus: false,
+                    ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: AppService.widgets.elevatedButton.costum1(
-                    text: "Chat",
-                    onPressed: () {
-                      Get.toNamed(Routes.CHAT);
-                    },
-                    loadingStatus: false,
+                Obx(
+                  () => Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: AppService.widgets.elevatedButton.costum1(
+                      enabled: controller.statusController.value,
+                      text: "Chat",
+                      onPressed: () {
+                        Get.toNamed(Routes.CHAT);
+                      },
+                      loadingStatus: false,
+                    ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: AppService.widgets.elevatedButton.costum1(
-                    text: "Profile",
-                    onPressed: () {
-                      Get.toNamed(Routes.PROFILE);
-                    },
-                    loadingStatus: false,
+                Obx(
+                  () => Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: AppService.widgets.elevatedButton.costum1(
+                      enabled: controller.statusController.value,
+                      text: "Notifications",
+                      onPressed: () {
+                        Get.toNamed(Routes.NOTIFICATIONS);
+                      },
+                      loadingStatus: false,
+                    ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: AppService.widgets.elevatedButton.costum1(
-                    text: "Search",
-                    onPressed: () {
-                      Get.toNamed(Routes.SEARCH);
-                    },
-                    loadingStatus: false,
+                Obx(
+                  () => Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: AppService.widgets.elevatedButton.costum1(
+                      enabled: controller.statusController.value,
+                      text: "Profile",
+                      onPressed: () {
+                        Get.toNamed(Routes.PROFILE);
+                      },
+                      loadingStatus: false,
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: AppService.widgets.elevatedButton.costum1(
+                      enabled: controller.statusController.value,
+                      text: "Search",
+                      onPressed: () {
+                        Get.toNamed(Routes.SEARCH);
+                      },
+                      loadingStatus: false,
+                    ),
                   ),
                 ),
               ],
             ),
+            const Spacer(),
+            Row(
+              children: [
+                Obx(
+                  () => Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: AppService.widgets.elevatedButton.costum1(
+                      enabled: controller.statusController.value,
+                      text: "Fill Cache",
+                      onPressed: () {
+                        Get.toNamed(Routes.CACHE);
+                      },
+                      loadingStatus: false,
+                    ),
+                  ),
+                ),
+              ],
+            )
           ],
         ),
       ),

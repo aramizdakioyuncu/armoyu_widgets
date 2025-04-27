@@ -58,6 +58,7 @@ class StoryController extends GetxController {
     if (cachedStoryList != null) {
       storyList.value ??= [];
       storyList.value = cachedStoryList;
+      filteredStoryList.value = cachedStoryList;
     }
 
     fetchstory();

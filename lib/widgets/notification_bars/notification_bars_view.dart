@@ -1,24 +1,6 @@
-import 'package:armoyu_services/armoyu_services.dart';
-import 'package:armoyu_widgets/core/widgets.dart';
-import 'package:armoyu_widgets/data/models/ARMOYU/group.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
-import 'package:armoyu_widgets/data/models/useraccounts.dart';
-import 'package:armoyu_widgets/translations/app_translation.dart';
-import 'package:armoyu_widgets/widgets/buttons.dart';
-import 'package:armoyu_widgets/widgets/text.dart';
-import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
-import 'package:armoyu_services/core/models/ARMOYU/_response/service_result.dart';
-import 'package:flutter/material.dart';
 
-import 'package:cached_network_image/cached_network_image.dart';
-
-import 'package:get/get.dart';
-import '../detectabletext.dart';
-
-// ignore: must_be_immutable
-class CustomMenusNotificationbars {
-  final ARMOYUServices service;
-  final UserAccounts currentUserAccounts;
+class Notifications {
   final User user;
   final String text;
   final String date;
@@ -27,256 +9,36 @@ class CustomMenusNotificationbars {
   final int categorydetailID;
   final bool enableButtons;
 
-  CustomMenusNotificationbars({
+  Notifications({
     required this.user,
-    required this.currentUserAccounts,
     required this.text,
     required this.date,
     required this.category,
     required this.categorydetail,
     required this.categorydetailID,
     required this.enableButtons,
-    required this.service,
   });
-
-  Widget notificationWidget(BuildContext context,
-      {required Function deleteFunction, required Function profileFunction}) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-      child: Column(
-        children: [
-          InkWell(
-            onTap: () {
-              log(category.toString());
-              log(categorydetail.toString());
-              log(categorydetailID.toString());
-
-              if (categorydetail == "post") {
-                Get.toNamed("/social/detail", arguments: {
-                  "postID": categorydetailID,
-                });
-              } else if (categorydetail == "postyorum") {
-                Get.toNamed("/social/detail", arguments: {
-                  "commentID": categorydetailID,
-                });
-              } else if (category == "gruplar") {
-                Get.toNamed("/group/detail", arguments: {
-                  'user': currentUserAccounts.user,
-                  'group': Group(groupID: categorydetailID)
-                });
-              } else if (category == "arkadaslik") {
-                if (categorydetail == "kabul") {
-                  Get.to("/profile", arguments: {
-                    "profileUser": User(userID: user.userID),
-                  });
-                }
-              }
-            },
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                InkWell(
-                  onTap: () {
-                    profileFunction();
-                  },
-                  child: CircleAvatar(
-                    backgroundColor: Colors.transparent,
-                    foregroundImage: CachedNetworkImageProvider(
-                      user.avatar!.mediaURL.minURL.value,
-                    ),
-                    radius: 25,
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          CustomText.costum1(
-                            user.displayName!.value,
-                            weight: FontWeight.bold,
-                          ),
-                          const Spacer(),
-                          CustomText.costum1(date
-                              .replaceAll('Saniye', CommonKeys.second.tr)
-                              .replaceAll('Dakika', CommonKeys.minute.tr)
-                              .replaceAll('Saat', CommonKeys.hour.tr)
-                              .replaceAll('Gün', CommonKeys.day.tr)
-                              .replaceAll('Ay', CommonKeys.month.tr)
-                              .replaceAll('Yıl', CommonKeys.year.tr)),
-                        ],
-                      ),
-                      CustomDedectabletext.costum1(text, 2, 15),
-                      const SizedBox(height: 10),
-                      Visibility(
-                        visible: enableButtons,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            CustomButtons.costum1(
-                              text: CommonKeys.accept.tr,
-                              onPressed: () async {
-                                if (category == "arkadaslik") {
-                                  // natificationisVisible = false;
-                                  deleteFunction();
-                                  currentUserAccounts
-                                          .friendRequestCount.value ==
-                                      currentUserAccounts
-                                              .friendRequestCount.value -
-                                          1;
-
-                                  if (categorydetail == "istek") {
-                                    ServiceResult response = await service
-                                        .profileServices
-                                        .friendrequestanswer(
-                                      userID: user.userID!,
-                                      answer: 1,
-                                    );
-                                    if (!response.status) {
-                                      ARMOYUWidget.toastNotification(
-                                          response.description.toString());
-                                      // natificationisVisible = true;
-                                      deleteFunction();
-                                      // currentUserAccounts
-                                      //     .friendRequestCount++;
-                                      currentUserAccounts.friendRequestCount
-                                          .value = currentUserAccounts
-                                              .friendRequestCount.value +
-                                          1;
-                                      1;
-
-                                      return;
-                                    }
-                                  }
-                                } else if (category == "gruplar") {
-                                  if (categorydetail == "davet") {
-                                    // currentUserAccounts
-                                    //     .groupInviteCount--;
-
-                                    currentUserAccounts.groupInviteCount.value =
-                                        currentUserAccounts
-                                                .groupInviteCount.value -
-                                            1;
-
-                                    // natificationisVisible = false;
-                                    deleteFunction();
-
-                                    GroupRequestAnswerResponse response =
-                                        await service.groupServices
-                                            .grouprequestanswer(
-                                      groupID: categorydetailID,
-                                      answer: "1",
-                                    );
-                                    if (!response.result.status) {
-                                      ARMOYUWidget.toastNotification(response
-                                          .result.description
-                                          .toString());
-
-                                      currentUserAccounts.groupInviteCount
-                                          .value = currentUserAccounts
-                                              .groupInviteCount.value +
-                                          1;
-
-                                      // natificationisVisible = true;
-                                      deleteFunction();
-
-                                      return;
-                                    }
-                                  }
-                                }
-                              },
-                              loadingStatus: false.obs,
-                            ),
-                            const SizedBox(width: 16),
-                            CustomButtons.costum1(
-                              text: CommonKeys.decline.tr,
-                              onPressed: () async {
-                                if (category == "arkadaslik") {
-                                  if (categorydetail == "istek") {
-                                    // currentUserAccounts
-                                    //     .friendRequestCount--;
-                                    currentUserAccounts.friendRequestCount
-                                        .value = currentUserAccounts
-                                            .friendRequestCount.value -
-                                        1;
-                                    // natificationisVisible = false;
-                                    deleteFunction();
-
-                                    ServiceResult response = await service
-                                        .profileServices
-                                        .friendrequestanswer(
-                                      userID: user.userID!,
-                                      answer: 0,
-                                    );
-                                    if (!response.status) {
-                                      ARMOYUWidget.toastNotification(
-                                          response.description.toString());
-                                      // currentUserAccounts
-                                      //     .friendRequestCount++;
-
-                                      currentUserAccounts.friendRequestCount
-                                          .value = currentUserAccounts
-                                              .friendRequestCount.value +
-                                          1;
-
-                                      // natificationisVisible = true;
-                                      deleteFunction();
-
-                                      return;
-                                    }
-                                  }
-                                } else if (category == "gruplar") {
-                                  if (categorydetail == "davet") {
-                                    // currentUserAccounts
-                                    //     .groupInviteCount--;
-
-                                    currentUserAccounts.groupInviteCount.value =
-                                        currentUserAccounts
-                                                .groupInviteCount.value -
-                                            1;
-                                    // natificationisVisible = false;
-                                    deleteFunction();
-
-                                    GroupRequestAnswerResponse response =
-                                        await service.groupServices
-                                            .grouprequestanswer(
-                                      groupID: categorydetailID,
-                                      answer: "0",
-                                    );
-                                    if (!response.result.status) {
-                                      ARMOYUWidget.toastNotification(response
-                                          .result.description
-                                          .toString());
-                                      // currentUserAccounts
-                                      //     .groupInviteCount++;
-
-                                      currentUserAccounts.groupInviteCount
-                                          .value = currentUserAccounts
-                                              .groupInviteCount.value +
-                                          1;
-                                      // natificationisVisible = true;
-                                      deleteFunction();
-
-                                      return;
-                                    }
-                                  }
-                                }
-                              },
-                              loadingStatus: false.obs,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+  factory Notifications.fromJson(Map<String, dynamic> json) {
+    return Notifications(
+      user: User.fromJson(json['user']),
+      text: json['text'] ?? '',
+      date: json['date'] ?? '',
+      category: json['category'] ?? '',
+      categorydetail: json['categorydetail'] ?? '',
+      categorydetailID: json['categorydetailID'] ?? 0,
+      enableButtons: json['enableButtons'] ?? false,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'user': user.toJson(),
+      'text': text,
+      'date': date,
+      'category': category,
+      'categorydetail': categorydetail,
+      'categorydetailID': categorydetailID,
+      'enableButtons': enableButtons,
+    };
   }
 }

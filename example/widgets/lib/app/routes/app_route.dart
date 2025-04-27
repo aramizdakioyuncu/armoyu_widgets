@@ -1,8 +1,10 @@
 // ignore_for_file: constant_identifier_names
 
+import 'package:widgets/app/modules/cache/cache_module.dart';
 import 'package:widgets/app/modules/chat/chat_module.dart';
 import 'package:widgets/app/modules/home/home_module.dart';
 import 'package:widgets/app/modules/main/main_module.dart';
+import 'package:widgets/app/modules/notifications/notifications_module.dart';
 import 'package:widgets/app/modules/posts/posts_module.dart';
 import 'package:widgets/app/modules/profile/profile_module.dart';
 import 'package:widgets/app/modules/search/search_module.dart';
@@ -20,6 +22,8 @@ class Routes {
   static const CHATCALL = "/chat/call";
   static const PROFILE = "/profile";
   static const SEARCH = "/search";
+  static const CACHE = "/cache";
+  static const NOTIFICATIONS = "/notifications";
 }
 
 class AppRoute {
@@ -34,5 +38,7 @@ class AppRoute {
     ...ChatModule.routes,
     ...ProfileModule.routes,
     ...SearchModule.routes,
+    ...CacheModule.routes,
+    ...NotificationsModule.routes,
   ];
 }

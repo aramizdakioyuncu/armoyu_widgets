@@ -7,6 +7,7 @@ import 'package:armoyu_widgets/sources/elevatedbutton.dart';
 import 'package:armoyu_widgets/sources/gallery/widgets/gallery_widget.dart';
 import 'package:armoyu_widgets/sources/mention.dart';
 import 'package:armoyu_widgets/sources/news/widgets/news_widget.dart';
+import 'package:armoyu_widgets/sources/notifications/widgets/notifications_widget.dart';
 import 'package:armoyu_widgets/sources/social/widgets/social_widget.dart';
 import 'package:armoyu_widgets/sources/searchbar/searchbar.dart';
 import 'package:armoyu_widgets/sources/textfield.dart';
@@ -24,6 +25,7 @@ class ARMOYUWidgets {
   late final GalleryWidget gallery;
   late final CardWidget cards;
   late final NewsWidget news;
+  late final NotificationsWidget notifications;
 
   late final AccountUserController accountController;
   late final SocketioController socketIO;
@@ -38,6 +40,7 @@ class ARMOYUWidgets {
     gallery = GalleryWidget(service);
     cards = CardWidget(service);
     news = NewsWidget(service);
+    notifications = NotificationsWidget(service);
 
     accountController = Get.put(AccountUserController(), permanent: true);
 

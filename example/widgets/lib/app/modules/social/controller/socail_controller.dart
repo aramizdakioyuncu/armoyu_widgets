@@ -24,6 +24,8 @@ class SocailController extends GetxController {
       },
       shrinkWrap: true,
       autofetchposts: false,
+      cachedpostsList: AppService
+          .widgets.accountController.currentUserAccounts.value.widgetPosts,
       profileFunction: ({
         required avatar,
         required banner,
@@ -35,6 +37,9 @@ class SocailController extends GetxController {
       },
     );
 
-    storyies = AppService.widgets.social.widgetStorycircle();
+    storyies = AppService.widgets.social.widgetStorycircle(
+      cachedStoryList: AppService.widgets.accountController.currentUserAccounts
+          .value.widgetStoriescard,
+    );
   }
 }

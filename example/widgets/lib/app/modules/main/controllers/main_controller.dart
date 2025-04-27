@@ -8,8 +8,10 @@ class MainController extends GetxController {
   var usernameController = TextEditingController().obs;
   var passcordController = TextEditingController().obs;
 
-  var statusController = Rx<bool?>(null);
+  var statusController = false.obs;
   var savestaus = false.obs;
+
+  var firstfetch = false.obs;
 
   @override
   void onInit() {

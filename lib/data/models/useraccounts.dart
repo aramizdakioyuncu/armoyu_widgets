@@ -11,6 +11,7 @@ import 'package:armoyu_widgets/data/models/Chat/chat.dart';
 import 'package:armoyu_widgets/data/models/Social/post.dart';
 import 'package:armoyu_widgets/data/models/Story/storylist.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
+import 'package:armoyu_widgets/widgets/notification_bars/notification_bars_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -37,7 +38,7 @@ class UserAccounts {
 
   List<User>? searchList = [];
 
-  List<User>? notificationList = [];
+  List<Notifications>? notificationList = [];
   List<User>? lastviewusersList = [];
   List<Group>? lastviewgroupsList = [];
   List<School>? lastviewschoolsList = [];
@@ -125,8 +126,9 @@ class UserAccounts {
       'newchatList': newchatList?.map((chat) => chat.toJson()).toList(),
       'newsList': newsList?.map((news) => news.toJson()).toList(),
       'searchList': searchList?.map((user) => user.toJson()).toList(),
-      'notificationList':
-          notificationList?.map((user) => user.toJson()).toList(),
+      'notificationList': notificationList
+          ?.map((notifications) => notifications.toJson())
+          .toList(),
       'lastviewusersList':
           lastviewusersList?.map((user) => user.toJson()).toList(),
       'lastviewgroupsList':
@@ -188,7 +190,7 @@ class UserAccounts {
           ?.map((user) => User.fromJson(user))
           .toList(),
       notificationList: (json['notificationList'] as List<dynamic>?)
-          ?.map((user) => User.fromJson(user))
+          ?.map((user) => Notifications.fromJson(user))
           .toList(),
       lastviewusersList: (json['lastviewusersList'] as List<dynamic>?)
           ?.map((user) => User.fromJson(user))
