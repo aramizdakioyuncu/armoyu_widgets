@@ -10,11 +10,15 @@ import 'package:get/get.dart';
 
 class NotificationsController extends GetxController {
   final ARMOYUServices service;
+  final String category;
+  final String categorydetail;
   List<Notifications>? cachedNotificationsList;
   Function(List<Notifications> updatedNotifications)? onNotificationsUpdated;
 
   NotificationsController({
     required this.service,
+    required this.category,
+    required this.categorydetail,
     this.cachedNotificationsList,
     this.onNotificationsUpdated,
   });
@@ -71,8 +75,8 @@ class NotificationsController extends GetxController {
 
     NotificationListResponse response =
         await service.notificationServices.getnotifications(
-      kategori: "",
-      kategoridetay: "",
+      kategori: category,
+      kategoridetay: categorydetail,
       page: page.value,
     );
 

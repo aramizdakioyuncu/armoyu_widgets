@@ -78,9 +78,11 @@ class NotificationsWidget {
                     0
                 ? false
                 : true,
-            label: Text(findCurrentAccountController
-                .currentUserAccounts.value.groupInviteCount
-                .toString()),
+            label: Text(
+              findCurrentAccountController
+                  .currentUserAccounts.value.groupInviteCount
+                  .toString(),
+            ),
             backgroundColor: Colors.red,
             textColor: Colors.white,
             child: Icon(
@@ -103,6 +105,8 @@ class NotificationsWidget {
   }
 
   NotificationsBundle notifications({
+    String category = "",
+    String categorydetail = "",
     List<Notifications>? cachedNotificationList,
     Function(List<Notifications> updatedNotifications)? onNotificationUpdated,
     Function(String category, String categorydetail, int categorydetailID)?
@@ -115,6 +119,8 @@ class NotificationsWidget {
     final controller = Get.put(
         NotificationsController(
           service: service,
+          category: category,
+          categorydetail: categorydetail,
           cachedNotificationsList: cachedNotificationList,
           onNotificationsUpdated: onNotificationUpdated,
         ),
@@ -159,11 +165,6 @@ class NotificationsWidget {
                               children: [
                                 InkWell(
                                   onTap: () {
-                                    log(notificationsINFO.category.toString());
-                                    log(notificationsINFO.categorydetail
-                                        .toString());
-                                    log(notificationsINFO.categorydetailID
-                                        .toString());
                                     if (onTap != null) {
                                       onTap(
                                         notificationsINFO.category,
@@ -171,26 +172,6 @@ class NotificationsWidget {
                                         notificationsINFO.categorydetailID,
                                       );
                                     }
-                                    // if (categorydetail == "post") {
-                                    //   Get.toNamed("/social/detail", arguments: {
-                                    //     "postID": categorydetailID,
-                                    //   });
-                                    // } else if (categorydetail == "postyorum") {
-                                    //   Get.toNamed("/social/detail", arguments: {
-                                    //     "commentID": categorydetailID,
-                                    //   });
-                                    // } else if (category == "gruplar") {
-                                    //   Get.toNamed("/group/detail", arguments: {
-                                    //     'user': currentUserAccounts.user,
-                                    //     'group': Group(groupID: categorydetailID)
-                                    //   });
-                                    // } else if (category == "arkadaslik") {
-                                    //   if (categorydetail == "kabul") {
-                                    //     Get.to("/profile", arguments: {
-                                    //       "profileUser": User(userID: user.userID),
-                                    //     });
-                                    //   }
-                                    // }
                                   },
                                   child: Row(
                                     crossAxisAlignment:
