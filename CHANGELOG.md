@@ -1,3 +1,3 @@
-## [1.0.0+74]
+## [1.0.0+75]
 
-- feat: Enhance NotificationsController with category parameters and update version to 1.0.0+74
+- feat: Refresh stories in SocailView and update post and story loading methods

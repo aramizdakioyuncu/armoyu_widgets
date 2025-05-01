@@ -28,6 +28,7 @@ class SocailView extends StatelessWidget {
               onPressed: () {
                 log('YENİLE');
                 controller.posts.refresh();
+                controller.storyies.refresh();
               },
               text: 'YENİLE',
             ),

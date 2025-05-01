@@ -34,7 +34,7 @@ class StoryController extends GetxController {
 
   Future<void> loadMoreStory() async {
     log("load More Stories");
-    return await fetchstory();
+    await fetchstory();
   }
 
   void updateStoryList() {
@@ -88,22 +88,28 @@ class StoryController extends GetxController {
     }
 
     if (response.response!.isEmpty && storyList.value!.isEmpty) {
-      storyList.value!.add(
-        StoryList(
-          owner: User(
-            userID: currentUser!.userID,
-            userName: (SocialKeys.socialStory.tr).obs,
-            avatar: currentUser!.avatar,
+      // Eğer hiç paylaşım yoksa ve bellekteki paylaşımlar da boşsa, varsayılan bir paylaşım ekle
+      if (!storyList.value!
+          .any((story) => story.owner.userID == currentUser!.userID)) {
+        storyList.value!.add(
+          StoryList(
+            owner: User(
+              userID: currentUser!.userID,
+              userName: (SocialKeys.socialStory.tr).obs,
+              avatar: currentUser!.avatar,
+            ),
+            story: null,
+            isView: true,
           ),
-          story: null,
-          isView: true,
-        ),
-      );
+        );
+      }
     }
     for (APIStoryList element in response.response!) {
-      storyList.value!.add(
-        StoryList(
-          owner: User(
+      if (!storyList.value!
+          .any((story) => story.owner.userID == currentUser!.userID)) {
+        storyList.value!.add(
+          StoryList(
+            owner: User(
               userID: element.oyuncuId,
               userName: Rx(element.oyuncuKadi),
               displayName: Rx(element.oyuncuAdSoyad),
@@ -117,24 +123,43 @@ class StoryController extends GetxController {
                     element.oyuncuAvatar.minURL,
                   ),
                 ),
-              )),
-          story: element.hikayeIcerik
-              .map(
-                (e) => Story(
-                  storyID: e.hikayeId,
-                  ownerID: e.hikayeSahip,
-                  ownerusername: element.oyuncuKadi,
-                  owneravatar: element.oyuncuAvatar.minURL,
-                  time: e.hikayeZaman,
-                  media: e.hikayeMedya,
-                  isLike: e.hikayeBenBegeni,
-                  isView: e.hikayeBenGoruntulenme,
-                ),
-              )
-              .toList(),
-          isView: false,
-        ),
-      );
+              ),
+            ),
+            story: element.hikayeIcerik
+                .map(
+                  (e) => Story(
+                    storyID: e.hikayeId,
+                    ownerID: e.hikayeSahip,
+                    ownerusername: element.oyuncuKadi,
+                    owneravatar: element.oyuncuAvatar.minURL,
+                    time: e.hikayeZaman,
+                    media: e.hikayeMedya,
+                    isLike: e.hikayeBenBegeni,
+                    isView: e.hikayeBenGoruntulenme,
+                  ),
+                )
+                .toList(),
+            isView: false,
+          ),
+        );
+      } else {
+        // Eğer paylaşım zaten varsa, güncelle
+        storyList.value!.firstWhere((story) => story.owner.userID == currentUser!.userID).story =
+            element.hikayeIcerik
+                .map(
+                  (e) => Story(
+                    storyID: e.hikayeId,
+                    ownerID: e.hikayeSahip,
+                    ownerusername: element.oyuncuKadi,
+                    owneravatar: element.oyuncuAvatar.minURL,
+                    time: e.hikayeZaman,
+                    media: e.hikayeMedya,
+                    isLike: e.hikayeBenBegeni,
+                    isView: e.hikayeBenGoruntulenme,
+                  ),
+                )
+                .toList();
+      }
     }
 
     storyproccess.value = false;

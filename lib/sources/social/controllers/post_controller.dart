@@ -64,7 +64,7 @@ class PostController extends GetxController {
 
   Future<void> loadMorePosts() async {
     log("load More Posts");
-    return await fetchsocailposts();
+    await fetchsocailposts();
   }
 
   void updatePostsList() {
