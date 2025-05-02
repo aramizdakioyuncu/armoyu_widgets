@@ -38,6 +38,9 @@ class SocailController extends GetxController {
     );
 
     storyies = AppService.widgets.social.widgetStorycircle(
+      onStoryUpdated: (updatedStories) {
+        log('Story updated: ${updatedStories.length}');
+      },
       cachedStoryList: AppService.widgets.accountController.currentUserAccounts
           .value.widgetStoriescard,
     );

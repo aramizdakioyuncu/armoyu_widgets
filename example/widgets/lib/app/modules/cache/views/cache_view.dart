@@ -69,6 +69,23 @@ class CacheView extends StatelessWidget {
                 ),
               ),
             ),
+            Obx(
+              () => Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: AppService.widgets.elevatedButton.costum1(
+                  background: AppService.widgets.accountController
+                              .currentUserAccounts.value.newsList !=
+                          null
+                      ? Colors.green
+                      : Colors.red,
+                  text: "News Notification",
+                  onPressed: () async {
+                    await controller.fillNews();
+                  },
+                  loadingStatus: controller.newsProcccess.value,
+                ),
+              ),
+            ),
           ],
         ),
       ),

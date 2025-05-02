@@ -1,5 +1,6 @@
 import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
+import 'package:armoyu_widgets/data/models/ARMOYU/news.dart';
 import 'package:armoyu_widgets/data/models/Social/post.dart';
 import 'package:armoyu_widgets/data/models/Story/story.dart';
 import 'package:armoyu_widgets/data/models/Story/storylist.dart';
@@ -12,6 +13,7 @@ class CacheController extends GetxController {
   var postsProcccess = false.obs;
   var storyiesProcccess = false.obs;
   var notificationsProcccess = false.obs;
+  var newsProcccess = false.obs;
 
   Future<void> fillPosts() async {
     if (postsProcccess.value) {
@@ -231,5 +233,52 @@ class CacheController extends GetxController {
       ),
     );
     notificationsProcccess.value = false;
+  }
+
+  Future<void> fillNews() async {
+    if (newsProcccess.value) {
+      return;
+    }
+
+    newsProcccess.value = true;
+
+    if (AppService
+            .widgets.accountController.currentUserAccounts.value.newsList !=
+        null) {
+      AppService.widgets.accountController.currentUserAccounts.value.newsList =
+          null;
+      newsProcccess.value = false;
+      return;
+    }
+
+    NewsListResponse response = await AppService.service.newsServices.fetch(
+      page: 1,
+    );
+
+    if (!response.result.status) {
+      newsProcccess.value = false;
+      return;
+    }
+
+    AppService.widgets.accountController.currentUserAccounts.value.newsList ??=
+        [];
+
+    AppService.widgets.accountController.currentUserAccounts.value.newsList!
+        .addAll(
+      response.response!.news.map(
+        (news) {
+          return News(
+            newsID: news.newsID,
+            newsTitle: news.title,
+            author: news.newsOwner.displayname,
+            newsImage: news.media.mediaURL.minURL,
+            newssummary: news.summary,
+            authoravatar: news.newsOwner.avatar.minURL,
+            newsViews: news.views,
+          );
+        },
+      ),
+    );
+    newsProcccess.value = false;
   }
 }

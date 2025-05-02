@@ -6,24 +6,61 @@ import 'package:get/get.dart';
 
 class NewsController extends GetxController {
   final ARMOYUServices service;
-  NewsController(this.service);
-  var newsList = <News>[].obs;
-  var postsearchprocess = false.obs;
+
+  List<News>? cachedNewsList;
+  Function(List<News> updatedNotifications)? onNewsUpdated;
+  NewsController({
+    required this.service,
+    this.cachedNewsList,
+    this.onNewsUpdated,
+  });
+
+  Rxn<List<News>> newsList = Rxn();
+  Rxn<List<News>> filterednewsList = Rxn();
 
   var eventlistProcces = false.obs;
+  var newsEndProcces = false.obs;
+  var newsPage = 1.obs;
+
+  Future<void> refreshAllNews() async {
+    log("Refresh All Notifications");
+    await getnewslist(refresh: true);
+  }
+
+  Future<void> loadMoreNews() async {
+    log("load More Notifications");
+    return await getnewslist();
+  }
+
+  void updateNewsList() {
+    filterednewsList.value = newsList.value;
+    newsList.refresh();
+    filterednewsList.refresh();
+    onNewsUpdated?.call(newsList.value!);
+  }
+
   @override
   void onInit() {
     super.onInit();
+
+    //Bellekteki paylaşımları yükle
+    if (cachedNewsList != null) {
+      newsList.value ??= [];
+      newsList.value = cachedNewsList;
+      filterednewsList.value = cachedNewsList;
+    }
+
     getnewslist();
   }
 
-  Future<void> getnewslist() async {
-    if (eventlistProcces.value) {
+  Future<void> getnewslist({bool refresh = false}) async {
+    if (eventlistProcces.value || newsEndProcces.value) {
       return;
     }
     eventlistProcces.value = true;
 
-    NewsListResponse response = await service.newsServices.fetch(page: 1);
+    NewsListResponse response =
+        await service.newsServices.fetch(page: newsPage.value);
     if (!response.result.status) {
       ARMOYUWidget.toastNotification(response.result.description.toString());
       eventlistProcces.value = false;
@@ -32,11 +69,15 @@ class NewsController extends GetxController {
       getnewslist();
       return;
     }
-
-    newsList.clear();
-
+    if (refresh) {
+      newsList.value = [];
+    }
+    newsList.value ??= [];
     for (var element in response.response!.news) {
-      newsList.add(
+      if (newsList.value!.any((e) => e.newsID == element.newsID)) {
+        continue;
+      }
+      newsList.value!.add(
         News(
           newsID: element.newsID,
           newsTitle: element.title,
@@ -48,6 +89,13 @@ class NewsController extends GetxController {
         ),
       );
     }
+
+    if (response.response!.news.length < 10) {
+      newsEndProcces.value = true;
+    }
+
+    updateNewsList();
+    newsPage.value++;
     eventlistProcces.value = false;
   }
 }

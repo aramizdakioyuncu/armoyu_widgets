@@ -2,14 +2,14 @@ import 'dart:developer';
 
 import 'package:armoyu_widgets/sources/card/bundle/card_bundle.dart';
 import 'package:armoyu_widgets/sources/card/widgets/card_widget.dart';
-import 'package:flutter/material.dart';
+import 'package:armoyu_widgets/sources/news/bundle/news_bundle.dart';
 import 'package:get/get.dart';
 import 'package:widgets/app/services/app_service.dart';
 
 class SearchViewController extends GetxController {
   late CardWidgetBundle cardWidget;
   late CardWidgetBundle cardWidget2;
-  Rxn<Widget> widget3 = Rxn();
+  late NewsWidgetBundle newsWidget;
 
   @override
   void onInit() {
@@ -43,7 +43,12 @@ class SearchViewController extends GetxController {
         required username,
       }) {},
     );
-    widget3.value = AppService.widgets.news.newsCarouselWidget(
+    newsWidget = AppService.widgets.news.newsCarouselWidget(
+      onNewsUpdated: (updatedNews) {
+        log('News updated: ${updatedNews.length}');
+      },
+      cachedNewsList: AppService
+          .widgets.accountController.currentUserAccounts.value.newsList,
       newsFunction: (news) {
         log(news.newsID.toString());
       },

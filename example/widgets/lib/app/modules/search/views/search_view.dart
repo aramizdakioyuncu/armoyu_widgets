@@ -28,9 +28,8 @@ class SearchView extends StatelessWidget {
             child: SizedBox(
               height: 200,
               width: 400,
-              child: Obx(
-                () => controller.widget3.value!,
-              ),
+              child: controller.newsWidget.widget.value ??
+                  const Center(child: CircularProgressIndicator()),
             ),
           ),
           controller.cardWidget.widget.value!,
