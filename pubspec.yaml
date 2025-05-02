@@ -1,7 +1,7 @@
 name: armoyu_widgets
 description: "ARMOYU Widget kütüphanesidir"
 repository: https://github.com/aramizdakioyuncu/armoyu_widgets
-version: 1.0.0+76
+version: 1.0.0+77
 
 environment:
   sdk: ">=3.4.4 <4.0.0"

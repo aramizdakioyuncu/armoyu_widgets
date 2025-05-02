@@ -87,26 +87,24 @@ class StoryController extends GetxController {
       storyList.value = [];
     }
 
-    if (response.response!.isEmpty && storyList.value!.isEmpty) {
-      // Eğer hiç paylaşım yoksa ve bellekteki paylaşımlar da boşsa, varsayılan bir paylaşım ekle
-      if (!storyList.value!
-          .any((story) => story.owner.userID == currentUser!.userID)) {
-        storyList.value!.add(
-          StoryList(
-            owner: User(
-              userID: currentUser!.userID,
-              userName: (SocialKeys.socialStory.tr).obs,
-              avatar: currentUser!.avatar,
-            ),
-            story: null,
-            isView: true,
+    // Eğer hiç paylaşım yoksa ve bellekteki paylaşımlar da boşsa, varsayılan bir paylaşım ekle
+    if (!storyList.value!
+        .any((story) => story.owner.userID == currentUser!.userID)) {
+      storyList.value!.add(
+        StoryList(
+          owner: User(
+            userID: currentUser!.userID,
+            userName: (SocialKeys.socialStory.tr).obs,
+            avatar: currentUser!.avatar,
           ),
-        );
-      }
+          story: null,
+          isView: true,
+        ),
+      );
     }
     for (APIStoryList element in response.response!) {
       if (!storyList.value!
-          .any((story) => story.owner.userID == currentUser!.userID)) {
+          .any((story) => story.owner.userID == element.oyuncuId)) {
         storyList.value!.add(
           StoryList(
             owner: User(

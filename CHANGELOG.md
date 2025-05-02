@@ -1,3 +1,3 @@
-## [1.0.0+75]
+## [1.0.0+77]
 
-- feat: Refresh stories in SocailView and update post and story loading methods
+- fix: Update default story addition logic and version to 1.0.0+77
