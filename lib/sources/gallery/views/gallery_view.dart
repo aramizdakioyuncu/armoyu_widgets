@@ -2,7 +2,6 @@ import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_widgets/data/services/accountuser_services.dart';
 import 'package:armoyu_widgets/sources/gallery/controllers/gallery_controller.dart';
 import 'package:armoyu_widgets/sources/gallery/widgets/gallery_widget.dart';
-import 'package:armoyu_widgets/sources/photoviewer/views/photoviewer_view.dart';
 import 'package:armoyu_widgets/widgets/buttons.dart';
 import 'package:armoyu_widgets/widgets/text.dart';
 import 'package:flutter/material.dart';
@@ -18,8 +17,8 @@ class GalleryView extends StatelessWidget {
     final findCurrentAccountController = Get.find<AccountUserController>();
     log("Current AccountUser :: ${findCurrentAccountController.currentUserAccounts.value.user.value.displayName}");
     //* *//
-    var currentUser =
-        findCurrentAccountController.currentUserAccounts.value.user.value;
+
+    findCurrentAccountController.currentUserAccounts.value.user.value;
 
     final controller = Get.put(GalleryController(service: service));
 
@@ -85,37 +84,42 @@ class GalleryView extends StatelessWidget {
                       ),
                     ),
                   ),
-                  GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3, // Her satırda 3 görsel
-                      crossAxisSpacing: 5.0, // Yatayda boşluk
-                      mainAxisSpacing: 5.0, // Dikeyde boşluk
+                  Center(
+                    child: Text(
+                      "Bu Sayfa Henüz Geliştirilmedi",
                     ),
-                    itemCount: controller.thumbnailmemorymedia.length,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => PhotoviewerView(
-                                service: service,
-                                currentUserID: currentUser.userID!,
-                                isMemory: true,
-                                media: controller.memorymedia,
-                                initialIndex: index,
-                              ),
-                            ),
-                          );
-                        },
-                        child: Image.memory(
-                          controller.thumbnailmemorymedia[index].mediaBytes!,
-                          fit: BoxFit.cover,
-                        ),
-                      );
-                    },
                   ),
+                  // GridView.builder(
+                  //   gridDelegate:
+                  //       const SliverGridDelegateWithFixedCrossAxisCount(
+                  //     crossAxisCount: 3, // Her satırda 3 görsel
+                  //     crossAxisSpacing: 5.0, // Yatayda boşluk
+                  //     mainAxisSpacing: 5.0, // Dikeyde boşluk
+                  //   ),
+                  //   itemCount: controller.thumbnailmemorymedia.length,
+                  //   itemBuilder: (context, index) {
+                  //     return GestureDetector(
+                  //       onTap: () {
+                  //         Navigator.push(
+                  //           context,
+                  //           MaterialPageRoute(
+                  //             builder: (context) => PhotoviewerView(
+                  //               service: service,
+                  //               currentUserID: currentUser.userID!,
+                  //               isMemory: true,
+                  //               media: controller.memorymedia,
+                  //               initialIndex: index,
+                  //             ),
+                  //           ),
+                  //         );
+                  //       },
+                  //       child: Image.memory(
+                  //         controller.thumbnailmemorymedia[index].mediaBytes!,
+                  //         fit: BoxFit.cover,
+                  //       ),
+                  //     );
+                  //   },
+                  // ),
                 ],
               ),
             ),

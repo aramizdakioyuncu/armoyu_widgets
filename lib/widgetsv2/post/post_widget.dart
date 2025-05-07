@@ -279,8 +279,12 @@ class PostWidget {
                     const Spacer(),
                     IconButton(
                       onPressed: () async {
-                        await Share.share(
-                          'https://aramizdakioyuncu.com/?sosyal1=${postdetail.value.postID}',
+                        SharePlus.instance.share(
+                          ShareParams(
+                            uri: Uri.parse(
+                              'https://aramizdakioyuncu.com/?sosyal1=${postdetail.value.postID}',
+                            ),
+                          ),
                         );
                       },
                       icon: const Icon(Icons.share_outlined),

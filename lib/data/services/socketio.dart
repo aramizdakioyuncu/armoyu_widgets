@@ -12,7 +12,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart' as webrtc;
 import 'package:get/get.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:socket_io_client/socket_io_client.dart' as socketio;
 
 class SocketioController extends GetxController {
   void Function(Chat updatedChat)? onChatUpdated;
@@ -34,7 +34,7 @@ class SocketioController extends GetxController {
     }
   }
 
-  late IO.Socket socket;
+  late socketio.Socket socket;
   var socketChatStatus = false.obs;
 
   Timer? userListTimer;
@@ -151,7 +151,7 @@ class SocketioController extends GetxController {
     updateuseraccount();
 
     // Socket.IO'ya bağlanma
-    socket = IO.io('http://socket.armoyu.com:2020', <String, dynamic>{
+    socket = socketio.io('http://socket.armoyu.com:2020', <String, dynamic>{
       // socket = IO.io('http://10.0.2.2:2020', <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': true,

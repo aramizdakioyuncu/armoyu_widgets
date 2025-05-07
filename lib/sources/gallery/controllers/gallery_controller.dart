@@ -10,7 +10,6 @@ import 'package:armoyu_widgets/sources/gallery/bundle/gallery_bundle.dart';
 import 'package:armoyu_widgets/sources/gallery/widgets/gallery_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:photo_manager/photo_manager.dart';
 
 class GalleryController extends GetxController
     with GetSingleTickerProviderStateMixin {
@@ -26,9 +25,6 @@ class GalleryController extends GetxController
   late GalleryWidgetBundle galleryWidget;
 
   var fetchFirstDeviceGalleryStatus = false.obs;
-  var assets = <AssetEntity>[].obs;
-  var memorymedia = <Media>[].obs;
-  var thumbnailmemorymedia = <Media>[].obs;
   var currentUserAccounts = Rx<UserAccounts>(
     UserAccounts(
       user: User().obs,
@@ -122,52 +118,5 @@ class GalleryController extends GetxController
       return;
     }
     fetchFirstDeviceGalleryStatus.value = true;
-    assets.value = await PhotoManager.getAssetListRange(
-      start: 0,
-      end: 300,
-    );
-
-    for (AssetEntity element in assets) {
-      // Original
-      final bytes = await element.thumbnailDataWithOption(
-        const ThumbnailOption(
-          size: ThumbnailSize(600, 600),
-          quality: 95,
-        ),
-      );
-
-      //Thumbnail
-      final thumbnailbytes = await element.thumbnailDataWithOption(
-        const ThumbnailOption(
-          size: ThumbnailSize(150, 150),
-          quality: 80,
-        ),
-      );
-      memorymedia.add(
-        Media(
-          mediaID: element.typeInt,
-          mediaType: MediaType.image,
-          mediaBytes: bytes,
-          mediaURL: MediaURL(
-            bigURL: Rx<String>("bigURL"),
-            normalURL: Rx<String>("normalURL"),
-            minURL: Rx<String>("minURL"),
-          ),
-        ),
-      );
-
-      thumbnailmemorymedia.add(
-        Media(
-          mediaID: element.typeInt,
-          mediaType: MediaType.image,
-          mediaBytes: thumbnailbytes,
-          mediaURL: MediaURL(
-            bigURL: Rx<String>("bigURL"),
-            normalURL: Rx<String>("normalURL"),
-            minURL: Rx<String>("minURL"),
-          ),
-        ),
-      );
-    }
   }
 }
