@@ -66,6 +66,7 @@ class MusicplayerController extends GetxController
   void setMediaList(List<Music> list) {
     musicList.value = list;
     musicIndex.value = 0;
+    updateCurrentPosition();
     musicService();
   }
 
