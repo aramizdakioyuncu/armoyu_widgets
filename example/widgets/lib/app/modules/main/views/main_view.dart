@@ -3,6 +3,7 @@ import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
 import 'package:armoyu_widgets/armoyuwidgets.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/data/models/useraccounts.dart';
+import 'package:armoyu_widgets/sources/players/bundle/musicplayer_bundle.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -229,6 +230,56 @@ class MainView extends StatelessWidget {
                       text: "Fill Cache",
                       onPressed: () {
                         Get.toNamed(Routes.CACHE);
+                      },
+                      loadingStatus: false,
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: AppService.widgets.elevatedButton.costum1(
+                      enabled: controller.statusController.value,
+                      text: "Music Player",
+                      onPressed: () {
+                        PlayerWidgetBundle player =
+                            AppService.widgets.players.musicplayer();
+
+                        PlayerWidgetBundle player2 =
+                            AppService.widgets.players.advencedPlayer(
+                          context,
+                        );
+
+                        player2.mediaList(Constants.musicList);
+
+                        showDialog(
+                          context: Get.context!,
+                          builder: (_) => AlertDialog(
+                            title: Text("Music Player"),
+                            content: Row(
+                              children: [
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: player.widget.value!,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: player2.widget.value!,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Get.back(),
+                                child: Text("Kapat"),
+                              )
+                            ],
+                          ),
+                        );
                       },
                       loadingStatus: false,
                     ),
