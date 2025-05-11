@@ -26,7 +26,7 @@ dependencies:
 
   url_launcher: ^6.3.1
 
-  armoyu_services: ^1.0.0+57
+  armoyu_services: ^1.0.0+58
 
   like_button: ^2.0.5
   share_plus: ^11.0.0
