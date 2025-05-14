@@ -241,7 +241,7 @@ class MainView extends StatelessWidget {
                     child: AppService.widgets.elevatedButton.costum1(
                       enabled: controller.statusController.value,
                       text: "Music Player",
-                      onPressed: () {
+                      onPressed: () async {
                         PlayerWidgetBundle player =
                             AppService.widgets.players.musicplayer();
 
@@ -249,8 +249,6 @@ class MainView extends StatelessWidget {
                             AppService.widgets.players.advencedPlayer(
                           context,
                         );
-
-                        player2.mediaList(Constants.musicList);
 
                         showDialog(
                           context: Get.context!,

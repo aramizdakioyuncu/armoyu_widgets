@@ -21,6 +21,7 @@ dependencies:
   http: ^1.2.2
   device_info_plus: ^11.4.0
   package_info_plus: ^8.0.1
+  connectivity_plus: ^6.0.1
   crypto: ^3.0.3
   image_picker: ^1.0.7
   image_cropper: ^9.1.0
@@ -44,8 +45,7 @@ dependencies:
   flutter_webrtc: ^0.14.0
 
 
-  armoyu_services: ^1.0.0+55
-
+  armoyu_services: ^1.0.0+60
 
 
 

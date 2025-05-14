@@ -79,19 +79,19 @@ class PlayersWidget {
                     ),
                     child: controller.musicIndex.value == null
                         ? Image.asset(
-                            "assets/images/medinotfound.png",
+                            "assets/images/medinotfound.jpg",
                             package: 'armoyu_widgets',
                           )
-                        : controller.musicList
+                        : controller.filteredmusicList
                                     .value![controller.musicIndex.value!].img ==
                                 null
                             ? Image.asset(
-                                "assets/images/medinotfound.png",
+                                "assets/images/medinotfound.jpg",
                                 package: 'armoyu_widgets',
                               )
                             : CachedNetworkImage(
                                 fit: BoxFit.contain,
-                                imageUrl: controller.musicList
+                                imageUrl: controller.filteredmusicList
                                     .value![controller.musicIndex.value!].img!,
                               ),
                   ),
@@ -101,37 +101,92 @@ class PlayersWidget {
                 alignment: Alignment.centerLeft,
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 4.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Row(
                     children: [
-                      Obx(
-                        () => Text(
-                          controller.musicIndex.value == null
-                              ? ""
-                              : controller.musicList
-                                  .value![controller.musicIndex.value!].name,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Obx(
+                              () => Text(
+                                controller.musicIndex.value == null
+                                    ? ""
+                                    : controller
+                                        .filteredmusicList
+                                        .value![controller.musicIndex.value!]
+                                        .name,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            Obx(
+                              () => Text(
+                                controller.musicIndex.value == null
+                                    ? ""
+                                    : controller
+                                            .filteredmusicList
+                                            .value![
+                                                controller.musicIndex.value!]
+                                            .owner ??
+                                        "",
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      Obx(
-                        () => Text(
+                      IconButton(
+                        onPressed: () {
+                          if (controller.filteredmusicList
+                              .value![controller.musicIndex.value!].ismyfav) {
+                            service.musicServices.removefavorite(
+                              musicID: controller.filteredmusicList
+                                  .value![controller.musicIndex.value!].musicID,
+                            );
+
+                            controller
+                                .filteredmusicList
+                                .value![controller.musicIndex.value!]
+                                .ismyfav = false;
+                          } else {
+                            service.musicServices.addfavorite(
+                              musicID: controller.filteredmusicList
+                                  .value![controller.musicIndex.value!].musicID,
+                            );
+
+                            controller
+                                .filteredmusicList
+                                .value![controller.musicIndex.value!]
+                                .ismyfav = true;
+                          }
+
+                          controller.filteredmusicList.refresh();
+                        },
+                        icon: Icon(
                           controller.musicIndex.value == null
-                              ? ""
+                              ? Icons.favorite_border
                               : controller
-                                      .musicList
+                                      .filteredmusicList
                                       .value![controller.musicIndex.value!]
-                                      .owner ??
-                                  "",
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
+                                      .ismyfav
+                                  ? Icons.favorite
+                                  : Icons.favorite_border,
+                          color: controller.musicIndex.value == null
+                              ? Colors.grey
+                              : controller
+                                      .filteredmusicList
+                                      .value![controller.musicIndex.value!]
+                                      .ismyfav
+                                  ? Colors.red
+                                  : Colors.white,
                         ),
-                      ),
+                      )
                     ],
                   ),
                 ),
@@ -195,17 +250,15 @@ class PlayersWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: IconButton(
-                        onPressed: () {
-                          controller.shuffleplayer();
-                        },
-                        icon: Icon(
-                          Icons.shuffle_rounded,
-                          color: sliderColor.withValues(),
-                        ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: IconButton(
+                      onPressed: () {
+                        controller.shuffleplayer();
+                      },
+                      icon: Icon(
+                        Icons.shuffle_rounded,
+                        color: sliderColor.withValues(),
                       ),
                     ),
                   ),
@@ -287,9 +340,34 @@ class PlayersWidget {
                         context: context,
                         shape: UnderlineInputBorder(),
                         builder: (context) {
-                          return advencedPlayerlist(
-                            context,
-                          ).widget.value!;
+                          return SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.7,
+                            child: DefaultTabController(
+                              length: 2,
+                              child: Column(
+                                children: [
+                                  const TabBar(
+                                    tabs: [
+                                      Tab(text: "Tüm Müzikler"),
+                                      Tab(text: "Favori Müzikler"),
+                                    ],
+                                  ),
+                                  Expanded(
+                                    child: TabBarView(
+                                      children: [
+                                        advencedPlayerlist(
+                                          context,
+                                        ).widget.value!,
+                                        advencedPlayerlist(
+                                          context,
+                                        ).widget.value!,
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
                         },
                       );
                     },
@@ -323,13 +401,13 @@ class PlayersWidget {
     final controller = Get.put(MusicplayerController(service));
 
     Widget widget = Obx(
-      () => controller.musicList.value == null
+      () => controller.filteredmusicList.value == null
           ? Center(
               child: CupertinoActivityIndicator(),
             )
           : ListView(
               children: List.generate(
-                controller.musicList.value!.length,
+                controller.filteredmusicList.value!.length,
                 (index) {
                   return Obx(
                     () => Padding(
@@ -372,27 +450,30 @@ class PlayersWidget {
                             borderRadius: BorderRadius.circular(5),
                             image: DecorationImage(
                               fit: BoxFit.cover,
-                              image: controller.musicList.value![index].img ==
+                              image: controller.filteredmusicList.value![index]
+                                          .img ==
                                       null
                                   ? AssetImage(
-                                      "assets/images/medinotfound.png",
+                                      "assets/images/medinotfound.jpg",
                                       package: 'armoyu_widgets',
                                     )
                                   : CachedNetworkImageProvider(
-                                      controller.musicList.value![index].img!,
+                                      controller
+                                          .filteredmusicList.value![index].img!,
                                     ),
                             ),
                           ),
                         ),
                         title: Text(
-                          controller.musicList.value![index].name,
+                          controller.filteredmusicList.value![index].name,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         subtitle: Text(
-                          controller.musicList.value![index].owner ?? "",
+                          controller.filteredmusicList.value![index].owner ??
+                              "",
                           overflow: TextOverflow.ellipsis,
                         ),
                         trailing: Padding(
@@ -466,21 +547,21 @@ class PlayersWidget {
                       fit: BoxFit.cover,
                       image: controller.musicIndex.value == null
                           ? AssetImage(
-                              "assets/images/medinotfound.png",
+                              "assets/images/medinotfound.jpg",
                               package: 'armoyu_widgets',
                             )
                           : controller
-                                      .musicList
+                                      .filteredmusicList
                                       .value![controller.musicIndex.value!]
                                       .img ==
                                   null
                               ? AssetImage(
-                                  "assets/images/medinotfound.png",
+                                  "assets/images/medinotfound.jpg",
                                   package: 'armoyu_widgets',
                                 )
                               : CachedNetworkImageProvider(
                                   controller
-                                      .musicList
+                                      .filteredmusicList
                                       .value![controller.musicIndex.value!]
                                       .img!,
                                 ),
@@ -515,7 +596,7 @@ class PlayersWidget {
                         () => Text(
                           controller.musicIndex.value == null
                               ? ""
-                              : controller.musicList
+                              : controller.filteredmusicList
                                   .value![controller.musicIndex.value!].name,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -528,7 +609,7 @@ class PlayersWidget {
                           controller.musicIndex.value == null
                               ? ""
                               : controller
-                                      .musicList
+                                      .filteredmusicList
                                       .value![controller.musicIndex.value!]
                                       .owner ??
                                   "",
