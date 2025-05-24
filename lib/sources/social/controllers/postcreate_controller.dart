@@ -1,0 +1,93 @@
+import 'package:armoyu_services/armoyu_services.dart';
+import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
+import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
+import 'package:armoyu_widgets/data/models/user.dart';
+import 'package:armoyu_widgets/data/models/useraccounts.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_mentions/flutter_mentions.dart';
+
+import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
+
+class PostcreateController extends GetxController {
+  final ARMOYUServices service;
+
+  var postsharetext = TextEditingController().obs;
+  var media = <Media>[].obs;
+  var postshareProccess = false.obs;
+  var key = GlobalKey<FlutterMentionsState>().obs;
+  var userLocation = Rx<String?>(null);
+
+  PostcreateController({
+    required this.service,
+  });
+  var currentUserAccounts = Rx<UserAccounts>(
+    UserAccounts(
+      user: User().obs,
+      sessionTOKEN: Rx(""),
+      language: Rxn(),
+    ),
+  );
+
+  @override
+  // ignore: unnecessary_overrides
+  void onInit() {
+    super.onInit();
+  }
+
+  Future<void> sharePost() async {
+    if (postshareProccess.value) {
+      return;
+    }
+
+    postshareProccess.value = true;
+
+    PostShareResponse response = await service.postsServices.share(
+      text: key.value.currentState!.controller!.text,
+      files: media.map((media) => media.mediaXFile!).toList(),
+      location: userLocation.value,
+    );
+    if (!response.result.status) {
+      postsharetext.value.text = response.result.description.toString();
+      postshareProccess.value = false;
+
+      return;
+    }
+
+    if (response.result.status) {
+      postsharetext.value.text = response.result.description.toString();
+      postshareProccess.value = false;
+
+      Get.back(result: true);
+
+      // currentUserAccounts.value.user.value.widgetPosts!.add(element);
+    }
+  }
+
+  Future<Position> determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Test if location services are enabled.
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    return await Geolocator.getCurrentPosition();
+  }
+}

@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:widgets/app/modules/posts/postcreate/views/postcreate_view.dart';
 import 'package:widgets/app/modules/posts/postdetail/views/postdetail_view.dart';
 import 'package:widgets/app/modules/posts/_main/views/posts_view.dart';
 import 'package:widgets/app/modules/posts/postprofile/views/postprofile_view.dart';
@@ -11,6 +12,10 @@ class PostsModule {
     GetPage(
       name: route,
       page: () => const PostsView(),
+    ),
+    GetPage(
+      name: "$route/create",
+      page: () => const PostcreateView(),
     ),
     GetPage(
       name: "$route/detail",

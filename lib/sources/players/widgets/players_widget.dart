@@ -79,15 +79,13 @@ class PlayersWidget {
                     ),
                     child: controller.musicIndex.value == null
                         ? Image.asset(
-                            "assets/images/medinotfound.jpg",
-                            package: 'armoyu_widgets',
+                            "packages/armoyu_widgets/assets/images/notfound.jpg",
                           )
                         : controller.filteredmusicList
                                     .value![controller.musicIndex.value!].img ==
                                 null
                             ? Image.asset(
-                                "assets/images/medinotfound.jpg",
-                                package: 'armoyu_widgets',
+                                "packages/armoyu_widgets/assets/images/notfound.jpg",
                               )
                             : CachedNetworkImage(
                                 fit: BoxFit.contain,
@@ -454,8 +452,7 @@ class PlayersWidget {
                                           .img ==
                                       null
                                   ? AssetImage(
-                                      "assets/images/medinotfound.jpg",
-                                      package: 'armoyu_widgets',
+                                      "packages/armoyu_widgets/assets/images/notfound.jpg",
                                     )
                                   : CachedNetworkImageProvider(
                                       controller
@@ -547,8 +544,7 @@ class PlayersWidget {
                       fit: BoxFit.cover,
                       image: controller.musicIndex.value == null
                           ? AssetImage(
-                              "assets/images/medinotfound.jpg",
-                              package: 'armoyu_widgets',
+                              "packages/armoyu_widgets/assets/images/notfound.jpg",
                             )
                           : controller
                                       .filteredmusicList
@@ -556,8 +552,7 @@ class PlayersWidget {
                                       .img ==
                                   null
                               ? AssetImage(
-                                  "assets/images/medinotfound.jpg",
-                                  package: 'armoyu_widgets',
+                                  "packages/armoyu_widgets/assets/images/notfound.jpg",
                                 )
                               : CachedNetworkImageProvider(
                                   controller

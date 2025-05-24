@@ -7,6 +7,7 @@ import 'package:widgets/app/modules/main/main_module.dart';
 import 'package:widgets/app/modules/notifications/notifications_module.dart';
 import 'package:widgets/app/modules/posts/posts_module.dart';
 import 'package:widgets/app/modules/profile/profile_module.dart';
+import 'package:widgets/app/modules/reels/reels_module.dart';
 import 'package:widgets/app/modules/search/search_module.dart';
 import 'package:widgets/app/modules/social/socail_module.dart';
 import 'package:widgets/app/modules/story/story_module.dart';
@@ -22,6 +23,7 @@ class Routes {
   static const CHATCALL = "/chat/call";
   static const PROFILE = "/profile";
   static const SEARCH = "/search";
+  static const REELS = "/reels";
   static const CACHE = "/cache";
   static const NOTIFICATIONS = "/notifications";
 }
@@ -40,5 +42,6 @@ class AppRoute {
     ...SearchModule.routes,
     ...CacheModule.routes,
     ...NotificationsModule.routes,
+    ...ReelsModule.routes,
   ];
 }

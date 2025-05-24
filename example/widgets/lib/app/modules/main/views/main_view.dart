@@ -92,7 +92,12 @@ class MainView extends StatelessWidget {
 
                             return;
                           }
-
+                          if (response.result.description ==
+                              "Oyuncu bilgileri yanlış!") {
+                            controller.savestaus.value = false;
+                            controller.statusController.value = false;
+                            return;
+                          }
                           AppService.widgets.accountController.changeUser(
                             UserAccounts(
                               user: User.apilogintoUser(response.response!).obs,
@@ -134,6 +139,19 @@ class MainView extends StatelessWidget {
                       text: "Posts",
                       onPressed: () {
                         Get.toNamed("/posts");
+                      },
+                      loadingStatus: false,
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: AppService.widgets.elevatedButton.costum1(
+                      enabled: controller.statusController.value,
+                      text: "Post Create",
+                      onPressed: () {
+                        Get.toNamed("/posts/create");
                       },
                       loadingStatus: false,
                     ),
@@ -212,6 +230,19 @@ class MainView extends StatelessWidget {
                       text: "Search",
                       onPressed: () {
                         Get.toNamed(Routes.SEARCH);
+                      },
+                      loadingStatus: false,
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: AppService.widgets.elevatedButton.costum1(
+                      enabled: controller.statusController.value,
+                      text: "Reels",
+                      onPressed: () {
+                        Get.toNamed(Routes.REELS);
                       },
                       loadingStatus: false,
                     ),

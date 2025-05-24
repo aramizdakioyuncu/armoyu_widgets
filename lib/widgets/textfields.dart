@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_widgets/core/armoyu.dart';
-import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/translations/app_translation.dart';
 import 'package:armoyu_widgets/widgets/Mention/mention.dart';
 import 'package:armoyu_widgets/widgets/text.dart';
@@ -123,7 +122,6 @@ class CustomTextfields {
   FlutterMentions mentionTextFiled({
     required Rx<GlobalKey<FlutterMentionsState>> key,
     int? minLines = 1,
-    required User currentUser,
     Timer? searchTimer,
   }) {
     return FlutterMentions(

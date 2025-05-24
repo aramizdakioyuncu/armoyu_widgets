@@ -17,12 +17,10 @@ import 'package:armoyu_widgets/widgets/post_likers/post_likers_view.dart';
 import 'package:armoyu_widgets/widgets/shimmer/placeholder.dart';
 import 'package:armoyu_widgets/widgets/text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:chewie/chewie.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pinch_zoom/pinch_zoom.dart';
-import 'package:video_player/video_player.dart';
 
 class PostController extends GetxController {
   final ARMOYUServices service;
@@ -796,30 +794,29 @@ class PostController extends GetxController {
       if (isvideo == true) {
         log(mediaUrl);
 
-        final videoPlayerController = VideoPlayerController.networkUrl(
-          Uri.parse(mediaUrl),
-        );
+        // final videoPlayerController = VideoPlayerController.networkUrl(
+        //   Uri.parse(mediaUrl),
+        // );
 
-        final chewieController = ChewieController(
-          videoPlayerController: videoPlayerController,
-          autoInitialize: true,
-          autoPlay: false,
-          aspectRatio: 9 / 16,
-          // isLive: true,
-          looping: false,
-        );
+        // final chewieController = ChewieController(
+        //   videoPlayerController: videoPlayerController,
+        //   autoInitialize: true,
+        //   autoPlay: false,
+        //   aspectRatio: 9 / 16,
+        //   // isLive: true,
+        //   looping: false,
+        // );
 
         return FittedBox(
           fit: BoxFit.cover,
           child: SizedBox(
-            height: 500,
-            width: ARMOYU.screenWidth - 20,
-            child: chewieController.videoPlayerController.value.isInitialized
-                ? const CupertinoActivityIndicator()
-                : Chewie(
-                    controller: chewieController,
-                  ),
-          ),
+              height: 500,
+              width: ARMOYU.screenWidth - 20,
+              child: 1 != 1 ? const CupertinoActivityIndicator() : Text("Video")
+              // : Chewie(
+              //     controller: chewieController,
+              //   ),
+              ),
         );
       }
       if (islastmedia && indexlength > 4) {

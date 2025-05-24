@@ -593,7 +593,7 @@ class ChatWidget {
                                     try {
                                       await controller.player.value.play(
                                         UrlSource(
-                                          'https://api.aramizdakioyuncu.com/muzikler/tantasci-yalan.mp3',
+                                          'https://storage.aramizdakioyuncu.com/muzikler/tantasci-yalan.mp3',
                                         ),
                                       );
                                     } catch (e) {
@@ -624,7 +624,7 @@ class ChatWidget {
                                     try {
                                       await controller.player.value.play(
                                         UrlSource(
-                                          'https://api.aramizdakioyuncu.com/galeri/muzikler/11324orijinal1689174596.m4a',
+                                          'https://storage.aramizdakioyuncu.com/galeri/muzikler/11324orijinal1689174596.m4a',
                                         ),
                                       );
                                     } catch (e) {
@@ -690,7 +690,7 @@ class ChatWidget {
                                     try {
                                       await controller.player.value.play(
                                         UrlSource(
-                                          'https://api.aramizdakioyuncu.com/muzikler/kalbenhaydisoyle.mp3',
+                                          'https://storage.aramizdakioyuncu.com/muzikler/kalbenhaydisoyle.mp3',
                                         ),
                                       );
                                     } catch (e) {
@@ -715,7 +715,9 @@ class ChatWidget {
                                   onPressed: () async {
                                     try {
                                       controller.player.value.play(
-                                        AssetSource("sounds/calling_end.mp3"),
+                                        AssetSource(
+                                          "packages/armoyu_widgets/assets/sounds/calling_end.mp3",
+                                        ),
                                       );
                                       socketio.closecall("${chat.user.userID}");
                                       onClose();
@@ -835,7 +837,7 @@ class ChatWidget {
                                                 await controller.player.value
                                                     .play(
                                                   UrlSource(
-                                                    'https://api.aramizdakioyuncu.com/muzikler/tantasci-yalan.mp3',
+                                                    'https://storage.aramizdakioyuncu.com/muzikler/tantasci-yalan.mp3',
                                                   ),
                                                 );
                                               } catch (e) {
@@ -862,7 +864,8 @@ class ChatWidget {
                                               try {
                                                 controller.player.value.play(
                                                   AssetSource(
-                                                      "sounds/calling_end.mp3"),
+                                                    "packages/armoyu_widgets/assets/sounds/calling_end.mp3",
+                                                  ),
                                                 );
                                                 socketio.peerConnection
                                                     ?.close();
