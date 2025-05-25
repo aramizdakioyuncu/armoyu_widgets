@@ -9,19 +9,10 @@ class PostcreateView extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(CreatePostController());
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Post Create'),
-        forceMaterialTransparency: true,
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: controller.createPostWidget.widget.value ?? const SizedBox(),
-          ),
-        ],
-      ),
-    );
+        appBar: AppBar(
+          title: const Text('Post Create'),
+          forceMaterialTransparency: true,
+        ),
+        body: controller.createPostWidget.widget.value);
   }
 }

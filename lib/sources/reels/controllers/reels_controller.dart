@@ -26,10 +26,6 @@ class ReelsController extends GetxController {
   }
 
   void fetchReels() async {
-    // Reels verilerini çekmek için gerekli işlemleri burada yapabilirsiniz.
-    // Örnek olarak, API'den veri çekme işlemi yapılabilir.
-    // Bu örnekte, reelsList zaten tanımlı olduğu için ek bir işlem yapmıyoruz.
-
     ReelsListResponse response = await service.reelsServices.fetch(page: 1);
 
     if (!response.result.status) {

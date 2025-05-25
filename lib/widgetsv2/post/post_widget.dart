@@ -224,13 +224,11 @@ class PostWidget {
                     controller.postLike(true, postdetail.value);
                   }
                 },
-                child: Obx(
-                  () => Center(
-                    child: controller.buildMediaContent(
-                      context,
-                      postdetail,
-                      availableWidth,
-                    ),
+                child: Center(
+                  child: controller.buildMediaContent(
+                    context,
+                    postdetail,
+                    availableWidth,
                   ),
                 ),
               ),

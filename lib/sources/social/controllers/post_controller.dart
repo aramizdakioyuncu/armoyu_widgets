@@ -20,6 +20,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:media_kit/media_kit.dart' as media_kit;
+import 'package:media_kit_video/media_kit_video.dart';
 import 'package:pinch_zoom/pinch_zoom.dart';
 
 class PostController extends GetxController {
@@ -777,85 +779,118 @@ class PostController extends GetxController {
     return;
   }
 
+  media_kit.Player? videoPlayerController;
+  VideoController? videoController;
+
+  Widget mediaSablon(
+    BuildContext context,
+    String mediaUrl, {
+    required int indexlength,
+    BoxFit? fit = BoxFit.cover,
+    double? width = 100,
+    double? height = 100,
+    bool? isvideo = false,
+    bool islastmedia = false,
+  }) {
+    if (isvideo == true) {
+      log(mediaUrl);
+
+      videoPlayerController = media_kit.Player();
+      videoController = VideoController(videoPlayerController!);
+      videoPlayerController!.open(
+        media_kit.Media(mediaUrl),
+        play: true,
+      );
+      videoPlayerController!.setVolume(0.0);
+      videoPlayerController!.setPlaylistMode(media_kit.PlaylistMode.loop);
+
+      var videoIsMute = true.obs;
+      return Stack(
+        children: [
+          FittedBox(
+            fit: BoxFit.cover,
+            child: InkWell(
+              onTap: () {
+                if (videoIsMute.value) {
+                  videoPlayerController!.setVolume(100.0);
+                  videoIsMute.value = false;
+                } else {
+                  videoPlayerController!.setVolume(0.0);
+                  videoIsMute.value = true;
+                }
+              },
+              child: SizedBox(
+                height: 500,
+                width: MediaQuery.of(context).size.width - 20,
+                child: 1 != 1
+                    ? const CupertinoActivityIndicator()
+                    : Video(
+                        controller: videoController!,
+                        controls: (state) {
+                          return SizedBox.shrink();
+                        },
+                      ),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 15,
+            right: 15,
+            child: Obx(
+              () => videoIsMute.value
+                  ? Icon(
+                      Icons.volume_off_rounded,
+                      color: Colors.white70,
+                      size: 20,
+                    )
+                  : SizedBox.shrink(),
+            ),
+          ),
+        ],
+      );
+    }
+    if (islastmedia && indexlength > 4) {
+      return Container(
+        width: width,
+        height: height,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            colorFilter: ColorFilter.mode(
+              Colors.black..withValues(alpha: 0.4),
+              BlendMode.dstATop,
+            ),
+            image: CachedNetworkImageProvider(
+              mediaUrl,
+              errorListener: (p0) => const Icon(Icons.error),
+            ),
+            fit: fit,
+          ),
+        ),
+        child: Center(
+            child: Text(
+          "+${indexlength - 4}",
+          style: const TextStyle(fontSize: 50),
+        )),
+      );
+    } else {
+      return PinchZoom(
+        child: CachedNetworkImage(
+          imageUrl: mediaUrl,
+          fit: fit,
+          width: width, // Genişlik Kafayı yediği için yorum satırına aldık
+          height: height,
+          placeholder: (context, url) => const CupertinoActivityIndicator(),
+          errorWidget: (context, url, error) => const Icon(Icons.error),
+        ),
+      );
+    }
+  }
+
   Widget buildMediaContent(
     BuildContext context,
     Rx<Post> postInfo,
     double availableWidth,
   ) {
-    Widget mediaSablon(
-      String mediaUrl, {
-      required int indexlength,
-      BoxFit? fit = BoxFit.cover,
-      double? width = 100,
-      double? height = 100,
-      bool? isvideo = false,
-      bool islastmedia = false,
-    }) {
-      if (isvideo == true) {
-        log(mediaUrl);
-
-        // final videoPlayerController = VideoPlayerController.networkUrl(
-        //   Uri.parse(mediaUrl),
-        // );
-
-        // final chewieController = ChewieController(
-        //   videoPlayerController: videoPlayerController,
-        //   autoInitialize: true,
-        //   autoPlay: false,
-        //   aspectRatio: 9 / 16,
-        //   // isLive: true,
-        //   looping: false,
-        // );
-
-        return FittedBox(
-          fit: BoxFit.cover,
-          child: SizedBox(
-              height: 500,
-              width: ARMOYU.screenWidth - 20,
-              child: 1 != 1 ? const CupertinoActivityIndicator() : Text("Video")
-              // : Chewie(
-              //     controller: chewieController,
-              //   ),
-              ),
-        );
-      }
-      if (islastmedia && indexlength > 4) {
-        return Container(
-          width: width,
-          height: height,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              colorFilter: ColorFilter.mode(
-                Colors.black..withValues(alpha: 0.4),
-                BlendMode.dstATop,
-              ),
-              image: CachedNetworkImageProvider(
-                mediaUrl,
-                errorListener: (p0) => const Icon(Icons.error),
-              ),
-              fit: fit,
-            ),
-          ),
-          child: Center(
-              child: Text(
-            "+${indexlength - 4}",
-            style: const TextStyle(fontSize: 50),
-          )),
-        );
-      } else {
-        return PinchZoom(
-          child: CachedNetworkImage(
-            imageUrl: mediaUrl,
-            fit: fit,
-            width: width, // Genişlik Kafayı yediği için yorum satırına aldık
-            height: height,
-            placeholder: (context, url) => const CupertinoActivityIndicator(),
-            errorWidget: (context, url, error) => const Icon(Icons.error),
-          ),
-        );
-      }
-    }
-
     Widget mediayerlesim = const Row();
 
     List<Row> mediaItems = [];
@@ -867,10 +902,12 @@ class PostController extends GetxController {
         continue;
       }
 
-      if (postInfo.value.media[i].mediaType == MediaType.video) {
+      if (postInfo.value.media[i].mediaType == MediaType.video ||
+          postInfo.value.media[i].mediaURL.normalURL.value.endsWith(".mp4")) {
         mediarow1.clear();
         mediarow1.add(
           mediaSablon(
+            context,
             indexlength: postInfo.value.media.length,
             postInfo.value.media[i].mediaURL.normalURL.value,
             isvideo: true,
@@ -964,6 +1001,7 @@ class PostController extends GetxController {
           // );
         },
         child: mediaSablon(
+          context,
           indexlength: postInfo.value.media.length,
           postInfo.value.media[i].mediaURL.normalURL.value,
           width: mediawidth,
@@ -1006,5 +1044,15 @@ class PostController extends GetxController {
       children: mediaItems,
     );
     return mediayerlesim;
+  }
+
+  @override
+  void onClose() {
+    if (videoPlayerController != null) {
+      videoPlayerController!.stop();
+
+      videoPlayerController!.dispose();
+    }
+    super.onClose();
   }
 }

@@ -6,7 +6,7 @@ import 'package:armoyu_widgets/data/models/Social/post.dart';
 import 'package:armoyu_widgets/data/models/Story/storylist.dart';
 import 'package:armoyu_widgets/data/services/accountuser_services.dart';
 import 'package:armoyu_widgets/sources/Story/story_screen_page/views/story_screen_view.dart';
-import 'package:armoyu_widgets/sources/gallery/views/gallery_view.dart';
+import 'package:armoyu_widgets/sources/gallery/pages/gallery/views/gallery_view.dart';
 import 'package:armoyu_widgets/sources/gallery/widgets/gallery_widget.dart';
 import 'package:armoyu_widgets/sources/social/bundle/postcreate_bundle.dart';
 import 'package:armoyu_widgets/sources/social/bundle/posts_bundle.dart';
@@ -313,7 +313,12 @@ class SocialWidget {
           children: [
             Obx(
               () => GalleryWidget(service).mediaList(
-                controller.media,
+                Get.context!,
+                onMediaUpdated: (onMediaUpdated) {
+                  controller.media.value = onMediaUpdated;
+                  controller.media.refresh();
+                  log("media updated: ${controller.media.length}");
+                },
                 big: true,
                 editable: true,
               ),

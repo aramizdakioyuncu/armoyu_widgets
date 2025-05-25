@@ -16,7 +16,7 @@ class PostsController extends GetxController {
     posts = AppService.widgets.social.posts(
       context: Get.context!,
       scrollController: scrollController.value,
-      userID: 1,
+
       // shrinkWrap: true,
       profileFunction: ({
         required avatar,

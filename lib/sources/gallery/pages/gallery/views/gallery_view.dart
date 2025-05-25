@@ -1,6 +1,6 @@
 import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_widgets/data/services/accountuser_services.dart';
-import 'package:armoyu_widgets/sources/gallery/controllers/gallery_controller.dart';
+import 'package:armoyu_widgets/sources/gallery/pages/gallery/controllers/gallery_controller.dart';
 import 'package:armoyu_widgets/sources/gallery/widgets/gallery_widget.dart';
 import 'package:armoyu_widgets/widgets/buttons.dart';
 import 'package:armoyu_widgets/widgets/text.dart';
@@ -57,7 +57,11 @@ class GalleryView extends StatelessWidget {
                       child: Column(
                         children: [
                           GalleryWidget(service).mediaList(
-                            controller.mediaList,
+                            context,
+                            onMediaUpdated: (onMediaUpdated) {
+                              controller.mediaList.value = onMediaUpdated;
+                              controller.mediaList.refresh();
+                            },
                             big: false,
                           ),
                           SizedBox(

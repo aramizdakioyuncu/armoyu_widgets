@@ -12,9 +12,7 @@ class ReelsScreenController extends GetxController {
   @override
   void onInit() {
     videoPlayerController.open(
-      Media(
-        reels.videoUrl,
-      ),
+      Media(reels.videoUrl),
     );
 
     videoPlayerController.setPlaylistMode(PlaylistMode.loop);
