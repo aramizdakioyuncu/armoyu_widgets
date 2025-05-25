@@ -1,0 +1,2 @@
+D:/fluttercodes/armoyu_widgets/example/widgets/android/app/.cxx/Debug/72664x46/x86_64/CMakeFiles/edit_cache.dir
+D:/fluttercodes/armoyu_widgets/example/widgets/android/app/.cxx/Debug/72664x46/x86_64/CMakeFiles/rebuild_cache.dir

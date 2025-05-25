@@ -50,10 +50,7 @@ class PostcreateController extends GetxController {
       file.absolute.path,
       targetPath,
       quality: 88,
-      rotate: 180,
     );
-
-    print(file.lengthSync());
 
     return result;
   }
