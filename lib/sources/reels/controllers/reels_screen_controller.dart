@@ -1,22 +1,26 @@
+import 'dart:io';
+
 import 'package:armoyu_widgets/data/models/reels.dart';
+import 'package:armoyu_widgets/sources/videoplayer/videoplayer_bundle.dart';
+import 'package:armoyu_widgets/sources/videoplayer/widgets/mediakitvideo_widget.dart';
+import 'package:armoyu_widgets/sources/videoplayer/widgets/mobilevideo_widget.dart';
 import 'package:get/get.dart';
-import 'package:media_kit/media_kit.dart';
-import 'package:media_kit_video/media_kit_video.dart';
 
 class ReelsScreenController extends GetxController {
   final Reels reels;
 
   ReelsScreenController({required this.reels});
-  late final videoPlayerController = Player();
-  late final videoController = VideoController(videoPlayerController);
+
+  late final VideoplayerWidgetBundle videoController;
   @override
   void onInit() {
-    videoPlayerController.open(
-      Media(reels.videoUrl),
-    );
-
-    videoPlayerController.setPlaylistMode(PlaylistMode.loop);
-    reels.commentCount = reels.commentCount + 1;
+    if (Platform.isWindows) {
+      videoController = MediaKitVideoControllerWrapper(reels.videoUrl);
+    } else {
+      final mobile = MobileVideoControllerWrapper(reels.videoUrl);
+      videoController = mobile;
+      mobile.initialize(); // sadece mobile initialize gerekiyor
+    }
     super.onInit();
   }
 
@@ -25,17 +29,16 @@ class ReelsScreenController extends GetxController {
   }
 
   stopReels() async {
-    await videoPlayerController.pause();
+    await videoController.pause();
   }
 
   startReels() async {
-    await videoPlayerController.play();
+    await videoController.play();
   }
 
   @override
   void onClose() {
-    videoPlayerController.dispose();
-
+    videoController.dispose();
     super.onClose();
   }
 }

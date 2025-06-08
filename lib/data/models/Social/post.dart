@@ -2,6 +2,7 @@ import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
 import 'package:armoyu_widgets/data/models/Social/comment.dart';
 import 'package:armoyu_widgets/data/models/Social/like.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
+import 'package:armoyu_widgets/sources/videoplayer/videoplayer_bundle.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 
 class Post {
@@ -16,6 +17,7 @@ class Post {
   bool iscommentMe;
   User owner;
   List<Media> media;
+  VideoplayerWidgetBundle? mediaController;
   List<Comment>? firstthreecomment;
   List<Comment>? comments;
   List<Like>? firstthreelike;
@@ -35,6 +37,7 @@ class Post {
     required this.iscommentMe,
     required this.owner,
     required this.media,
+    this.mediaController,
     required this.firstthreecomment,
     this.comments,
     required this.firstthreelike,

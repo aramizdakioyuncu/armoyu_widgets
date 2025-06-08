@@ -38,7 +38,7 @@ class ReelsController extends GetxController {
       reelsList.value!.add(
         Reels(
           id: element.reelsID,
-          videoUrl: element.media.mediaURL.minURL,
+          videoUrl: element.media.mediaURL.normalURL,
           thumbnailUrl: element.media.mediaURL.minURL,
           owner: User(
             userID: element.owner.userID,

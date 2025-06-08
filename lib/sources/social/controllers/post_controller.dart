@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_services/core/models/ARMOYU/API/post/post_detail.dart';
 import 'package:armoyu_services/core/models/ARMOYU/API/utils/player_pop_list.dart';
@@ -12,6 +14,8 @@ import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/data/services/accountuser_services.dart';
 import 'package:armoyu_widgets/sources/photoviewer/views/photoviewer_view.dart';
 import 'package:armoyu_widgets/sources/postscomment/views/postcomment_view.dart';
+import 'package:armoyu_widgets/sources/videoplayer/widgets/mediakitvideo_widget.dart';
+import 'package:armoyu_widgets/sources/videoplayer/widgets/mobilevideo_widget.dart';
 import 'package:armoyu_widgets/translations/app_translation.dart';
 import 'package:armoyu_widgets/widgets/post_likers/post_likers_view.dart';
 import 'package:armoyu_widgets/widgets/shimmer/placeholder.dart';
@@ -20,8 +24,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:media_kit/media_kit.dart' as media_kit;
-import 'package:media_kit_video/media_kit_video.dart';
 import 'package:pinch_zoom/pinch_zoom.dart';
 
 class PostController extends GetxController {
@@ -779,11 +781,9 @@ class PostController extends GetxController {
     return;
   }
 
-  media_kit.Player? videoPlayerController;
-  VideoController? videoController;
-
   Widget mediaSablon(
     BuildContext context,
+    Rx<Post> postInfo,
     String mediaUrl, {
     required int indexlength,
     BoxFit? fit = BoxFit.cover,
@@ -795,14 +795,15 @@ class PostController extends GetxController {
     if (isvideo == true) {
       log(mediaUrl);
 
-      videoPlayerController = media_kit.Player();
-      videoController = VideoController(videoPlayerController!);
-      videoPlayerController!.open(
-        media_kit.Media(mediaUrl),
-        play: true,
-      );
-      videoPlayerController!.setVolume(0.0);
-      videoPlayerController!.setPlaylistMode(media_kit.PlaylistMode.loop);
+      if (Platform.isWindows) {
+        postInfo.value.mediaController =
+            MediaKitVideoControllerWrapper(mediaUrl);
+      } else {
+        final mobile = MobileVideoControllerWrapper(mediaUrl);
+        postInfo.value.mediaController = mobile;
+
+        mobile.initialize(mute: true); // sadece mobile initialize gerekiyor
+      }
 
       var videoIsMute = true.obs;
       return Stack(
@@ -811,39 +812,31 @@ class PostController extends GetxController {
             fit: BoxFit.cover,
             child: InkWell(
               onTap: () {
-                if (videoIsMute.value) {
-                  videoPlayerController!.setVolume(100.0);
-                  videoIsMute.value = false;
-                } else {
-                  videoPlayerController!.setVolume(0.0);
-                  videoIsMute.value = true;
+                if (Platform.isWindows) {
+                  if (videoIsMute.value) {
+                    postInfo.value.mediaController!.setVolume(100.0);
+                    videoIsMute.value = false;
+                  } else {
+                    postInfo.value.mediaController!.setVolume(0.0);
+                    videoIsMute.value = true;
+                  }
+                  return;
+                }
+                if (Platform.isAndroid || Platform.isIOS) {
+                  if (videoIsMute.value) {
+                    postInfo.value.mediaController!.setVolume(100.0);
+                    videoIsMute.value = false;
+                  } else {
+                    postInfo.value.mediaController!.setVolume(0.0);
+                    videoIsMute.value = true;
+                  }
                 }
               },
               child: SizedBox(
                 height: 500,
-                width: MediaQuery.of(context).size.width - 20,
-                child: 1 != 1
-                    ? const CupertinoActivityIndicator()
-                    : Video(
-                        controller: videoController!,
-                        controls: (state) {
-                          return SizedBox.shrink();
-                        },
-                      ),
+                width: MediaQuery.of(context).size.width,
+                child: postInfo.value.mediaController!.getVideoWidget(),
               ),
-            ),
-          ),
-          Positioned(
-            bottom: 15,
-            right: 15,
-            child: Obx(
-              () => videoIsMute.value
-                  ? Icon(
-                      Icons.volume_off_rounded,
-                      color: Colors.white70,
-                      size: 20,
-                    )
-                  : SizedBox.shrink(),
             ),
           ),
         ],
@@ -909,6 +902,7 @@ class PostController extends GetxController {
           mediaSablon(
             context,
             indexlength: postInfo.value.media.length,
+            postInfo,
             postInfo.value.media[i].mediaURL.normalURL.value,
             isvideo: true,
           ),
@@ -971,37 +965,14 @@ class PostController extends GetxController {
                       .toList(),
                   initialIndex: i,
                   currentUserID: currentUser!.userID!,
-                  // isFile: isFile,
-                  // isMemory: isMemory,
                 ),
               );
             },
           );
-
-          // Navigator.of(context).push(
-          //   MaterialPageRoute(
-          //     builder: (context) => PhotoviewerView(
-          //       service: service,
-          //       currentUserID: currentUser!.userID!,
-          //       media: postInfo.value.media!
-          //           .map(
-          //             (e) => Media(
-          //               mediaID: e.mediaID,
-          //               mediaURL: MediaURL(
-          //                 bigURL: Rx(e.mediaURL.bigURL),
-          //                 normalURL: Rx(e.mediaURL.normalURL),
-          //                 minURL: Rx(e.mediaURL.minURL),
-          //               ),
-          //             ),
-          //           )
-          //           .toList(),
-          //       initialIndex: i,
-          //     ),
-          //   ),
-          // );
         },
         child: mediaSablon(
           context,
+          postInfo,
           indexlength: postInfo.value.media.length,
           postInfo.value.media[i].mediaURL.normalURL.value,
           width: mediawidth,
@@ -1048,11 +1019,9 @@ class PostController extends GetxController {
 
   @override
   void onClose() {
-    if (videoPlayerController != null) {
-      videoPlayerController!.stop();
-
-      videoPlayerController!.dispose();
-    }
+    postsList.value!.map(
+      (e) => e.mediaController!.dispose(),
+    );
     super.onClose();
   }
 }

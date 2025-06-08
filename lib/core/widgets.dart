@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_widgets/translations/app_translation.dart';
 import 'package:armoyu_widgets/widgets/text.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -21,13 +24,28 @@ class ARMOYUWidget {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         backgroundColor: Get.theme.scaffoldBackgroundColor,
-        content: Text(text),
-        duration: const Duration(milliseconds: 500),
+        content: Text(
+          text,
+          textAlign: TextAlign.center,
+        ),
+        duration: const Duration(milliseconds: 800),
       ),
     );
   }
 
   static void toastNotification(String text) {
+    if (Platform.isWindows) {
+      // For Windows, we can use a simple print statement or a custom dialog
+      if (kDebugMode) {
+        print(text);
+      }
+      stackbarNotification(
+        Get.context!,
+        text,
+      );
+      return;
+    }
+
     Fluttertoast.showToast(
       msg: text,
       toastLength: Toast.LENGTH_SHORT,

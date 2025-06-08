@@ -5,7 +5,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:like_button/like_button.dart';
-import 'package:media_kit_video/media_kit_video.dart';
 
 class ReelsScreen extends StatelessWidget {
   final Reels reels;
@@ -42,17 +41,9 @@ class ReelsScreen extends StatelessWidget {
               width: MediaQuery.of(context).size.width,
               child: GestureDetector(
                 onTap: () {
-                  controller.videoController.player.playOrPause();
+                  controller.videoController.pauseOrPlay();
                 },
-                child: Video(
-                  controls: (state) {
-                    //Controlleri sildim
-
-                    return SizedBox.shrink();
-                  },
-                  fit: BoxFit.cover,
-                  controller: controller.videoController,
-                ),
+                child: controller.videoController.getVideoWidget(),
               ),
             ),
             Align(
