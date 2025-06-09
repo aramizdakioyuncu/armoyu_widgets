@@ -1,26 +1,20 @@
 import 'package:flutter/material.dart';
 
-class TextPage extends StatefulWidget {
+class TextView extends StatelessWidget {
   final String texttitle;
   final String textcontent;
 
-  const TextPage({
+  const TextView({
     super.key,
     required this.texttitle,
     required this.textcontent,
   });
 
   @override
-  State<TextPage> createState() => _TextPageState();
-}
-
-class _TextPageState extends State<TextPage> {
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.texttitle),
-        // backgroundColor: ARMOYU.appbarColor,
+        title: Text(texttitle),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -29,7 +23,7 @@ class _TextPageState extends State<TextPage> {
           children: [
             const SizedBox(height: 16),
             Text(
-              widget.textcontent,
+              textcontent,
               style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 24),

@@ -2,17 +2,19 @@ import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_services/core/models/ARMOYU/API/media/media_fetch.dart';
 import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
 import 'package:armoyu_widgets/core/armoyu.dart';
+import 'package:armoyu_widgets/core/widgets.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/data/models/useraccounts.dart';
 import 'package:armoyu_widgets/data/services/accountuser_services.dart';
+import 'package:armoyu_widgets/functions/utils_function.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class MediagalleryController extends GetxController {
   final ARMOYUServices service;
-  final int? userID;
-  final String? username;
+  int? userID;
+  String? username;
 
   List<Media>? cachedmediaList;
   Function(List<Media> updatedPosts)? onMediaUpdated;
@@ -64,6 +66,10 @@ class MediagalleryController extends GetxController {
     currentUserAccounts.value =
         findCurrentAccountController.currentUserAccounts.value;
 
+    if (userID == null && username == null) {
+      userID = currentUserAccounts.value.user.value.userID;
+    }
+
     //Bellekteki paylaşımları yükle
     if (cachedmediaList != null) {
       mediaList.value ??= [];
@@ -75,10 +81,18 @@ class MediagalleryController extends GetxController {
   }
 
   fetchgallery({bool refreshmedia = false}) async {
-    if (mediafetchProccess.value || mediafetchEndProccess.value) {
+    if ((mediafetchProccess.value || mediafetchEndProccess.value) &&
+        !refreshmedia) {
       return;
     }
     mediafetchProccess.value = true;
+
+    //Page Hesaplama Fonksionu
+    mediapagecount.value = UtilsFunction.calculatePageNumber(
+      cardList: mediaList,
+      itemsPerPage: 30,
+    );
+    //Page Hesaplama Fonksionu Bitiş
 
     if (refreshmedia) {
       mediapagecount.value = 1;
@@ -160,14 +174,15 @@ class MediagalleryController extends GetxController {
                             .mediaServices
                             .delete(mediaID: medialist[index].mediaID);
 
+                        medialist.removeAt(index);
+                        updateMediaList();
                         if (!response.result.status) {
                           log(response.result.description.toString());
-                          // ARMOYUWidget.toastNotification(
-                          //   response.result.description.toString(),
-                          // );
+                          ARMOYUWidget.toastNotification(
+                            response.result.description.toString(),
+                          );
                           return;
                         }
-                        medialist.removeAt(index);
                       },
                       child: const ListTile(
                         leading: Icon(

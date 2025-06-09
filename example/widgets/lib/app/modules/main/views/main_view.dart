@@ -3,6 +3,7 @@ import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
 import 'package:armoyu_widgets/armoyuwidgets.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/data/models/useraccounts.dart';
+import 'package:armoyu_widgets/sources/gallery/bundle/gallery_bundle.dart';
 import 'package:armoyu_widgets/sources/players/bundle/musicplayer_bundle.dart';
 
 import 'package:flutter/material.dart';
@@ -123,9 +124,25 @@ class MainView extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: AppService.widgets.elevatedButton.costum1(
                       enabled: controller.statusController.value,
-                      text: "PostDetail",
+                      text: "Posts (Profile Tagged)",
                       onPressed: () {
                         Get.toNamed("/posts/detail");
+                      },
+                      loadingStatus: false,
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: AppService.widgets.elevatedButton.costum1(
+                      enabled: controller.statusController.value,
+                      text: "Gallery(Pop Up)",
+                      onPressed: () {
+                        GalleryWidgetBundle aa = AppService.widgets.gallery
+                            .mediaGallery(context: context);
+
+                        aa.popupGallery();
                       },
                       loadingStatus: false,
                     ),

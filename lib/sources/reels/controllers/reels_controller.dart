@@ -4,6 +4,7 @@ import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/media.dart' as armoyumedia;
 import 'package:armoyu_widgets/data/models/reels.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
+import 'package:armoyu_widgets/functions/utils_function.dart';
 import 'package:armoyu_widgets/sources/reels/controllers/reels_screen_controller.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
@@ -15,9 +16,10 @@ class ReelsController extends GetxController {
 
   late PageController pageController;
 
-  Rxn<List<Reels>> reelsList = Rxn();
+  var reelsList = Rxn<List<Reels>>();
 
   var pageIndex = 0.obs;
+  var reelspageIndex = 1.obs;
   @override
   void onInit() {
     pageController = PageController(initialPage: pageIndex.value);
@@ -26,7 +28,11 @@ class ReelsController extends GetxController {
   }
 
   void fetchReels() async {
-    ReelsListResponse response = await service.reelsServices.fetch(page: 1);
+    reelspageIndex.value = UtilsFunction.calculatePageNumber(
+        cardList: reelsList, itemsPerPage: 30);
+
+    ReelsListResponse response =
+        await service.reelsServices.fetch(page: reelspageIndex.value);
 
     if (!response.result.status) {
       log(response.result.description);

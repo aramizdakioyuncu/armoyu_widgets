@@ -1,6 +1,6 @@
 import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_widgets/data/services/accountuser_services.dart';
-import 'package:armoyu_widgets/sources/gallery/pages/gallery/controllers/gallery_controller.dart';
+import 'package:armoyu_widgets/screens/gallery/controllers/gallery_controller.dart';
 import 'package:armoyu_widgets/sources/gallery/widgets/gallery_widget.dart';
 import 'package:armoyu_widgets/widgets/buttons.dart';
 import 'package:armoyu_widgets/widgets/text.dart';
@@ -25,6 +25,12 @@ class GalleryView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Hikaye Gönder'),
+        actions: [
+          IconButton(
+            onPressed: () async => await controller.galleryWidget.refresh(),
+            icon: Icon(Icons.refresh),
+          ),
+        ],
       ),
       body: Obx(
         () => Column(
@@ -93,37 +99,6 @@ class GalleryView extends StatelessWidget {
                       "Bu Sayfa Henüz Geliştirilmedi",
                     ),
                   ),
-                  // GridView.builder(
-                  //   gridDelegate:
-                  //       const SliverGridDelegateWithFixedCrossAxisCount(
-                  //     crossAxisCount: 3, // Her satırda 3 görsel
-                  //     crossAxisSpacing: 5.0, // Yatayda boşluk
-                  //     mainAxisSpacing: 5.0, // Dikeyde boşluk
-                  //   ),
-                  //   itemCount: controller.thumbnailmemorymedia.length,
-                  //   itemBuilder: (context, index) {
-                  //     return GestureDetector(
-                  //       onTap: () {
-                  //         Navigator.push(
-                  //           context,
-                  //           MaterialPageRoute(
-                  //             builder: (context) => PhotoviewerView(
-                  //               service: service,
-                  //               currentUserID: currentUser.userID!,
-                  //               isMemory: true,
-                  //               media: controller.memorymedia,
-                  //               initialIndex: index,
-                  //             ),
-                  //           ),
-                  //         );
-                  //       },
-                  //       child: Image.memory(
-                  //         controller.thumbnailmemorymedia[index].mediaBytes!,
-                  //         fit: BoxFit.cover,
-                  //       ),
-                  //     );
-                  //   },
-                  // ),
                 ],
               ),
             ),

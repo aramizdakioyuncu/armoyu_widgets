@@ -19,7 +19,7 @@ class GalleryWidget {
     Function(List<Media> updatedMedia)? onmediaUpdated,
     bool storyShare = false,
   }) {
-    return mediaGalleryWidget(
+    return widgetmediaGallery(
       service: service,
       context: context,
       userID: userID,
@@ -36,7 +36,7 @@ class GalleryWidget {
     bool big = false,
     bool editable = false,
   }) {
-    return mediaListWidget(
+    return widgetMediaList(
       service: service,
       context: context,
       onListUpdated: onMediaUpdated,

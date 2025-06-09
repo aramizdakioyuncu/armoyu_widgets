@@ -7,7 +7,7 @@ import 'package:armoyu_widgets/data/models/Chat/chat_message.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/data/models/useraccounts.dart';
 import 'package:armoyu_widgets/data/services/accountuser_services.dart';
-import 'package:armoyu_widgets/sources/popupnotifications/calling_widget.dart';
+import 'package:armoyu_widgets/sources/popup/widgets/popup_widget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart' as webrtc;
@@ -196,7 +196,7 @@ class SocketioController extends GetxController {
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
         // Burada arama popup'ı açılabilir
-        CallingWidget.showIncomingCallDialog(
+        PopupWidget.showIncomingCallDialog(
           callerName: data['calling']['name'],
           callerAvatarUrl: data['calling']['image'],
           onAccept: () async {

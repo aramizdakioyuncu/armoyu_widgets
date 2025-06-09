@@ -2,7 +2,7 @@ import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_services/core/models/ARMOYU/_response/service_result.dart';
 import 'package:armoyu_widgets/core/armoyu.dart';
 import 'package:armoyu_widgets/sources/Story/story_screen_page/controllers/story_screen_controller.dart';
-import 'package:armoyu_widgets/sources/gallery/pages/gallery/views/gallery_view.dart';
+import 'package:armoyu_widgets/screens/gallery/views/gallery_view.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';

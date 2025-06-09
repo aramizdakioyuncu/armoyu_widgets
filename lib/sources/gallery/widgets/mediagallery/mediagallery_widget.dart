@@ -9,7 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-GalleryWidgetBundle mediaGalleryWidget({
+GalleryWidgetBundle widgetmediaGallery({
   required ARMOYUServices service,
   required context,
   int? userID,
@@ -101,5 +101,10 @@ GalleryWidgetBundle mediaGalleryWidget({
     widget: Rxn(widget),
     refresh: () async => await controller.refreshAllMedia(),
     loadMore: () async => await controller.loadMoreMedia(),
+    popupGallery: () async => await showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return widget;
+        }),
   );
 }

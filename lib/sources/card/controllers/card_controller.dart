@@ -1,6 +1,7 @@
 import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_services/core/models/ARMOYU/API/utils/player_pop_list.dart';
 import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
+import 'package:armoyu_widgets/functions/utils_function.dart';
 import 'package:armoyu_widgets/sources/card/widgets/card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -115,15 +116,9 @@ class CardsControllerV2 extends GetxController {
     morefetchProcces.value = true;
 
     log("${xtitle.value}");
-    cardList.value ??= [];
-    // Sayfa başına gösterilecek içerik sayısı
-    int itemsPerPage = 10;
 
-    // Şu anki içerik sayısını alıyoruz
-    int currentContentCount = cardList.value!.length;
-
-    // Sayfa numarasını içerik sayısına göre hesaplıyoruz
-    int currentPage = (currentContentCount / itemsPerPage).ceil() + 1;
+    int currentPage =
+        UtilsFunction.calculatePageNumber(cardList: cardList, itemsPerPage: 10);
 
     PlayerPopResponse response;
     if (xtitle.value == CustomCardType.playerPOP) {
