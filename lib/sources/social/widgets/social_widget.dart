@@ -54,7 +54,7 @@ class SocialWidget {
       refreshPosts: refreshPosts,
       scrollController: scrollController,
       shrinkWrap: shrinkWrap,
-      sliverWidget: shrinkWrap,
+      sliverWidget: sliverWidget,
       userID: userID,
       username: username,
     );

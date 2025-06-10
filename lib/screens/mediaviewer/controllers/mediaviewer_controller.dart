@@ -4,6 +4,8 @@ import 'dart:developer' as log;
 import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
+import 'package:armoyu_widgets/data/models/user.dart';
+import 'package:armoyu_widgets/data/services/accountuser_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -25,10 +27,15 @@ class PhotoviewerController extends GetxController {
 
   late PageController pageController;
   late RxInt currentIndex;
+  User? currentUser;
 
   bool handleKeyEvent(KeyEvent event) {
     if (event is KeyDownEvent &&
         (event.logicalKey == LogicalKeyboardKey.arrowRight)) {
+      if (isRotationedit.value) return true;
+
+      if (currentIndex.value >= rxmedia.value!.length - 1) return true;
+
       if (currentIndex.value < media.length - 1) {
         currentIndex.value++;
         pageController.animateToPage(
@@ -42,6 +49,10 @@ class PhotoviewerController extends GetxController {
     }
     if (event is KeyDownEvent &&
         (event.logicalKey == LogicalKeyboardKey.arrowLeft)) {
+      if (isRotationedit.value) return true;
+
+      if (0 > currentIndex.value - 1) return true;
+
       if (currentIndex.value > 0) {
         currentIndex.value--;
         pageController.animateToPage(
@@ -55,18 +66,17 @@ class PhotoviewerController extends GetxController {
       return true;
     }
 
-    if (event is KeyDownEvent &&
-        (event.logicalKey == LogicalKeyboardKey.escape)) {
-      log.log("esc");
-
-      return true;
-    }
     return false;
   }
 
   @override
   void onInit() {
     super.onInit();
+
+    final findCurrentAccountController = Get.find<AccountUserController>();
+    currentUser =
+        findCurrentAccountController.currentUserAccounts.value.user.value;
+
     currentIndex = initialIndex.obs;
     rxmedia = Rxn(media);
     pageController = PageController(initialPage: initialIndex);

@@ -100,7 +100,7 @@ class MediagalleryController extends GetxController {
     MediaFetchResponse response = await service.mediaServices.fetch(
       userID: userID,
       username: username,
-      category: "-1",
+      category: APIMediaType.all,
       page: mediapagecount.value,
     );
 
@@ -123,8 +123,8 @@ class MediagalleryController extends GetxController {
           mediaType: MediaType.image,
           mediaURL: MediaURL(
             bigURL: Rx(element.media.mediaURL.bigURL),
-            normalURL: Rx(element.media.mediaURL.bigURL),
-            minURL: Rx(element.media.mediaURL.bigURL),
+            normalURL: Rx(element.media.mediaURL.normalURL),
+            minURL: Rx(element.media.mediaURL.minURL),
           ),
         ),
       );

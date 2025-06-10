@@ -15,6 +15,16 @@ class SocailView extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Socail'),
         forceMaterialTransparency: true,
+        actions: [
+          IconButton(
+            onPressed: () {
+              log('YENİLE');
+              controller.posts.refresh();
+              controller.storyies.refresh();
+            },
+            icon: Icon(Icons.refresh),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         controller: controller.scrollController,
@@ -23,23 +33,20 @@ class SocailView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             controller.storyies.widget.value ?? const SizedBox(),
-            AppService.widgets.elevatedButton.costum1(
-              loadingStatus: false,
-              onPressed: () {
-                log('YENİLE');
-                controller.posts.refresh();
-                controller.storyies.refresh();
-              },
-              text: 'YENİLE',
-            ),
             controller.posts.widget.value ?? const SizedBox(),
-            AppService.widgets.elevatedButton.costum1(
-              loadingStatus: false,
-              onPressed: () {
-                log('devam');
-                controller.posts.loadMore();
-              },
-              text: 'devam et',
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Align(
+                alignment: Alignment.center,
+                child: AppService.widgets.elevatedButton.costum1(
+                  loadingStatus: false,
+                  onPressed: () {
+                    log('devam');
+                    controller.posts.loadMore();
+                  },
+                  text: 'Daha Fazlası',
+                ),
+              ),
             ),
           ],
         ),

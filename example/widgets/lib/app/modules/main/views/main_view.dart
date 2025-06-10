@@ -139,8 +139,11 @@ class MainView extends StatelessWidget {
                       enabled: controller.statusController.value,
                       text: "Gallery(Pop Up)",
                       onPressed: () {
-                        GalleryWidgetBundle aa = AppService.widgets.gallery
-                            .mediaGallery(context: context);
+                        GalleryWidgetBundle aa =
+                            AppService.widgets.gallery.mediaGallery(
+                          context: context,
+                          // userID: 1,
+                        );
 
                         aa.popupGallery();
                       },

@@ -21,17 +21,17 @@ packages:
     dependency: "direct main"
     description:
       name: armoyu_services
-      sha256: "96989363f01f17f8e74c661879e779aa1f4b628d6688b0d30c9b924a37462e5b"
+      sha256: eca1cebaa8796f0f6f0d5f1bd3647a33d04b3708262193c50adb71a4de7b3ce2
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0+62"
+    version: "1.0.0+65"
   armoyu_widgets:
     dependency: "direct main"
     description:
       path: "../.."
       relative: true
     source: path
-    version: "1.0.0+86"
+    version: "1.0.0+87"
   async:
     dependency: transitive
     description:

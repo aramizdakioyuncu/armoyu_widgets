@@ -12,7 +12,7 @@ import 'package:armoyu_widgets/data/models/Social/like.dart';
 import 'package:armoyu_widgets/data/models/Social/post.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/data/services/accountuser_services.dart';
-import 'package:armoyu_widgets/sources/photoviewer/views/photoviewer_view.dart';
+import 'package:armoyu_widgets/screens/mediaviewer/views/mediaviewer_view.dart';
 import 'package:armoyu_widgets/sources/postscomment/views/postcomment_view.dart';
 import 'package:armoyu_widgets/sources/videoplayer/widgets/mediakitvideo_widget.dart';
 import 'package:armoyu_widgets/sources/videoplayer/widgets/mobilevideo_widget.dart';
@@ -164,6 +164,9 @@ class PostController extends GetxController {
                   .map(
                     (media) => Media(
                       mediaID: media.mediaID,
+                      ownerID: media.owner!.userID,
+                      owneravatar: media.owner!.avatar.minURL,
+                      ownerusername: media.owner!.displayname,
                       mediaType: media.mediaType!.split("/")[0] == "video"
                           ? MediaType.video
                           : MediaType.image,
@@ -941,34 +944,31 @@ class PostController extends GetxController {
 
       GestureDetector aa = GestureDetector(
         onTap: () {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return Dialog(
-                insetPadding: EdgeInsets.zero, // Kenar boşluğunu kaldırır
-
-                backgroundColor: Colors.transparent,
-                child: PhotoviewerView(
-                  service: service,
-                  media: postInfo.value.media
-                      .map(
-                        (e) => Media(
-                          mediaID: e.mediaID,
-                          mediaType: MediaType.image,
-                          mediaURL: MediaURL(
-                            bigURL: Rx(e.mediaURL.bigURL.value),
-                            normalURL: Rx(e.mediaURL.normalURL.value),
-                            minURL: Rx(e.mediaURL.minURL.value),
-                          ),
-                        ),
-                      )
-                      .toList(),
-                  initialIndex: i,
-                  currentUserID: currentUser!.userID!,
-                ),
-              );
-            },
-          );
+          Get.dialog(
+            PhotoviewerView(
+              service: service,
+              media: postInfo.value.media
+                  .map(
+                    (e) => Media(
+                      mediaID: e.mediaID,
+                      ownerID: e.ownerID,
+                      owneravatar: e.owneravatar,
+                      ownerusername: e.ownerusername,
+                      mediaType: MediaType.image,
+                      mediaURL: MediaURL(
+                        bigURL: Rx(e.mediaURL.bigURL.value),
+                        normalURL: Rx(e.mediaURL.normalURL.value),
+                        minURL: Rx(e.mediaURL.minURL.value),
+                      ),
+                    ),
+                  )
+                  .toList(),
+              initialIndex: i,
+            ),
+            barrierDismissible: true,
+          ).whenComplete(() {
+            log('Photo viewer dialog closed.');
+          });
         },
         child: mediaSablon(
           context,
