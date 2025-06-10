@@ -1,3 +1,3 @@
-## [1.0.0+89]
+## [1.0.0+66]
 
-- feat: Enhance gallery and media viewer functionality; integrate medialist bundle and improve media handling
+- fix: Update armoyu_services dependency version to 1.0.0+66
