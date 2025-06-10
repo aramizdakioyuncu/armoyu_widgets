@@ -5,6 +5,8 @@ import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/data/models/useraccounts.dart';
+import 'package:armoyu_widgets/sources/gallery/bundle/medialist_bundle.dart';
+import 'package:armoyu_widgets/sources/gallery/widgets/gallery_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
@@ -32,6 +34,23 @@ class PostcreateController extends GetxController {
       language: Rxn(),
     ),
   );
+
+  late MedialistWidgetBundle medialistWidgetBundle;
+  @override
+  void onInit() {
+    super.onInit();
+
+    medialistWidgetBundle = GalleryWidget(service).mediaList(
+      Get.context!,
+      onMediaUpdated: (onMediaUpdated) {
+        media.value = onMediaUpdated;
+        media.refresh();
+        log("media updated: ${media.length}");
+      },
+      big: true,
+      editable: true,
+    );
+  }
 
   //Video Sıkıştırma işlemi
   Future<File?> compressAndGetVideo(File file) async {

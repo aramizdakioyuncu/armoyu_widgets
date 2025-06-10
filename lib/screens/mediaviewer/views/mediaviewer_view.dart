@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
 import 'package:armoyu_widgets/screens/mediaviewer/controllers/mediaviewer_controller.dart';
-import 'package:armoyu_widgets/sources/videoplayer/videoplayer_bundle.dart';
 import 'package:armoyu_widgets/sources/videoplayer/widgets/mediakitvideo_widget.dart';
 import 'package:armoyu_widgets/sources/videoplayer/widgets/mobilevideo_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -112,18 +111,18 @@ class PhotoviewerView extends StatelessWidget {
                 itemBuilder: (context, index) {
                   if (controller.rxmedia.value![index].mediaType ==
                       MediaType.video) {
-                    VideoplayerWidgetBundle videoWidget;
                     if (Platform.isWindows) {
-                      videoWidget = MediaKitVideoControllerWrapper(controller
-                          .rxmedia.value![index].mediaURL.normalURL.value);
+                      controller.videoWidget = MediaKitVideoControllerWrapper(
+                          controller
+                              .rxmedia.value![index].mediaURL.normalURL.value);
                     } else {
                       final mobile = MobileVideoControllerWrapper(controller
                           .rxmedia.value![index].mediaURL.normalURL.value);
-                      videoWidget = mobile;
+                      controller.videoWidget = mobile;
 
                       mobile.initialize(mute: true);
                     }
-                    return videoWidget.getVideoWidget();
+                    return controller.videoWidget!.getVideoWidget();
                   }
 
                   ImageProvider imageProvider;

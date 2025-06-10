@@ -1,7 +1,6 @@
 import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_widgets/data/services/accountuser_services.dart';
 import 'package:armoyu_widgets/screens/gallery/controllers/gallery_controller.dart';
-import 'package:armoyu_widgets/sources/gallery/widgets/gallery_widget.dart';
 import 'package:armoyu_widgets/widgets/buttons.dart';
 import 'package:armoyu_widgets/widgets/text.dart';
 import 'package:flutter/material.dart';
@@ -62,14 +61,7 @@ class GalleryView extends StatelessWidget {
                       controller: controller.galleryscrollcontroller.value,
                       child: Column(
                         children: [
-                          GalleryWidget(service).mediaList(
-                            context,
-                            onMediaUpdated: (onMediaUpdated) {
-                              controller.mediaList.value = onMediaUpdated;
-                              controller.mediaList.refresh();
-                            },
-                            big: false,
-                          ),
+                          controller.mediauploadWidget.widget.value!,
                           SizedBox(
                             height: 150,
                             child: Column(

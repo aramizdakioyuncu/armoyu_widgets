@@ -43,6 +43,20 @@ class MedialistController extends GetxController {
     super.onClose();
   }
 
+  void refreshMediaList() async {
+    mediaList.refresh();
+    onListUpdated?.call(
+      mediaList.map((e) => e.media).toList(),
+    );
+  }
+
+  void clearMediaList() async {
+    mediaList.value = [];
+    onListUpdated?.call(
+      mediaList.map((e) => e.media).toList(),
+    );
+  }
+
   pickfile() async {
     // //Multiples File Picker// //Multiples File Picker// //Multiples File Picker
 
@@ -97,7 +111,6 @@ class MedialistController extends GetxController {
       mediaList.refresh();
     }
 
-    // list = mediaList.map((e) => e.media).toList().obs;
     onListUpdated?.call(
       mediaList.map((e) => e.media).toList(),
     );

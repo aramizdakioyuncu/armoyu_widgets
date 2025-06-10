@@ -120,7 +120,10 @@ class MediagalleryController extends GetxController {
         Media(
           mediaID: element.media.mediaID,
           ownerID: element.mediaOwner.userID,
-          mediaType: MediaType.image,
+          mediaType: (element.mediatype.contains("video") ||
+                  element.media.mediaURL.normalURL.contains(".mp4"))
+              ? MediaType.video
+              : MediaType.image,
           mediaURL: MediaURL(
             bigURL: Rx(element.media.mediaURL.bigURL),
             normalURL: Rx(element.media.mediaURL.normalURL),

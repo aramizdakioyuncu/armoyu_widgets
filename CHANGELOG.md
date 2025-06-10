@@ -1,3 +1,3 @@
-## [1.0.0+78]
+## [1.0.0+89]
 
-- fix: Update default story addition logic and version to 1.0.0+77
+- feat: Enhance gallery and media viewer functionality; integrate medialist bundle and improve media handling

@@ -6,6 +6,7 @@ import 'package:armoyu_services/core/models/ARMOYU/_response/response.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
 import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/data/services/accountuser_services.dart';
+import 'package:armoyu_widgets/sources/videoplayer/videoplayer_bundle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -29,13 +30,18 @@ class PhotoviewerController extends GetxController {
   late RxInt currentIndex;
   User? currentUser;
 
+  VideoplayerWidgetBundle? videoWidget;
+
   bool handleKeyEvent(KeyEvent event) {
     if (event is KeyDownEvent &&
         (event.logicalKey == LogicalKeyboardKey.arrowRight)) {
       if (isRotationedit.value) return true;
 
       if (currentIndex.value >= rxmedia.value!.length - 1) return true;
-
+      if (videoWidget != null) {
+        videoWidget!.dispose();
+        videoWidget == null;
+      }
       if (currentIndex.value < media.length - 1) {
         currentIndex.value++;
         pageController.animateToPage(
@@ -52,7 +58,10 @@ class PhotoviewerController extends GetxController {
       if (isRotationedit.value) return true;
 
       if (0 > currentIndex.value - 1) return true;
-
+      if (videoWidget != null) {
+        videoWidget!.dispose();
+        videoWidget == null;
+      }
       if (currentIndex.value > 0) {
         currentIndex.value--;
         pageController.animateToPage(
@@ -87,6 +96,10 @@ class PhotoviewerController extends GetxController {
   void onClose() {
     super.onClose();
     HardwareKeyboard.instance.removeHandler(handleKeyEvent);
+
+    if (videoWidget != null) {
+      videoWidget!.dispose();
+    }
   }
 
   turnleft() {

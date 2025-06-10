@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:armoyu_widgets/core/armoyu.dart';
 import 'package:armoyu_widgets/core/widgets.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
-import 'package:armoyu_widgets/sources/gallery/widgets/gallery_widget.dart';
 import 'package:armoyu_widgets/sources/social/bundle/postcreate_bundle.dart';
 import 'package:armoyu_widgets/sources/social/controllers/postcreate_controller.dart';
 import 'package:armoyu_widgets/translations/app_translation.dart';
@@ -21,18 +20,7 @@ PostcreateWidgetBundle widgetPostcreate(service) {
     child: SingleChildScrollView(
       child: Column(
         children: [
-          Obx(
-            () => GalleryWidget(service).mediaList(
-              Get.context!,
-              onMediaUpdated: (onMediaUpdated) {
-                controller.media.value = onMediaUpdated;
-                controller.media.refresh();
-                log("media updated: ${controller.media.length}");
-              },
-              big: true,
-              editable: true,
-            ),
-          ),
+          controller.medialistWidgetBundle.widget.value!,
           SizedBox(
             width: Get.width,
             child: SingleChildScrollView(

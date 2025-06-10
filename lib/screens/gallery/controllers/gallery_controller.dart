@@ -7,6 +7,7 @@ import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/data/models/useraccounts.dart';
 import 'package:armoyu_widgets/data/services/accountuser_services.dart';
 import 'package:armoyu_widgets/sources/gallery/bundle/gallery_bundle.dart';
+import 'package:armoyu_widgets/sources/gallery/bundle/medialist_bundle.dart';
 import 'package:armoyu_widgets/sources/gallery/widgets/gallery_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -23,6 +24,7 @@ class GalleryController extends GetxController
   var galleryscrollcontroller = ScrollController().obs;
 
   late GalleryWidgetBundle galleryWidget;
+  late MedialistWidgetBundle mediauploadWidget;
 
   var fetchFirstDeviceGalleryStatus = false.obs;
   var currentUserAccounts = Rx<UserAccounts>(
@@ -40,6 +42,15 @@ class GalleryController extends GetxController
     final findCurrentAccountController = Get.find<AccountUserController>();
     currentUserAccounts.value =
         findCurrentAccountController.currentUserAccounts.value;
+
+    mediauploadWidget = GalleryWidget(service).mediaList(
+      Get.context!,
+      onMediaUpdated: (onMediaUpdated) {
+        mediaList.value = onMediaUpdated;
+        mediaList.refresh();
+      },
+      big: false,
+    );
 
     galleryWidget = GalleryWidget(service).mediaGallery(
       context: Get.context!,
@@ -106,6 +117,9 @@ class GalleryController extends GetxController
     mediaUploadProcess.value = false;
 
     mediaList.clear();
+    mediaList.refresh();
+
+    mediauploadWidget.clear();
 
     galleryWidget.refresh();
   }

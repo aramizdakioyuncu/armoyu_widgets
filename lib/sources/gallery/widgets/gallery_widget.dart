@@ -1,6 +1,7 @@
 import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/media.dart';
 import 'package:armoyu_widgets/sources/gallery/bundle/gallery_bundle.dart';
+import 'package:armoyu_widgets/sources/gallery/bundle/medialist_bundle.dart';
 import 'package:armoyu_widgets/sources/gallery/widgets/mediagallery/mediagallery_widget.dart';
 import 'package:armoyu_widgets/sources/gallery/widgets/medialist/medialist_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -30,7 +31,7 @@ class GalleryWidget {
     );
   }
 
-  Widget mediaList(
+  MedialistWidgetBundle mediaList(
     BuildContext context, {
     required Function(List<Media> onMediaUpdated)? onMediaUpdated,
     bool big = false,

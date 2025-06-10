@@ -4,12 +4,13 @@ import 'package:armoyu_services/armoyu_services.dart';
 import 'package:armoyu_widgets/data/models/ARMOYU/media.dart' as armoyumedia;
 import 'package:armoyu_widgets/data/models/user.dart';
 import 'package:armoyu_widgets/data/services/accountuser_services.dart';
+import 'package:armoyu_widgets/sources/gallery/bundle/medialist_bundle.dart';
 import 'package:armoyu_widgets/sources/gallery/widgets/medialist/controllers/medialist_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 
-Widget widgetMediaList({
+MedialistWidgetBundle widgetMediaList({
   required ARMOYUServices service,
   required BuildContext context,
   void Function(List<armoyumedia.Media> mediaList)? onListUpdated,
@@ -30,7 +31,7 @@ Widget widgetMediaList({
     controller.closeSize.value = 30;
   }
 
-  return LayoutBuilder(
+  Widget widget = LayoutBuilder(
     builder: (context, constraints) {
       if (big) {
         // Ekran genişliği
@@ -149,5 +150,11 @@ Widget widgetMediaList({
         ),
       );
     },
+  );
+
+  return MedialistWidgetBundle(
+    widget: Rxn(widget),
+    refresh: controller.refreshMediaList,
+    clear: () => controller.clearMediaList(),
   );
 }
