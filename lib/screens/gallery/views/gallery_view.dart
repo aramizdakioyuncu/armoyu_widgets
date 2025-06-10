@@ -31,10 +31,10 @@ class GalleryView extends StatelessWidget {
           ),
         ],
       ),
-      body: Obx(
-        () => Column(
-          children: [
-            TabBar(
+      body: Column(
+        children: [
+          Obx(
+            () => TabBar(
               unselectedLabelColor: Colors.grey,
               labelColor: Colors.white,
               controller: controller.tabController.value,
@@ -51,51 +51,48 @@ class GalleryView extends StatelessWidget {
                 )
               ],
             ),
-            Expanded(
-              child: TabBarView(
-                controller: controller.tabController.value,
-                children: [
-                  RefreshIndicator(
-                    onRefresh: () async => controller.galleryWidget.refresh(),
-                    child: SingleChildScrollView(
-                      controller: controller.galleryscrollcontroller.value,
-                      child: Column(
-                        children: [
-                          controller.mediauploadWidget.widget.value!,
-                          SizedBox(
-                            height: 150,
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                  height: 50,
-                                  child: CustomButtons.costum1(
-                                    text: "Yükle",
-                                    enabled: controller.mediaList.isNotEmpty,
-                                    onPressed: () async =>
-                                        await controller.uploadmediafunction(),
-                                    loadingStatus:
-                                        controller.mediaUploadProcess,
-                                  ),
+          ),
+          Expanded(
+            child: TabBarView(
+              controller: controller.tabController.value,
+              children: [
+                // Text("22"),
+                SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      controller.mediauploadWidget.widget.value!,
+                      Obx(
+                        () => SizedBox(
+                          height: 150,
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: 50,
+                                child: CustomButtons.costum1(
+                                  text: "Yükle",
+                                  enabled: controller.mediaList.isNotEmpty,
+                                  onPressed: () async =>
+                                      await controller.uploadmediafunction(),
+                                  loadingStatus: controller.mediaUploadProcess,
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                          controller.galleryWidget.widget.value ??
-                              const SizedBox(),
-                        ],
+                        ),
                       ),
-                    ),
+                      controller.galleryWidget.widget.value ?? const SizedBox(),
+                    ],
                   ),
-                  Center(
-                    child: Text(
-                      "Bu Sayfa Henüz Geliştirilmedi",
-                    ),
+                ),
+                Center(
+                  child: Text(
+                    "Bu Sayfa Henüz Geliştirilmedi",
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

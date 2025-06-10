@@ -30,7 +30,7 @@ GalleryWidgetBundle widgetmediaGallery({
       ),
       tag: "mediagallery-$userID");
   Widget widget = Obx(
-    () => ListView(
+    () => Column(
       children: [
         allowuploadmedia == false
             ? SizedBox.shrink()
