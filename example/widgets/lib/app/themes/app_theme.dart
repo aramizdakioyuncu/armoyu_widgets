@@ -45,7 +45,7 @@ final ThemeData appDarkThemeData = ThemeData.dark().copyWith(
   iconTheme: const IconThemeData(
     color: Colors.white,
   ),
-  dialogTheme: DialogTheme(
+  dialogTheme: DialogThemeData(
     backgroundColor: Colors.grey.shade900,
     contentTextStyle: const TextStyle(
       color: Colors.white,
@@ -59,7 +59,7 @@ final ThemeData appDarkThemeData = ThemeData.dark().copyWith(
   buttonTheme: const ButtonThemeData(
     buttonColor: Colors.red,
   ),
-  tabBarTheme: const TabBarTheme(
+  tabBarTheme: const TabBarThemeData(
     labelColor: Colors.white,
   ),
   iconButtonTheme: IconButtonThemeData(
@@ -180,7 +180,7 @@ final ThemeData appLightThemeData = ThemeData.light().copyWith(
   iconTheme: const IconThemeData(
     color: Colors.black,
   ),
-  dialogTheme: DialogTheme(
+  dialogTheme: DialogThemeData(
     backgroundColor: Colors.grey.shade900,
     contentTextStyle: const TextStyle(
       color: Colors.white,
@@ -194,7 +194,7 @@ final ThemeData appLightThemeData = ThemeData.light().copyWith(
   buttonTheme: const ButtonThemeData(
     buttonColor: Colors.red,
   ),
-  tabBarTheme: const TabBarTheme(
+  tabBarTheme: const TabBarThemeData(
     labelColor: Colors.white,
   ),
   iconButtonTheme: IconButtonThemeData(
